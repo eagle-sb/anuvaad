@@ -38,7 +38,7 @@ paths:
         - File
       parameters:
          - in: formData
-           name: upfile
+           name: file
            type: file
            description: The file to upload.
       responses:
@@ -52,13 +52,14 @@ paths:
               http:
                 status: 200
               why: 'request successfull'
+              data: 'filename'
         '400':
           description: bad request
           schema:
             $ref: '#/definitions/status'
   /download:
     get:
-      summary: Downloads a file
+      summary: Download a file
       tags:
         - File
       parameters:
