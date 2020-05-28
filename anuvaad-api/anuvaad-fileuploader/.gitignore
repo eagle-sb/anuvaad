@@ -44,6 +44,7 @@ project.xcworkspace
 
 # Android/IntelliJ
 #
+upload/*
 !upload/.gitkeep
 build/
 .idea
