@@ -7,7 +7,6 @@ itsdangerous==1.1.0
 Jinja2==2.11.2
 libmagic==1.0
 MarkupSafe==1.1.1
-python-magic-bin==0.4.14
 pytz==2020.1
 six==1.15.0
 Werkzeug==1.0.1
