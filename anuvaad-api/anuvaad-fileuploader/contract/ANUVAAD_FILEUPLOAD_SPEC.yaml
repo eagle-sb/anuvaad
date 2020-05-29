@@ -40,7 +40,7 @@ paths:
          - in: formData
            name: file
            type: file
-           description: The file to upload.
+           description: The file to upload. Accepted file type - docx, image(jpeg, jpg, png), pdf, txt
       responses:
         '200':
           description: request successful

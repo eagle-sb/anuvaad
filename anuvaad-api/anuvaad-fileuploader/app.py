@@ -30,7 +30,7 @@ CORS(app)
 UPLOAD_FOLDER = 'upload'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-ALLOWED_FILE_TYPES = ['application/pdf','image/x-ms-bmp','image/jpeg','image/png','text/plain','application/vnd.openxmlformats-officedocument.wordprocessingml.document']
+ALLOWED_FILE_TYPES = ['application/msword','application/pdf','image/x-ms-bmp','image/jpeg','image/jpg','image/png','text/plain','application/vnd.openxmlformats-officedocument.wordprocessingml.document']
 
 log = logging.getLogger('file')
 
@@ -59,6 +59,7 @@ def upload_file():
     basename = str(int(time.time()))
     f = request.files['file']
     filetype = magic.from_buffer(f.read(), mime=True)
+    print(filetype)
     if filetype in ALLOWED_FILE_TYPES:
         filepath = os.path.join(
             app.config['UPLOAD_FOLDER'], basename+'_'+f.filename)
