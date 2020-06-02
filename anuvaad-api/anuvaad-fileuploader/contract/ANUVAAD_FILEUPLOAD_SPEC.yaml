@@ -63,8 +63,8 @@ paths:
       tags:
         - File
       parameters:
-        - in: path
-          name: filename
+        - in: query
+          name: file
           required: true
           description: Filename to be downloaded
           type: string

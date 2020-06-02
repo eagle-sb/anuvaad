@@ -71,8 +71,12 @@ def upload_file():
         return res.getres(), 400
 
 
-@app.route('/anuvaad/v1/download/<filename>', methods=['GET'])
-def download_file(filename):
+@app.route('/anuvaad/v1/download', methods=['GET'])
+def download_file():
+    filename = request.args.get('file')
+    if filename is None:
+        res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value,None)
+        return res.getres(), 400
     filepath = os.path.join(
         app.config['UPLOAD_FOLDER'], filename)
     if(os.path.exists(filepath)):
