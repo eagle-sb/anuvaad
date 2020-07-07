@@ -1,4 +1,4 @@
- import pytesseract
+import pytesseract
 from pytesseract import Output
 import cv2
 from pdf2image import convert_from_path
@@ -9,6 +9,7 @@ from utilities.sentenceutils import SentenceExtractionUtils
 from repository.sentencerepository import SentenceRepository
 from validator.sentencevalidator import SentenceValidator
 from .sentencewflowservice import SentenceWflowService
+from utilities.ptf_to_html_integration import pdf_to_json
 
 import datetime as dt
 import logging
@@ -23,7 +24,7 @@ man_suffix = 'manual-'
 nomatch_suffix = 'nomatch-'
 file_path_delimiter = '/'
 
-sentence_topic = ""
+sentence_topic = "anuvaad-etl-align-job-register"
 
 repo = SentenceRepository()
 producer = Producer()
@@ -39,7 +40,7 @@ class SentenceService():
         job_id = util.generate_job_id()
         response = {"input": object_in, "jobID": job_id, "status": "START"}
         self.update_job_details(response, True)
-        producer.push_to_queue(response, sentence_extraction_topic)
+        producer.push_to_queue(response, sentence_topic)
         return response
 
     # Service method to register the alignment job
@@ -80,8 +81,9 @@ class SentenceService():
 
         try:
             #Tesseract ocr
-            Ocrlinewise = SentenceExtractorV3(directory_path,path)
-            output_dict =Ocrlinewise.response
+            #Ocrlinewise = SentenceExtractorV3(directory_path,path)
+            #output_dict =Ocrlinewise.response
+            output_dict  = pdf_to_json(path)
             if output_dict is not None:
                 result = self.build_final_response( output_dict, object_in)
                 self.update_job_details(result, False)

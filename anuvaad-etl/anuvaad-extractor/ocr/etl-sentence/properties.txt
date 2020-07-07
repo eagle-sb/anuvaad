@@ -1,4 +1,4 @@
-Service name: anuvaad-etl-aligner
+Service name: anuvaad-etl-ocr
 Git path: https://github.com/project-anuvaad/anuvaad/tree/wfmanager_feature/anuvaad-etl/anuvaad-extractor/sentence/etl-sentence
 Port number: 5003
 Packages to be installed: Refer requirements.txt

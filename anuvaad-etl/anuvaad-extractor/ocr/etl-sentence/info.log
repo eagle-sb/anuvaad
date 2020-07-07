@@ -28,3 +28,5 @@
 [2020-07-01 13:08:59,444] {alignmentconsumer.py:42} AlignerKafka-Thread INFO in alignmentconsumer: Consumer running.......
 [2020-07-01 13:09:00,461] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
 [2020-07-03 17:43:22,555] {_internal.py:122} MainThread INFO in _internal:  * Running on http://0.0.0.0:5002/ (Press CTRL+C to quit)
+[2020-07-07 18:10:35,050] {_internal.py:122} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-07 19:22:45,915] {_internal.py:122} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
