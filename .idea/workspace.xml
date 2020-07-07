@@ -19,16 +19,28 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="1f147588-5a8e-4ccc-a7d9-ceb1c1618a9e" name="Default Changelist" comment="" />
+    <list default="true" id="1f147588-5a8e-4ccc-a7d9-ceb1c1618a9e" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py" beforeDir="false" afterPath="$PROJECT_DIR$/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1e9laaPUMpyxkFZoelI6Ma9ECGU" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -70,6 +82,7 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
     <state x="693" y="302" width="524" height="509" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1593778663030">
@@ -80,5 +93,16 @@
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="456" y="228" width="1022" height="737" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1593741863655" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py</url>
+          <line>5</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

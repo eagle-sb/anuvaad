@@ -71,7 +71,7 @@ class SentenceService():
         log.info("Alignment process starts for job: " + str(object_in["jobID"]))
 
         path = object_in["input"]["path"]
-        full_path = directory_path + file_path_delimiter + path
+
 
 
         object_in["status"] = "INPROGRESS"
@@ -80,7 +80,7 @@ class SentenceService():
 
         try:
             #Tesseract ocr
-            Ocrlinewise = SentenceExtractorV3(full_path)
+            Ocrlinewise = SentenceExtractorV3(directory_path,path)
             output_dict =Ocrlinewise.response
             if output_dict is not None:
                 result = self.build_final_response( output_dict, object_in)
@@ -122,13 +122,14 @@ class SentenceService():
 
 class SentenceExtractorV3:
 
-    def __init__(self, pdf_path):
-        self.pdf_path = pdf_path
+    def __init__(self, directory_path,path):
+        self.pdf_path = os.path.join(str(directory_path),str(path))
         self.response = {'resolution': None, 'lines_data': []}
         self.language_map = {'Malayalam': 'mal', 'Tamil': 'tam', 'Devanagari': 'hin', 'Telugu': 'tel', 'Latin': 'eng'}
         self.margin_support = 4
         self.tesseract_conf = 0
         self.page_df = None
+        self.pdf_to_html()
         self.pdf_to_image()
         self.pdf_language_detect()
         self.line_metadata()
