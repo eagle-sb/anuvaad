@@ -27,8 +27,8 @@ def createalignmentjob():
 # REST endpoint to align files through wflow
 @sentenceapp.route(context_path + '/v1/sentences/extract_lines', methods=["POST"])
 def createalignmentwflowjob():
-    service = SentenceService()
-    data = request.get_json()
+    #service = SentenceService()
+    #data = request.get_json()
     return {'response':'dfd'}'#service.wf_process(data)
 
 
