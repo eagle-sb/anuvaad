@@ -18,7 +18,7 @@ import pandas as pd
 import numpy as np
 
 log = logging.getLogger('file')
-directory_path = os.environ.get('SA_DIRECTORY_PATH', r'C:\Users\Vishal\Desktop\anuvaad\Facebook LASER\resources\Input\length-wise')
+directory_path = os.environ.get('SA_DIRECTORY_PATH', 'upload')
 res_suffix = 'response-'
 man_suffix = 'manual-'
 nomatch_suffix = 'nomatch-'
