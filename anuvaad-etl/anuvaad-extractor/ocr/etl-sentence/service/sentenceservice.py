@@ -72,36 +72,38 @@ class SentenceService():
         log.info("Alignment process starts for job: " + str(object_in["jobID"]))
 
         path = object_in["input"]["path"]
-
+        print(path ,'path')
+        print(path ,'path')
 
 
         object_in["status"] = "INPROGRESS"
         object_in["startTime"] = str(dt.datetime.now())
         self.update_job_details(object_in, False)
 
-        try:
-            #Tesseract ocr
-            #Ocrlinewise = SentenceExtractorV3(directory_path,path)
-            #output_dict =Ocrlinewise.response
-            output_dict  = pdf_to_json(path)
-            if output_dict is not None:
-                result = self.build_final_response( output_dict, object_in)
-                self.update_job_details(result, False)
-                if iswf:
-                    wflowservice.update_wflow_details(result, object_in, None)
-            else:
-                self.update_job_status("FAILED", object_in, "Exception while writing the output")
-                if iswf:
-                    error = validator.get_error("OUTPUT_ERROR", "Exception while writing the output")
-                    wflowservice.update_wflow_details(None, object_in, error)
-            log.info("Sentences extracted Successfully! JOB ID: " + str(object_in["jobID"]))
-        except Exception as e:
-            log.error("Exception while writing the output: ", str(e))
+        #try:
+        #Tesseract ocr
+        #Ocrlinewise = SentenceExtractorV3(directory_path,path)
+        #output_dict =Ocrlinewise.response
+        output_dict  = pdf_to_json(path)
+        if output_dict is not None:
+            result = self.build_final_response( output_dict, object_in)
+            self.update_job_details(result, False)
+            if iswf:
+                wflowservice.update_wflow_details(result, object_in, None)
+        else:
             self.update_job_status("FAILED", object_in, "Exception while writing the output")
             if iswf:
-                error = validator.get_error("OUTPUT_ERROR", "Exception while writing the output: " + str(e))
+                error = validator.get_error("OUTPUT_ERROR", "Exception while writing the output")
                 wflowservice.update_wflow_details(None, object_in, error)
-            return {}
+        log.info("Sentences extracted Successfully! JOB ID: " + str(object_in["jobID"]))
+        #except Exception as e:
+        #    pass
+            # log.error("Exception while writing the output: ", str(e))
+            # self.update_job_status("FAILED", object_in, "Exception while writing the output")
+            # if iswf:
+            #     error = validator.get_error("OUTPUT_ERROR", "Exception while writing the output: " + str(e))
+            #     wflowservice.update_wflow_details(None, object_in, error)
+            # return {}
 
 
 

@@ -84,3 +84,1032 @@ Traceback (most recent call last):
     self._error_message(selector))
 pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
 [2020-07-08 17:54:54,722] {_internal.py:122} Thread-4 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 17:54:54] "[1m[35mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 18:45:02,404] {sentenceconsumer.py:43} SentenceKafka-Thread INFO in sentenceconsumer: Consumer running.......
+[2020-07-08 18:45:02,411] {_internal.py:122} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-08 18:49:13,657] {sentenceconsumer.py:43} SentenceKafka-Thread INFO in sentenceconsumer: Consumer running.......
+[2020-07-08 18:49:13,663] {_internal.py:122} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-08 18:49:55,533] {app.py:1891} Thread-1 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 49, in wf_process
+    self.update_job_details(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1491, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1820, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1807, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1760, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1793, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 477, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 205, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 18:49:55,565] {_internal.py:122} Thread-1 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 18:49:55] "[1m[35mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 18:52:23,826] {app.py:1891} Thread-2 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 49, in wf_process
+    self.update_job_details(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1491, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1820, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1807, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1760, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1793, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 477, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 205, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 18:52:23,828] {_internal.py:122} Thread-2 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 18:52:23] "[1m[35mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 18:55:03,004] {app.py:1891} Thread-3 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 49, in wf_process
+    self.update_job_details(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1491, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1820, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1807, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1760, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1793, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 477, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 205, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 18:55:03,007] {_internal.py:122} Thread-3 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 18:55:03] "[1m[35mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 18:55:39,355] {app.py:1891} Thread-4 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 49, in wf_process
+    self.update_job_details(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1491, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1820, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1807, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1760, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1793, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 477, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 205, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 18:55:39,358] {_internal.py:122} Thread-4 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 18:55:39] "[1m[35mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 18:58:17,979] {sentenceconsumer.py:43} SentenceKafka-Thread INFO in sentenceconsumer: Consumer running.......
+[2020-07-08 18:58:17,988] {_internal.py:122} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-08 18:58:55,320] {app.py:1891} Thread-1 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 49, in wf_process
+    self.update_job_details(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1491, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1820, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1807, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1760, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1793, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 477, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 205, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 18:58:55,335] {_internal.py:122} Thread-1 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 18:58:55] "[1m[35mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 19:00:33,747] {app.py:1891} Thread-2 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 49, in wf_process
+    self.update_job_details(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1491, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1820, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1807, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1760, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1793, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 477, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 205, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 19:00:33,751] {_internal.py:122} Thread-2 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 19:00:33] "[1m[35mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 19:00:52,992] {app.py:1891} Thread-3 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 49, in wf_process
+    self.update_job_details(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1491, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1820, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1807, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1760, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1793, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 477, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 205, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 19:00:52,995] {_internal.py:122} Thread-3 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 19:00:52] "[1m[35mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 19:01:26,152] {_internal.py:122} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-08 19:02:03,480] {app.py:1891} Thread-1 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 49, in wf_process
+    self.update_job_details(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1491, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1820, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1807, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1760, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1793, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 477, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 205, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 19:02:03,486] {_internal.py:122} Thread-1 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 19:02:03] "[1m[35mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 19:05:08,829] {app.py:1891} Thread-2 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 49, in wf_process
+    self.update_job_details(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1491, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1820, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1807, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1760, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1793, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 477, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 205, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 19:05:08,836] {_internal.py:122} Thread-2 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 19:05:08] "[1m[35mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 19:05:22,058] {_internal.py:122} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-08 19:05:56,157] {app.py:1891} Thread-1 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 49, in wf_process
+    self.update_job_details(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1491, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1820, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1807, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1760, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1793, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 477, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 205, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 19:05:56,163] {_internal.py:122} Thread-1 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 19:05:56] "[1m[35mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 19:08:12,811] {app.py:1891} Thread-2 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/flask/app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 49, in wf_process
+    self.update_job_details(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1491, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1820, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1807, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1760, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1793, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 477, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/restful/lib/python3.7/site-packages/pymongo/topology.py", line 205, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 19:08:12,813] {_internal.py:122} Thread-2 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 19:08:12] "[1m[35mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 19:25:02,320] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-08 19:25:41,046] {app.py:1892} Thread-1 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 49, in wf_process
+    self.update_job_details(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1490, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1823, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1810, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1763, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1796, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 485, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 209, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 19:25:41,053] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 19:25:41] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 21:25:06,961] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-08 21:25:42,341] {app.py:1892} Thread-1 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 49, in wf_process
+    self.update_job_details(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1490, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1823, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1810, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1763, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1796, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 485, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 209, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 21:25:42,347] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 21:25:42] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 21:26:43,873] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 21:26:43] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+[2020-07-08 21:29:41,197] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-08 21:31:16,997] {app.py:1892} Thread-1 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 49, in wf_process
+    self.update_job_details(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1490, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1823, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1810, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1763, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1796, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 485, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 209, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 21:31:17,001] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 21:31:17] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 21:36:40,523] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-08 21:37:31,423] {app.py:1892} Thread-1 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 24, in createalignmentjob
+    return service.register_job(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 42, in register_job
+    self.update_job_details(response, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1490, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1823, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1810, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1763, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1796, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 485, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 209, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 21:37:31,430] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 21:37:31] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 21:38:11,179] {app.py:1892} Thread-2 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 24, in createalignmentjob
+    return service.register_job(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 42, in register_job
+    self.update_job_details(response, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1490, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1823, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1810, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1763, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1796, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 485, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 209, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 21:38:11,181] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 21:38:11] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 21:39:21,170] {app.py:1892} Thread-3 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 24, in createalignmentjob
+    return service.register_job(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 42, in register_job
+    self.update_job_details(response, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1490, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1823, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1810, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1763, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1796, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 485, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 209, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 21:39:21,172] {_internal.py:113} Thread-3 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 21:39:21] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 21:40:06,437] {app.py:1892} Thread-4 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 24, in createalignmentjob
+    return service.register_job(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 42, in register_job
+    self.update_job_details(response, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1490, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1823, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1810, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1763, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1796, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 485, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 209, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 21:40:06,438] {_internal.py:113} Thread-4 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 21:40:06] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 21:47:13,124] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-08 21:48:12,860] {app.py:1892} Thread-1 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 24, in createalignmentjob
+    return service.register_job(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 42, in register_job
+    self.update_job_details(response, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1490, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1823, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1810, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1763, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1796, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 485, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 209, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 21:48:12,871] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 21:48:12] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 21:58:14,238] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-08 21:58:33,923] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 21:58:33] "[33mGET / HTTP/1.1[0m" 404 -
+[2020-07-08 21:58:48,023] {_internal.py:113} Thread-3 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 21:58:48] "[33mGET / HTTP/1.1[0m" 404 -
+[2020-07-08 21:58:51,725] {app.py:1892} Thread-1 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 24, in createalignmentjob
+    return service.register_job(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 42, in register_job
+    self.update_job_details(response, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1490, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1823, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1810, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1763, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1796, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 485, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 209, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 21:58:51,734] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 21:58:51] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 21:59:41,949] {app.py:1892} Thread-4 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 24, in createalignmentjob
+    return service.register_job(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 42, in register_job
+    self.update_job_details(response, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1490, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1823, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1810, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1763, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1796, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 485, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 209, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-08 21:59:41,958] {_internal.py:113} Thread-4 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 21:59:41] "[35m[1mPOST //anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 22:00:23,732] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-08 22:00:23,732] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-08 22:00:24,338] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-08 22:00:24,676] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 209-032-784
+[2020-07-08 22:01:13,996] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 22:01:13] "[35m[1mPOST //anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 22:01:56,823] {_internal.py:113} Thread-3 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 22:01:56] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 22:05:32,247] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/app.py', reloading
+[2020-07-08 22:05:32,718] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-08 22:05:33,450] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-08 22:05:33,451] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 209-032-784
+[2020-07-08 22:06:26,405] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/app.py', reloading
+[2020-07-08 22:06:26,541] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-08 22:06:27,323] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-08 22:06:27,323] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 209-032-784
+[2020-07-08 22:07:05,973] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 22:07:05] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-08 22:16:22,543] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py', reloading
+[2020-07-08 22:16:22,818] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-08 22:16:23,544] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-08 22:16:23,545] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 209-032-784
+[2020-07-08 22:16:33,825] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-08 22:16:33,826] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-08 22:16:34,479] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-08 22:16:34,480] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 209-032-784
+[2020-07-08 22:18:30,411] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py', reloading
+[2020-07-08 22:18:30,643] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-08 22:18:31,542] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-08 22:18:31,542] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 209-032-784
+[2020-07-08 22:19:54,217] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py', reloading
+[2020-07-08 22:19:54,385] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-08 22:19:55,373] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-08 22:19:55,373] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 209-032-784
+[2020-07-08 22:20:59,290] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py', reloading
+[2020-07-08 22:20:59,455] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-08 22:21:00,481] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-08 22:21:00,482] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 209-032-784
+[2020-07-08 22:21:03,566] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-08 22:21:03,567] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-08 22:21:04,169] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-08 22:21:04,170] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 209-032-784
+[2020-07-08 22:24:04,540] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 22:24:04] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines_status HTTP/1.1[0m" 500 -
+[2020-07-08 22:28:29,024] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-08 22:28:29,025] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-08 22:28:29,649] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-08 22:28:29,649] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 209-032-784
+[2020-07-08 22:29:05,788] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 22:29:05] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines_status HTTP/1.1[0m" 500 -
+[2020-07-08 22:29:35,709] {_internal.py:113} Thread-3 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 22:29:35] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -

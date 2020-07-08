@@ -3,8 +3,8 @@ import os
 import pymongo
 
 mongo_client = os.environ.get('MONGO_CLIENT', 'mongodb://localhost:27017/')
-mongo_alignment_db = os.environ.get('MONGO_ETL_SENTENCE_DB', 'anuvaad-etl')
-mongo_alignment_col = os.environ.get('MONGO_ETL_SENTENCE_COL', 'extractor-aligner')
+mongo_alignment_db = os.environ.get('MONGO_ETL_OCR_DB', 'anuvaad-etl')
+mongo_alignment_col = os.environ.get('MONGO_ETL_OCR_COL', 'extractor-aligner')
 
 class SentenceRepository:
 

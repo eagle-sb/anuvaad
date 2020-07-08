@@ -9,11 +9,11 @@ Volume mount: Yes
 context path: /anuvaad-etl/extractor/sentence
 
 Environment Variables:
-SA_DIRECTORY_PATH = /opt/share/sentence-alignment/upload:upload
+SA_DIRECTORY_PATH =  /home/dhiraj/Documents/Anuwad/page_segmentation/v4/sample_pdfs:upload
 LASER_PATH = http://127.0.0.1:8050/vectorize
 FILE_UPLOAD_URL = http://auth.anuvaad.org/upload
 KAFKA_CLUSTER_DETAILS = localhost:1234
 MONGO_CLIENT = mongodb://localhost:27017/
-MONGO_ETL_ALIGNMENT_DB = anuvaad-etl
-MONGO_ETL_ALIGNMENT_COL = extractor-ocr
+MONGO_ETL_OCR_DB = anuvaad-etl
+MONGO_ETL_OCR_COL = extractor-ocr
 
