@@ -29,7 +29,7 @@ def createalignmentjob():
 def createalignmentwflowjob():
     service = SentenceService()
     data = request.get_json()
-    return service.wf_process(data)
+    return {'response':'dfd'}'#service.wf_process(data)
 
 
 # REST endpoint to fetch job status
