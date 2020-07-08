@@ -13,9 +13,9 @@ from logging.config import dictConfig
 log                         = logging.getLogger('file')
 cluster_details             = os.environ.get('KAFKA_CLUSTER_DETAILS', 'localhost:9092')
 consumer_poll_interval      = os.environ.get('CONSUMER_POLL_INTERVAL', 10)
-sentence_topic              = ""
-anu_dp_wf_sentence_in_topic = ""
-sentence_consumer_grp       = ""
+sentence_topic              = "anuvaad-etl-ocr-job-register"
+anu_dp_wf_sentence_in_topic = "anuvaad-dp-tools-ocr-input"
+sentence_consumer_grp       = "anuvaad-etl-ocr-consumer-group"
 
 
 class Consumer:

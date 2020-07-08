@@ -36,6 +36,7 @@ def start_consumer():
 
 if __name__ == '__main__':
     start_consumer()
+    print(sentenceapp.url_map)
     sentenceapp.run(host=app_host, port=app_port)
 
 
