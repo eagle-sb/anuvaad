@@ -13,7 +13,7 @@ sentenceapp = Flask(__name__)
 context_path = os.environ.get('SA_CONTEXT_PATH', '/anuvaad-etl/extractor/sentence')
 
 # REST endpoint to align files
-@sentenceapp.route(context_path + '/v1/sentences/extract', methods=["POST"])
+@sentenceapp.route(context_path + '/v1/sentences/extract_lines', methods=["POST"])
 def createalignmentjob():
     service = SentenceService()
     validator = SentenceValidator()

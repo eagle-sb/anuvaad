@@ -24,7 +24,7 @@ man_suffix = 'manual-'
 nomatch_suffix = 'nomatch-'
 file_path_delimiter = '/'
 
-sentence_topic = "anuvaad-etl-align-job-register"
+sentence_topic = "anuvaad-etl-ocr-register"
 
 repo = SentenceRepository()
 producer = Producer()
