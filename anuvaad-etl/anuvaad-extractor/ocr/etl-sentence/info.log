@@ -1113,3 +1113,20 @@ pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connect
 [2020-07-08 22:28:29,649] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 209-032-784
 [2020-07-08 22:29:05,788] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 22:29:05] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines_status HTTP/1.1[0m" 500 -
 [2020-07-08 22:29:35,709] {_internal.py:113} Thread-3 INFO in _internal: 127.0.0.1 - - [08/Jul/2020 22:29:35] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-09 07:53:26,059] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-09 07:53:26,060] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 07:53:26,706] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 07:53:27,040] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 07:54:49,857] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 07:54:49] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -
+[2020-07-09 07:58:38,704] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py', reloading
+[2020-07-09 07:58:38,831] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 07:58:39,552] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 07:58:39,552] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 07:59:20,337] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 07:59:20] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-09 08:14:49,552] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py', reloading
+[2020-07-09 08:14:49,734] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 08:14:50,531] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 08:14:50,532] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 08:15:12,216] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/app.py', reloading
+[2020-07-09 08:15:12,345] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 08:15:22,379] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 08:15:22] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -
