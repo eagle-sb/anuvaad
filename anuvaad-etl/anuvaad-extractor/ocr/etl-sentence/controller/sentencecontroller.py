@@ -4,7 +4,7 @@ import os
 from flask import Flask, jsonify, request
 import datetime as dt
 from service.sentenceservice import SentenceService
-from service.sentencewflowservice import SentenceWflowService
+#from service.sentencewflowservice import SentenceWflowService
 from validator.sentencevalidator import SentenceValidator
 
 from logging.config import dictConfig
@@ -27,9 +27,9 @@ def createalignmentjob():
 # REST endpoint to align files through wflow
 @sentenceapp.route(context_path + '/v1/sentences/extract_lines', methods=["POST"])
 def createalignmentwflowjob():
-    #service = SentenceService()
-    #data = request.get_json()
-    return {'response':'dfd'}#service.wf_process(data)
+    service = SentenceService()
+    data = request.get_json()
+    return service.wf_process(data)
 
 
 # REST endpoint to fetch job status

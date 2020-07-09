@@ -1130,3 +1130,236 @@ pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connect
 [2020-07-09 08:15:12,216] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/app.py', reloading
 [2020-07-09 08:15:12,345] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
 [2020-07-09 08:15:22,379] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 08:15:22] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -
+[2020-07-09 12:34:23,546] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-09 12:35:00,810] {app.py:1892} Thread-1 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 49, in wf_process
+    self.update_job_details(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1490, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1823, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1810, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1763, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1796, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 485, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 209, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-07-09 12:35:00,816] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 12:35:00] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-09 14:35:57,930] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-09 14:35:57,931] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 14:35:58,545] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 14:35:58,546] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 14:37:53,369] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py', reloading
+[2020-07-09 14:37:54,524] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 14:37:55,600] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 14:37:55,601] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 14:38:32,999] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 14:38:32] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-09 14:40:30,366] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py', reloading
+[2020-07-09 14:40:30,747] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 14:40:31,607] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 14:40:31,608] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 14:40:36,790] {sentenceservice.py:72} Thread-2 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-09 14:40:53,084] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 14:40:53] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-09 14:41:48,192] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py', reloading
+[2020-07-09 14:41:48,325] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 14:41:48,974] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 14:41:48,975] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 14:42:06,777] {sentenceservice.py:72} Thread-2 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-09 14:42:23,095] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 14:42:23] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-09 15:19:12,603] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py', reloading
+[2020-07-09 15:19:12,744] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 15:19:13,397] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 15:19:13,398] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 15:20:48,062] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py', reloading
+[2020-07-09 15:20:48,182] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 15:20:48,803] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 15:20:48,803] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 15:36:40,170] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py', reloading
+[2020-07-09 15:36:40,299] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 15:36:40,932] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 15:36:40,932] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 15:39:13,909] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py', reloading
+[2020-07-09 15:39:14,051] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 15:39:14,676] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 15:39:14,676] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 15:39:52,049] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py', reloading
+[2020-07-09 15:39:52,166] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 15:39:52,829] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 15:39:52,829] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 15:41:10,770] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py', reloading
+[2020-07-09 15:41:10,896] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 15:41:11,516] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 15:41:11,516] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 15:42:00,348] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py', reloading
+[2020-07-09 15:42:00,479] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 15:42:01,214] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 15:42:01,215] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 15:44:04,773] {sentenceproducer.py:34} Thread-2 ERROR in sentenceproducer: Exception while producing: KafkaTimeoutError: Failed to update metadata after 60.0 secs.
+Traceback (most recent call last):
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/kafkawrapper/sentenceproducer.py", line 30, in push_to_queue
+    producer.send(topic, value=object_in)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/kafka/producer/kafka.py", line 564, in send
+    self._wait_on_metadata(topic, self.config['max_block_ms'] / 1000.0)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/kafka/producer/kafka.py", line 691, in _wait_on_metadata
+    "Failed to update metadata after %.1f secs." % (max_wait,))
+kafka.errors.KafkaTimeoutError: KafkaTimeoutError: Failed to update metadata after 60.0 secs.
+[2020-07-09 15:44:04,779] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 15:44:04] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines_status HTTP/1.1[0m" 200 -
+[2020-07-09 15:46:13,890] {sentenceservice.py:72} Thread-4 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-09 15:47:32,083] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py', reloading
+[2020-07-09 15:47:32,226] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 15:47:33,072] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 15:47:33,073] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 15:47:39,578] {sentenceservice.py:72} Thread-2 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-09 15:48:02,552] {sentenceservice.py:72} Thread-3 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-09 15:49:09,483] {sentenceproducer.py:34} Thread-2 ERROR in sentenceproducer: Exception while producing: KafkaTimeoutError: Failed to update metadata after 60.0 secs.
+Traceback (most recent call last):
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/kafkawrapper/sentenceproducer.py", line 30, in push_to_queue
+    producer.send(topic, value=object_in)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/kafka/producer/kafka.py", line 564, in send
+    self._wait_on_metadata(topic, self.config['max_block_ms'] / 1000.0)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/kafka/producer/kafka.py", line 691, in _wait_on_metadata
+    "Failed to update metadata after %.1f secs." % (max_wait,))
+kafka.errors.KafkaTimeoutError: KafkaTimeoutError: Failed to update metadata after 60.0 secs.
+[2020-07-09 15:49:09,484] {sentenceservice.py:98} Thread-2 INFO in sentenceservice: Sentences extracted Successfully! JOB ID: <usecase_code>-<13 digit epoch>
+[2020-07-09 15:49:09,494] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 15:49:09] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-09 15:49:25,345] {sentenceproducer.py:34} Thread-3 ERROR in sentenceproducer: Exception while producing: KafkaTimeoutError: Failed to update metadata after 60.0 secs.
+Traceback (most recent call last):
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/kafkawrapper/sentenceproducer.py", line 30, in push_to_queue
+    producer.send(topic, value=object_in)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/kafka/producer/kafka.py", line 564, in send
+    self._wait_on_metadata(topic, self.config['max_block_ms'] / 1000.0)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/kafka/producer/kafka.py", line 691, in _wait_on_metadata
+    "Failed to update metadata after %.1f secs." % (max_wait,))
+kafka.errors.KafkaTimeoutError: KafkaTimeoutError: Failed to update metadata after 60.0 secs.
+[2020-07-09 15:49:25,347] {sentenceservice.py:98} Thread-3 INFO in sentenceservice: Sentences extracted Successfully! JOB ID: <usecase_code>-<13 digit epoch>
+[2020-07-09 15:49:25,364] {_internal.py:113} Thread-3 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 15:49:25] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-09 15:51:20,925] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py', reloading
+[2020-07-09 15:51:21,107] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 15:51:22,101] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 15:51:22,102] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 15:51:51,593] {sentenceservice.py:72} Thread-2 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-09 15:53:14,203] {sentenceproducer.py:34} Thread-2 ERROR in sentenceproducer: Exception while producing: KafkaTimeoutError: Failed to update metadata after 60.0 secs.
+Traceback (most recent call last):
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/kafkawrapper/sentenceproducer.py", line 30, in push_to_queue
+    producer.send(topic, value=object_in)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/kafka/producer/kafka.py", line 564, in send
+    self._wait_on_metadata(topic, self.config['max_block_ms'] / 1000.0)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/kafka/producer/kafka.py", line 691, in _wait_on_metadata
+    "Failed to update metadata after %.1f secs." % (max_wait,))
+kafka.errors.KafkaTimeoutError: KafkaTimeoutError: Failed to update metadata after 60.0 secs.
+[2020-07-09 15:53:14,205] {sentenceservice.py:98} Thread-2 INFO in sentenceservice: Sentences extracted Successfully! JOB ID: <usecase_code>-<13 digit epoch>
+[2020-07-09 15:53:14,216] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 15:53:14] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-09 16:00:21,401] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py', reloading
+[2020-07-09 16:00:21,584] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 16:00:22,676] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 16:00:22,677] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 16:00:29,897] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py', reloading
+[2020-07-09 16:00:30,053] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 16:00:32,533] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-09 16:00:32,534] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 16:00:33,145] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 16:00:33,146] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 16:00:44,532] {sentenceservice.py:72} Thread-2 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-09 16:02:07,357] {sentenceproducer.py:34} Thread-2 ERROR in sentenceproducer: Exception while producing: KafkaTimeoutError: Failed to update metadata after 60.0 secs.
+Traceback (most recent call last):
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/kafkawrapper/sentenceproducer.py", line 30, in push_to_queue
+    producer.send(topic, value=object_in)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/kafka/producer/kafka.py", line 564, in send
+    self._wait_on_metadata(topic, self.config['max_block_ms'] / 1000.0)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/kafka/producer/kafka.py", line 691, in _wait_on_metadata
+    "Failed to update metadata after %.1f secs." % (max_wait,))
+kafka.errors.KafkaTimeoutError: KafkaTimeoutError: Failed to update metadata after 60.0 secs.
+[2020-07-09 16:02:07,359] {sentenceservice.py:98} Thread-2 INFO in sentenceservice: Sentences extracted Successfully! JOB ID: <usecase_code>-<13 digit epoch>
+[2020-07-09 16:02:07,373] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 16:02:07] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-09 16:03:35,799] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py', reloading
+[2020-07-09 16:03:35,926] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 16:03:37,066] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 16:03:37,066] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 16:05:46,597] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py', reloading
+[2020-07-09 16:05:46,734] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 16:06:47,467] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-09 16:06:47,468] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 16:06:48,169] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 16:06:48,170] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 16:06:52,051] {sentenceservice.py:72} Thread-2 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-09 16:07:14,940] {sentenceservice.py:98} Thread-2 INFO in sentenceservice: Sentences extracted Successfully! JOB ID: <usecase_code>-<13 digit epoch>
+[2020-07-09 16:07:14,952] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 16:07:14] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-09 16:10:04,153] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py', reloading
+[2020-07-09 16:10:04,281] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 16:10:04,921] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 16:10:04,922] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 16:10:20,284] {sentenceservice.py:72} Thread-2 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-09 16:10:36,529] {sentenceservice.py:98} Thread-2 INFO in sentenceservice: Sentences extracted Successfully! JOB ID: <usecase_code>-<13 digit epoch>
+[2020-07-09 16:10:36,541] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 16:10:36] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-09 16:18:39,663] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-09 16:18:39,664] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 16:18:40,178] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 16:18:40,179] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 628-366-080
+[2020-07-09 16:18:59,766] {sentenceservice.py:72} Thread-2 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-09 16:19:16,024] {sentenceservice.py:98} Thread-2 INFO in sentenceservice: Sentences extracted Successfully! JOB ID: <usecase_code>-<13 digit epoch>
+[2020-07-09 16:19:16,032] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 16:19:16] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-09 16:20:48,443] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py', reloading
+[2020-07-09 16:20:48,562] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 16:20:49,227] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 16:20:49,228] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 628-366-080
+[2020-07-09 16:21:35,467] {sentenceservice.py:72} Thread-2 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-09 16:21:51,662] {sentenceservice.py:98} Thread-2 INFO in sentenceservice: Sentences extracted Successfully! JOB ID: <usecase_code>-<13 digit epoch>
+[2020-07-09 16:21:51,676] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 16:21:51] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-09 16:26:35,402] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py', reloading
+[2020-07-09 16:26:35,507] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 16:26:36,164] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 16:26:36,165] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 628-366-080
+[2020-07-09 16:26:42,462] {sentenceservice.py:72} Thread-2 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-09 16:26:58,752] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 16:26:58] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -
+[2020-07-09 16:27:25,735] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py', reloading
+[2020-07-09 16:27:25,847] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 16:27:26,464] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 16:27:26,465] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 628-366-080
+[2020-07-09 16:27:29,615] {sentenceservice.py:72} Thread-2 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-09 16:27:45,843] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 16:27:45] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -
+[2020-07-09 16:28:13,020] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py', reloading
+[2020-07-09 16:28:13,124] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 16:28:13,730] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 16:28:13,730] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 628-366-080
+[2020-07-09 16:28:29,039] {sentenceservice.py:72} Thread-2 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-09 16:28:51,715] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 16:28:51] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -
+[2020-07-09 16:31:05,304] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/python_env/rest/lib/python3.7/site-packages/requests/__init__.py', reloading
+[2020-07-09 16:31:05,389] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 16:31:22,763] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-09 16:31:22,764] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 16:31:23,282] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 16:31:23,283] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 628-366-080
+[2020-07-09 16:31:28,275] {sentenceservice.py:72} Thread-2 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-09 16:31:50,931] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 16:31:50] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -
