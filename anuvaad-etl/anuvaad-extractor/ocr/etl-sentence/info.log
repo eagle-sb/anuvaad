@@ -1363,3 +1363,23 @@ kafka.errors.KafkaTimeoutError: KafkaTimeoutError: Failed to update metadata aft
 [2020-07-09 16:31:23,283] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 628-366-080
 [2020-07-09 16:31:28,275] {sentenceservice.py:72} Thread-2 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
 [2020-07-09 16:31:50,931] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 16:31:50] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -
+[2020-07-09 16:52:46,204] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-09 16:52:46,205] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-09 16:52:46,865] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-09 16:52:46,865] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-09 16:52:59,480] {sentenceservice.py:72} Thread-2 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-09 16:53:22,132] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [09/Jul/2020 16:53:22] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -
+[2020-07-10 15:07:37,923] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py', reloading
+[2020-07-10 15:07:38,049] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-10 15:07:38,685] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-10 15:07:38,686] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-10 15:34:27,081] {_internal.py:113} MainThread INFO in _internal:  * Detected change in '/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py', reloading
+[2020-07-10 15:34:27,226] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-10 15:34:27,859] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-10 15:34:27,860] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-10 15:56:27,426] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-10 15:56:27,426] {_internal.py:113} MainThread INFO in _internal:  * Restarting with stat
+[2020-07-10 15:56:27,999] {_internal.py:113} MainThread WARNING in _internal:  * Debugger is active!
+[2020-07-10 15:56:28,000] {_internal.py:113} MainThread INFO in _internal:  * Debugger PIN: 120-574-164
+[2020-07-10 15:57:05,163] {sentenceservice.py:72} Thread-2 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-10 15:57:56,468] {_internal.py:113} Thread-2 INFO in _internal: 127.0.0.1 - - [10/Jul/2020 15:57:56] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -

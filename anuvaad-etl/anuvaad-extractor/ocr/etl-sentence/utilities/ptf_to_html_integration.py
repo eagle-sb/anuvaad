@@ -4,6 +4,7 @@ import json
 
 pdf_to_html = 'https://auth.anuvaad.org/api/v0/pdf-to-html-wf'
 htm_to_json = 'https://auth.anuvaad.org/api/v0/html-to-json-wf'
+# param = {"pdf_file_id":"1.pdf"}
 
 file_id = '0018022427'
 
@@ -45,9 +46,9 @@ def pdf_to_json(file_id, pdf_to_html=pdf_to_html,  htm_to_json=htm_to_json):
     #print(json_path)
     pages_count = len(json_path.keys())
 
-    response = []
-    for i in range(pages_count):
-        response.append(json_path[str(i)])
-        #print(json_path[str(i)])
+    # response = []
+    # for i in range(pages_count):
+    #     response.append(json_path[str(i)])
+    #     #print(json_path[str(i)])
 
-    return response
+    return json_path

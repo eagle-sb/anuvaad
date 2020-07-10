@@ -9,7 +9,7 @@ from utilities.sentenceutils import SentenceExtractionUtils
 from repository.sentencerepository import SentenceRepository
 from validator.sentencevalidator import SentenceValidator
 #from .sentencewflowservice import SentenceWflowService
-from utilities.ptf_to_html_integration import pdf_to_json
+from utilities.visual_translater import pdf_html_with_vbs
 
 import datetime as dt
 import logging
@@ -84,7 +84,7 @@ class SentenceService():
         #Tesseract ocr
         #Ocrlinewise = SentenceExtractorV3(directory_path,path)
         #output_dict =Ocrlinewise.response
-        output_dict  = pdf_to_json(path)
+        output_dict  = pdf_html_with_vbs(path)
         if output_dict is not None:
             result = self.build_final_response( output_dict, object_in)
             #self.update_job_details(result, False)

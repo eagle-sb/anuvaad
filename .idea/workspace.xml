@@ -16,13 +16,23 @@
         <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
       </path>
     </expand>
-    <select />
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="BRANCH:ocrdev" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1f147588-5a8e-4ccc-a7d9-ceb1c1618a9e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/visual_translater.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/anuvaad.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/anuvaad.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/info.log" beforeDir="false" afterPath="$PROJECT_DIR$/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/info.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py" beforeDir="false" afterPath="$PROJECT_DIR$/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py" beforeDir="false" afterPath="$PROJECT_DIR$/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +87,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="ocrdev" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
@@ -85,24 +107,33 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="418" y="211" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1594227348106">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state x="418" y="211" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1594227348106" />
     <state x="693" y="302" width="524" height="509" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1593778663030">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="693" y="302" width="524" height="509" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.27.1920.1053@0.27.1920.1053" timestamp="1593778663030" />
+    <state width="1874" height="275" key="GridCell.Tab.0.bottom" timestamp="1594216676308">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state width="1874" height="275" key="GridCell.Tab.0.bottom/0.27.1920.1053@0.27.1920.1053" timestamp="1594216676308" />
+    <state width="1874" height="275" key="GridCell.Tab.0.center" timestamp="1594216676307">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state width="1874" height="275" key="GridCell.Tab.0.center/0.27.1920.1053@0.27.1920.1053" timestamp="1594216676307" />
+    <state width="1874" height="275" key="GridCell.Tab.0.left" timestamp="1594216676307">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state width="1874" height="275" key="GridCell.Tab.0.left/0.27.1920.1053@0.27.1920.1053" timestamp="1594216676307" />
+    <state width="1874" height="275" key="GridCell.Tab.0.right" timestamp="1594216676308">
+      <screen x="0" y="27" width="1920" height="1053" />
+    </state>
+    <state width="1874" height="275" key="GridCell.Tab.0.right/0.27.1920.1053@0.27.1920.1053" timestamp="1594216676308" />
     <state x="456" y="228" width="1022" height="737" key="SettingsEditor" timestamp="1593741863655">
       <screen x="0" y="27" width="1920" height="1053" />
     </state>
     <state x="456" y="228" width="1022" height="737" key="SettingsEditor/0.27.1920.1053@0.27.1920.1053" timestamp="1593741863655" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py</url>
-          <line>5</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
 </project>
