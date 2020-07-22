@@ -95,7 +95,7 @@ def add_width_and_line(html_data):
         page_df = add_metadata(page_df)
 
         #sorted_df ,_, line_index = sort_and_merge_p(page_df,[],[],line=line_index )
-        html_data[str(page)]['html_nodes'] =page_df.to_dto_dict('records')   # pd.DataFrame(sorted_df).to_dict('records')
+        html_data[str(page)]['html_nodes'] =page_df.to_dict('records')  # pd.DataFrame(sorted_df).to_dict('records')
 
     return html_data
 
