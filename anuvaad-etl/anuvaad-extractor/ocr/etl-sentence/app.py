@@ -36,7 +36,7 @@ app_port = os.environ.get('ANU_ETL_WFM_PORT', 5003)
 if __name__ == '__main__':
     #start_consumer()
     print(sentenceapp.url_map)
-    sentenceapp.run(host=app_host, port=app_port, debug=True)
+    sentenceapp.run(host=app_host, port=app_port, debug=False)
 
 
 # Log config

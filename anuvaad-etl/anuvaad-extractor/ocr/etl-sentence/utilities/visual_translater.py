@@ -1,6 +1,6 @@
 import json
 import requests
-from utilities.ptf_to_html_integration import pdf_to_json
+from utilities.ptf_to_html_integration import pdf_to_json ,add_width_and_line
 
 
 ocr_api = 'https://auth.anuvaad.org/api/v3/ocr/lines'
@@ -49,13 +49,13 @@ def cal_iou_score(html_data, ocr_data):
             height_ratio = float(h / int(line['page_height']))
             left = int(width_ratio * int(line['x']))
             top = int(height_ratio * int(line['y']))
-            bottom = top + int(height_ratio * int(line['class_style']['font-size'][:-2]))
-            right =  left + int(int(line['class_style']['font-size'][:-2]) * len(line['text']))
+            bottom = int(height_ratio * int(line['bottom']))#top + int(height_ratio * int(line['class_style']['font-size'][:-2]))
+            right =  int(width_ratio * int(line['right']))#left + int(int(line['class_style']['font-size'][:-2]) * len(line['text']))
             page_no = int(line['page_no'])
             bb1 = {'x1': left, 'y1': top, 'x2': right, 'y2': bottom}
             total_score = 0
             top_3_iou = []
-            visual_break = 1
+            visual_break = 0
             for ocr_line in ocr_data['lines_data'][page_no - 1]['line_data']:
                 ocr_left = ocr_line['left']
                 ocr_right = ocr_line['right']
@@ -65,18 +65,20 @@ def cal_iou_score(html_data, ocr_data):
                 iou = get_iou(bb1, bb2)
 
                 top_3_iou.append(iou)
-                if iou > 0.30:
+                if iou > 0.5:
                     print("iou", iou)
                     print("total_score", total_score)
                     total_score = total_score + iou * ocr_line['visual_break']
                     visual_break = ocr_line['visual_break']
                     right = ocr_right
 
+                #else :
+
             line['iou_score'] = total_score
             top_3_iou_sorted = sorted(top_3_iou, reverse=True)
             line['top_3_iou'] = top_3_iou_sorted[0:3]
-            line['visual_break'] = visual_break
-            line['right'] = right
+            line['visual_break'] = int(visual_break)
+            #line['right'] = right
             # print(line['top_3_iou'])
             html_data[str(page)]['html_nodes'][num] = line
 
@@ -86,7 +88,10 @@ def cal_iou_score(html_data, ocr_data):
 
 def pdf_html_with_vbs(file_id):
     param = {"pdf_file_id":file_id}
+
     html_data = pdf_to_json(file_id)
+    html_data =  add_width_and_line(html_data)
+
     ocr_data = post_request(ocr_api,param)
 
     html_data = cal_iou_score(html_data, ocr_data)
