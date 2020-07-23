@@ -1,9 +1,9 @@
-import pytesseract
-from pytesseract import Output
-import cv2
-from pdf2image import convert_from_path
+#import pytesseract
+#from pytesseract import Output
+#import cv2
+#from pdf2image import convert_from_path
 import os
-import glob
+#import glob
 #from kafkawrapper.sentenceproducer import Producer
 from utilities.sentenceutils import SentenceExtractionUtils
 from repository.sentencerepository import SentenceRepository
@@ -14,8 +14,8 @@ from utilities.visual_translater import pdf_html_with_vbs
 import datetime as dt
 import logging
 import uuid
-import pandas as pd
-import numpy as np
+#import pandas as pd
+#import numpy as np
 
 log = logging.getLogger('file')
 directory_path = os.environ.get('SA_DIRECTORY_PATH', 'upload')
@@ -125,7 +125,7 @@ class SentenceService():
 
 
 
-
+'''
 class SentenceExtractorV3:
 
     def __init__(self, directory_path,path):
@@ -501,13 +501,13 @@ class SentenceExtractorV3:
 class TableRepositories:
     def __init__(self, filepath, rect=None, SORT_METHOD='top-to-bottom', MAX_THRESHOLD_VALUE=255, BLOCK_SIZE=15,
                  THRESHOLD_CONSTANT=0, SCALE=15):
-        '''
-        :param filepath: absolute path of input image file , or a grayscale image as a numpy array
-        :param SORT_METHOD: order of indexing of cells in a table
-        :param BLOCK_SIZE: size of neighbourhood taken in account for calculating adaptive threshold
-        :param THRESHOLD_CONSTANT: offset used for adaptive thresholding
-        :param SCALE: size of pattern finding kernel (line elements in this case)
-        '''
+'''
+        # :param filepath: absolute path of input image file , or a grayscale image as a numpy array
+        # :param SORT_METHOD: order of indexing of cells in a table
+        # :param BLOCK_SIZE: size of neighbourhood taken in account for calculating adaptive threshold
+        # :param THRESHOLD_CONSTANT: offset used for adaptive thresholding
+        # :param SCALE: size of pattern finding kernel (line elements in this case)
+'''
 
         self.image_path = filepath
         self.rect = rect
@@ -585,12 +585,12 @@ class TableRepositories:
         return sorted_contours
 
     def draw_contours_index(self, contours, img):
-        '''
-
-        :param contours:  contours present cropped fraction of mask image
-        :param img: cropped portion of mask image having one table (in case when input image has multiple tables )
-        :return: image indexed with cell location, list of bounding box coordinates of every individual cell
-        '''
+'''
+        #
+        # :param contours:  contours present cropped fraction of mask image
+        # :param img: cropped portion of mask image having one table (in case when input image has multiple tables )
+        # :return: image indexed with cell location, list of bounding box coordinates of every individual cell
+'''
         image_area = img.shape[0] * img.shape[1]
         draw_conts = np.zeros(img.shape)
         # margin = 10
@@ -784,3 +784,5 @@ class RectRepositories:
         boundingBoxes = [cv2.boundingRect(c) for c in cnts]
         (cnts, boundingBoxes) = zip(*sorted(zip(cnts, boundingBoxes), key=lambda b: b[1][i], reverse=reverse))
         return (cnts, boundingBoxes)
+
+'''

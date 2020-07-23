@@ -1672,3 +1672,6 @@ TypeError: list indices must be integers or slices, not str
 [2020-07-23 12:43:29,429] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
 [2020-07-23 12:45:48,201] {sentenceservice.py:72} Thread-1 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
 [2020-07-23 12:46:21,606] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [23/Jul/2020 12:46:21] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -
+[2020-07-23 12:56:05,636] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-23 12:56:10,884] {sentenceservice.py:72} Thread-1 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-23 12:56:43,137] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [23/Jul/2020 12:56:43] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -
