@@ -22,7 +22,7 @@ def pdf_to_json(file_id, pdf_to_html=pdf_to_html,  htm_to_json=htm_to_json):
     pdf_to_html_input = {"input": {"files":[{ "locale": "en","path": file_id,"type": "pdf"}]},"jobID": "Pdf-12354687954","state": "INITIATED","status": "STARTED","stepOrder": 0,"workflowCode": "DP_WFLOW_P","tool":"PDF2HTML"}
     phml = post_request(pdf_to_html,pdf_to_html_input)
     #print(list(phml.keys()),'dgdg')
-    path_to_html = phml['output']['files'][0]['outputHtmlFilePath']
+    path_to_html = phml['output'][0]['outputHtmlFilePath']
 
 
     htm_to_json_input = {"input": {
