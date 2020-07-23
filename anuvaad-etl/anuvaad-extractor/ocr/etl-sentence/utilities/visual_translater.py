@@ -40,7 +40,7 @@ def get_iou(bb1, bb2):
     assert iou <= 1.0
     return iou
 
-def cal_iou_score(html_data, ocr_data,iou_threshold=0.7):
+def cal_iou_score(html_data, ocr_data,iou_threshold=0.1):
     for page in html_data:
         w = ocr_data['resolution']['x']
         h = ocr_data['resolution']['y']
@@ -73,7 +73,7 @@ def cal_iou_score(html_data, ocr_data,iou_threshold=0.7):
                     #print("iou", iou)
                     #print("total_score", total_score)
                     total_score = total_score + iou * ocr_line['visual_break']
-                    #visual_break = ocr_line['visual_break']
+                    visual_break = ocr_line['visual_break']
 
                 if iou >= 0.5:
                     line['ocr_right'] = int(ocr_line['right'] / width_ratio)
@@ -85,7 +85,7 @@ def cal_iou_score(html_data, ocr_data,iou_threshold=0.7):
             top_3_iou_sorted = sorted(top_3_iou, reverse=True)
             line['top_iou'] = top_3_iou_sorted[0]
             if  line['iou_score'] >= iou_threshold:
-                line['visual_break'] = 1 #int(visual_break)
+                line['visual_break'] = int(visual_break)
             #line['right'] = right
             # print(line['top_3_iou'])
             html_data[str(page)]['html_nodes'][num] = line

@@ -43,7 +43,7 @@ def pdf_to_json(file_id, pdf_to_html=pdf_to_html,  htm_to_json=htm_to_json):
         }
     pdf_json = post_request(htm_to_json,htm_to_json_input)
 
-    json_path = pdf_json['output']['files'][0]['outputHtml2JsonFilePath']
+    json_path = pdf_json['output'][0]['outputHtmlFilePath']
     #print(json_path)
     pages_count = len(json_path.keys())
 
