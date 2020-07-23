@@ -7,7 +7,7 @@ import os
 import time
 
 import requests
-import numpy as np
+#import numpy as np
 import csv
 
 log = logging.getLogger('file')
