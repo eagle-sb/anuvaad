@@ -84,7 +84,7 @@ def cal_iou_score(html_data, ocr_data,iou_threshold=0.7):
             line['iou_score'] = total_score
             top_3_iou_sorted = sorted(top_3_iou, reverse=True)
             line['top_iou'] = top_3_iou_sorted[0]
-            if  line['top_iou'] >= iou_threshold:
+            if  line['iou_score'] >= iou_threshold:
                 line['visual_break'] = 1 #int(visual_break)
             #line['right'] = right
             # print(line['top_3_iou'])
