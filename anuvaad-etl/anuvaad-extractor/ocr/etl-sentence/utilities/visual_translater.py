@@ -103,7 +103,7 @@ def pdf_html_with_vbs(file_id):
     ocr_data = post_request(ocr_api,param)
 
     html_data = cal_iou_score(html_data, ocr_data)
-    return html_data
+    return html_data ,ocr_data
 # input_image_path = "/home/naresh/Tesseract/sentence_extraction/hw-recog-be/src/tmp/images/167_2009_11_1501_16003_Judgement_14-Aug-2019/0001-1.jpg"
 # ​
 #

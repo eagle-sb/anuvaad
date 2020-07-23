@@ -84,9 +84,9 @@ class SentenceService():
         #Tesseract ocr
         #Ocrlinewise = SentenceExtractorV3(directory_path,path)
         #output_dict =Ocrlinewise.response
-        output_dict  = pdf_html_with_vbs(path)
+        output_dict ,ocr_output = pdf_html_with_vbs(path)
         if output_dict is not None:
-            result = self.build_final_response( output_dict, object_in)
+            result = self.build_final_response( output_dict, ocr_output,object_in)
             #self.update_job_details(result, False)
             #if iswf:
             #   wflowservice.update_wflow_details(result, object_in, None)
@@ -109,13 +109,15 @@ class SentenceService():
 
 
 
-    def build_final_response(self, output, object_in):
+    def build_final_response(self, output,ocr, object_in):
         result = {"status": "COMPLETED",
                   "jobID": object_in["jobID"],
                   "startTime": object_in["startTime"],
                   "endTime": str(dt.datetime.now()),
                   "input": object_in['input'],
-                  "output": output}
+                  "output": output,
+                  "ocr" : ocr
+                  }
 
         return result
 
