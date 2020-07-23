@@ -1638,3 +1638,6 @@ json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
 [2020-07-22 10:44:39,103] {_internal.py:113} Thread-3 INFO in _internal: 127.0.0.1 - - [22/Jul/2020 10:44:39] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -
 [2020-07-22 10:48:07,136] {sentenceservice.py:72} Thread-4 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
 [2020-07-22 10:49:10,274] {_internal.py:113} Thread-4 INFO in _internal: 127.0.0.1 - - [22/Jul/2020 10:49:10] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -
+[2020-07-23 10:52:10,120] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-23 10:52:49,660] {sentenceservice.py:72} Thread-1 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-23 10:53:22,211] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [23/Jul/2020 10:53:22] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -

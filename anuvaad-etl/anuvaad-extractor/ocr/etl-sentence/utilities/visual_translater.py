@@ -45,6 +45,7 @@ def cal_iou_score(html_data, ocr_data):
         w = ocr_data['resolution']['x']
         h = ocr_data['resolution']['y']
         for num, line in enumerate(html_data[str(page)]['html_nodes']):
+
             width_ratio = float(w / int(line['page_width']))
             height_ratio = float(h / int(line['page_height']))
             left = int(width_ratio * int(line['x']))
@@ -56,27 +57,31 @@ def cal_iou_score(html_data, ocr_data):
             total_score = 0
             top_3_iou = []
             visual_break = 0
+            line['ocr_width']  = None
+
             for ocr_line in ocr_data['lines_data'][page_no - 1]['line_data']:
                 ocr_left = ocr_line['left']
                 ocr_right = ocr_line['right']
                 ocr_top = ocr_line['top']
                 ocr_bottom = ocr_line['bottom']
                 bb2 = {'x1': ocr_left, 'y1': ocr_top, 'x2': ocr_right, 'y2': ocr_bottom}
+
                 iou = get_iou(bb1, bb2)
 
                 top_3_iou.append(iou)
-                if iou > 0.5:
+                if iou >= 0.5:
                     print("iou", iou)
                     print("total_score", total_score)
                     total_score = total_score + iou * ocr_line['visual_break']
                     visual_break = ocr_line['visual_break']
+                    line['ocr_width'] = int(ocr_line['widht'])
                     right = ocr_right
 
                 #else :
 
             line['iou_score'] = total_score
             top_3_iou_sorted = sorted(top_3_iou, reverse=True)
-            line['top_3_iou'] = top_3_iou_sorted[0:3]
+            line['top_iou'] = top_3_iou_sorted[0]
             line['visual_break'] = int(visual_break)
             #line['right'] = right
             # print(line['top_3_iou'])
