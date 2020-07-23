@@ -57,7 +57,7 @@ def cal_iou_score(html_data, ocr_data,iou_threshold=0.7):
             total_score = 0
             top_3_iou = []
             visual_break = 0
-            line['ocr_width']  = None
+            line['ocr_rght']  = None
 
             for ocr_line in ocr_data['lines_data'][page_no - 1]['line_data']:
                 ocr_left = ocr_line['left']
@@ -76,7 +76,7 @@ def cal_iou_score(html_data, ocr_data,iou_threshold=0.7):
                     #visual_break = ocr_line['visual_break']
 
                 if iou >= 0.5:
-                    line['ocr_width'] = int(ocr_line['widht'] / width_ratio)
+                    line['ocr_right'] = int(ocr_line['right'] / width_ratio)
                     #right = ocr_right
 
                 #else :
