@@ -75,7 +75,7 @@ def cal_iou_score(html_data, ocr_data,iou_threshold=0.1):
                     total_score = total_score + iou * ocr_line['visual_break']
                     visual_break = ocr_line['visual_break']
 
-                if iou >= 0.5:
+                if iou >= 0.:
                     line['ocr_right'] = int(ocr_line['right'] / width_ratio)
                     #right = ocr_right
 

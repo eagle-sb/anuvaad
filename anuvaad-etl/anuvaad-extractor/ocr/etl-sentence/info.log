@@ -1689,3 +1689,64 @@ TypeError: list indices must be integers or slices, not str
 [2020-07-23 13:42:31,113] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
 [2020-07-23 13:42:36,551] {sentenceservice.py:72} Thread-1 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
 [2020-07-23 13:43:09,096] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [23/Jul/2020 13:43:09] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -
+[2020-07-23 18:11:25,299] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-23 18:11:33,898] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-23 18:11:48,980] {sentenceservice.py:72} Thread-1 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-23 18:12:17,227] {app.py:1892} Thread-1 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 50, in wf_process
+    result = self.process(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 87, in process
+    output_dict ,ocr_output = pdf_html_with_vbs(path)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/visual_translater.py", line 100, in pdf_html_with_vbs
+    html_data = pdf_to_json(file_id)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py", line 46, in pdf_to_json
+    json_path = pdf_json['output'][0]['outputHtmlFilePath']
+KeyError: 'outputHtmlFilePath'
+[2020-07-23 18:12:17,243] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [23/Jul/2020 18:12:17] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-23 18:13:52,714] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-23 18:19:40,016] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-23 18:19:45,086] {sentenceservice.py:72} Thread-1 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-23 18:20:11,014] {app.py:1892} Thread-1 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 50, in wf_process
+    result = self.process(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 87, in process
+    output_dict ,ocr_output = pdf_html_with_vbs(path)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/visual_translater.py", line 100, in pdf_html_with_vbs
+    html_data = pdf_to_json(file_id)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/utilities/ptf_to_html_integration.py", line 47, in pdf_to_json
+    json_path = pdf_json['output'][0]['outputHtmlFilePath']
+KeyError: 'outputHtmlFilePath'
+[2020-07-23 18:20:11,018] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [23/Jul/2020 18:20:11] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -
+[2020-07-23 18:22:35,426] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-07-23 18:22:56,455] {sentenceservice.py:72} Thread-1 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
+[2020-07-23 18:23:40,863] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [23/Jul/2020 18:23:40] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -
