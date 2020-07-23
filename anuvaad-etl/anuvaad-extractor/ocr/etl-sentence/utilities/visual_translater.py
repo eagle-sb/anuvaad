@@ -56,7 +56,7 @@ def cal_iou_score(html_data, ocr_data,iou_threshold=0.7):
             bb1 = {'x1': left, 'y1': top, 'x2': right, 'y2': bottom}
             total_score = 0
             top_3_iou = []
-            visual_break = 0
+            line['visual_break']  = 0
             line['ocr_rght']  = None
 
             for ocr_line in ocr_data['lines_data'][page_no - 1]['line_data']:
