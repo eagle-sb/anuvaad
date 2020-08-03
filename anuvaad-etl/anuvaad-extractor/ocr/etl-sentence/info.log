@@ -1750,3 +1750,53 @@ KeyError: 'outputHtmlFilePath'
 [2020-07-23 18:22:35,426] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
 [2020-07-23 18:22:56,455] {sentenceservice.py:72} Thread-1 INFO in sentenceservice: Alignment process starts for job: <usecase_code>-<13 digit epoch>
 [2020-07-23 18:23:40,863] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [23/Jul/2020 18:23:40] "[37mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 200 -
+[2020-08-03 10:22:32,138] {sentenceconsumer.py:43} SentenceKafka-Thread INFO in sentenceconsumer: Consumer running.......
+[2020-08-03 10:22:32,139] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-08-03 10:24:07,788] {sentenceconsumer.py:43} SentenceKafka-Thread INFO in sentenceconsumer: Consumer running.......
+[2020-08-03 10:24:07,791] {_internal.py:113} MainThread INFO in _internal:  * Running on http://0.0.0.0:5003/ (Press CTRL+C to quit)
+[2020-08-03 10:25:31,336] {app.py:1892} Thread-1 ERROR in app: Exception on /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines [POST]
+Traceback (most recent call last):
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 2447, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1952, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1821, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/_compat.py", line 39, in reraise
+    raise value
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1950, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/flask/app.py", line 1936, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/controller/sentencecontroller.py", line 32, in createalignmentwflowjob
+    return service.wf_process(data)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 49, in wf_process
+    self.update_job_details(object_in, True)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/service/sentenceservice.py", line 56, in update_job_details
+    repo.create_job(object_in)
+  File "/home/dhiraj/Documents/Anuwad/anuvaad/anuvaad-etl/anuvaad-extractor/ocr/etl-sentence/repository/sentencerepository.py", line 24, in create_job
+    col.insert_one(object_in)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 698, in insert_one
+    session=session),
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 612, in _insert
+    bypass_doc_val, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/collection.py", line 600, in _insert_one
+    acknowledged, _insert_command, session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1490, in _retryable_write
+    with self._tmp_session(session) as s:
+  File "/usr/lib/python3.7/contextlib.py", line 112, in __enter__
+    return next(self.gen)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1823, in _tmp_session
+    s = self._ensure_session(session)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1810, in _ensure_session
+    return self.__start_session(True, causal_consistency=False)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1763, in __start_session
+    server_session = self._get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/mongo_client.py", line 1796, in _get_server_session
+    return self._topology.get_server_session()
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 485, in get_server_session
+    None)
+  File "/home/dhiraj/python_env/Anuvaad/lib/python3.7/site-packages/pymongo/topology.py", line 209, in _select_servers_loop
+    self._error_message(selector))
+pymongo.errors.ServerSelectionTimeoutError: localhost:27017: [Errno 111] Connection refused
+[2020-08-03 10:25:31,346] {_internal.py:113} Thread-1 INFO in _internal: 127.0.0.1 - - [03/Aug/2020 10:25:31] "[35m[1mPOST /anuvaad-etl/extractor/sentence/v1/sentences/extract_lines HTTP/1.1[0m" 500 -

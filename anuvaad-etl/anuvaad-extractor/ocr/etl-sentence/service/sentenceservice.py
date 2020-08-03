@@ -4,11 +4,11 @@
 #from pdf2image import convert_from_path
 import os
 #import glob
-#from kafkawrapper.sentenceproducer import Producer
+from kafkawrapper.sentenceproducer import Producer
 from utilities.sentenceutils import SentenceExtractionUtils
 from repository.sentencerepository import SentenceRepository
 from validator.sentencevalidator import SentenceValidator
-#from .sentencewflowservice import SentenceWflowService
+from .sentencewflowservice import SentenceWflowService
 from utilities.visual_translater import pdf_html_with_vbs
 
 import datetime as dt
@@ -27,10 +27,10 @@ file_path_delimiter = '/'
 sentence_topic = "anuvaad-etl-ocr-register"
 
 repo = SentenceRepository()
-#producer = Producer()
+producer = Producer()
 util = SentenceExtractionUtils()
 validator = SentenceValidator()
-#wflowservice = SentenceWflowService()
+wflowservice = SentenceWflowService()
 
 
 class SentenceService():
@@ -39,14 +39,14 @@ class SentenceService():
     def register_job(self, object_in):
         job_id = util.generate_job_id()
         response = {"input": object_in, "jobID": job_id, "status": "START"}
-        #self.update_job_details(response, True)
-        #producer.push_to_queue(response, sentence_topic)
+        self.update_job_details(response, True)
+        producer.push_to_queue(response, sentence_topic)
         return response
 
     # Service method to register the alignment job
     def wf_process(self, object_in):
         object_in["taskID"] = util.generate_task_id()
-        #self.update_job_details(object_in, True)
+        self.update_job_details(object_in, True)
         result = self.process(object_in, True)
         return result
 
@@ -65,11 +65,11 @@ class SentenceService():
         object_in["endTime"] = str(dt.datetime.now())
         if cause is not None:
             object_in["cause"] = cause
-        #self.update_job_details(object_in, False)
+        self.update_job_details(object_in, False)
 
     # Wrapper method to categorise sentences into MATCH, ALMOST-MATCH and NO-MATCH
     def process(self, object_in, iswf):
-        log.info("Alignment process starts for job: " + str(object_in["jobID"]))
+        log.info("OCR process starts for job: " + str(object_in["jobID"]))
 
         path = object_in["input"]["path"]
         print(path ,'path')
@@ -78,48 +78,46 @@ class SentenceService():
 
         object_in["status"] = "INPROGRESS"
         object_in["startTime"] = str(dt.datetime.now())
-        #self.update_job_details(object_in, False)
+        self.update_job_details(object_in, False)
 
-        #try:
+        try:
         #Tesseract ocr
         #Ocrlinewise = SentenceExtractorV3(directory_path,path)
         #output_dict =Ocrlinewise.response
-        output_dict ,ocr_output = pdf_html_with_vbs(path)
-        if output_dict is not None:
-            result = self.build_final_response( output_dict, ocr_output,object_in)
-            #self.update_job_details(result, False)
-            #if iswf:
-            #   wflowservice.update_wflow_details(result, object_in, None)
-            return result
-        else:
-            #self.update_job_status("FAILED", object_in, "Exception while writing the output")
-            return {}
+            output_dict ,ocr_output = pdf_html_with_vbs(path)
+            if output_dict is not None:
+                result = self.build_final_response( output_dict, ocr_output,object_in)
+                self.update_job_details(result, False)
+                if iswf:
+                   wflowservice.update_wflow_details(result, object_in, None)
+                return result
+            else:
+                self.update_job_status("FAILED", object_in, "Exception while writing the output")
+                return {}
+                if iswf:
+                    error = validator.get_error("OUTPUT_ERROR", "Exception while writing the output")
+                    wflowservice.update_wflow_details(None, object_in, error)
+            log.info("Sentences extracted Successfully! JOB ID: " + str(object_in["jobID"]))
+        except Exception as e:
+            log.error("Exception while writing the output: ", str(e))
+            self.update_job_status("FAILED", object_in, "Exception while writing the output")
             if iswf:
-                error = validator.get_error("OUTPUT_ERROR", "Exception while writing the output")
-                #wflowservice.update_wflow_details(None, object_in, error)
-        log.info("Sentences extracted Successfully! JOB ID: " + str(object_in["jobID"]))
-        #except Exception as e:
-        #    pass
-            # log.error("Exception while writing the output: ", str(e))
-            # self.update_job_status("FAILED", object_in, "Exception while writing the output")
-            # if iswf:
-            #     error = validator.get_error("OUTPUT_ERROR", "Exception while writing the output: " + str(e))
-            #     wflowservice.update_wflow_details(None, object_in, error)
-            # return {}
-
+                error = validator.get_error("OUTPUT_ERROR", "Exception while writing the output: " + str(e))
+                wflowservice.update_wflow_details(None, object_in, error)
+            return {}
 
 
     def build_final_response(self, output,ocr, object_in):
-        result = {"status": "COMPLETED",
-                  "jobID": object_in["jobID"],
-                  "startTime": object_in["startTime"],
-                  "endTime": str(dt.datetime.now()),
-                  "input": object_in['input'],
-                  "output": output,
-                  "ocr" : ocr
-                  }
+            result = {"status": "COMPLETED",
+                      "jobID": object_in["jobID"],
+                      "startTime": object_in["startTime"],
+                      "endTime": str(dt.datetime.now()),
+                      "input": object_in['input'],
+                      "output": output,
+                      "ocr" : ocr
+                      }
 
-        return result
+            return result
 
     def search_jobs(self, job_id):
         return repo.search_job(job_id)

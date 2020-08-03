@@ -5,7 +5,7 @@ from kafkawrapper.sentenceproducer import Producer
 
 log = logging.getLogger('file')
 producer = Producer()
-anu_dp_wf_sentence_out_topic = "anuvaad-dp-tools-aligner-output-new"
+anu_dp_wf_sentence_out_topic = "anuvaad-dp-tools-ocr-output-new"
 
 
 

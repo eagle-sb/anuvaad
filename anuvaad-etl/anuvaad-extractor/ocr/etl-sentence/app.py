@@ -8,7 +8,7 @@ import traceback
 from flask import copy_current_request_context
 from logging.config import dictConfig
 from controller.sentencecontroller import sentenceapp
-#from kafkawrapper.sentenceconsumer import Consumer
+from kafkawrapper.sentenceconsumer import Consumer
 
 
 log = logging.getLogger('file')
@@ -17,24 +17,24 @@ app_port = os.environ.get('ANU_ETL_WFM_PORT', 5003)
 
 
 #@copy_current_request_context
-# def context_consume():
-#     consumer = Consumer()
-#     consumer.consume()
-#
-#
-# # Starts the kafka consumer in a different thread
-# def start_consumer():
-#     with sentenceapp.app_context():
-#         consumer = Consumer()
-#         try:
-#             t1 = threading.Thread(target=consumer.consume, name='SentenceKafka-Thread')
-#             t1.start()
-#         except Exception as e:
-#             log.exception("Exception while starting the kafka consumer: " + str(e))
+def context_consume():
+    consumer = Consumer()
+    consumer.consume()
+
+
+# Starts the kafka consumer in a different thread
+def start_consumer():
+    with sentenceapp.app_context():
+        consumer = Consumer()
+        try:
+            t1 = threading.Thread(target=consumer.consume, name='SentenceKafka-Thread')
+            t1.start()
+        except Exception as e:
+            log.exception("Exception while starting the kafka consumer: " + str(e))
 
 
 if __name__ == '__main__':
-    #start_consumer()
+    start_consumer()
     print(sentenceapp.url_map)
     sentenceapp.run(host=app_host, port=app_port, debug=False)
 
