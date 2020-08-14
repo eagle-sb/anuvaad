@@ -58,17 +58,18 @@ def hello_():
 def upload_file():
     basename = str(int(time.time()))
     f = request.files['file']
-    filetype = magic.from_buffer(f.read(), mime=True)
     filename = str(uuid.uuid4())+'_'+f.filename
-    filepath = os.path.join(app.config['UPLOAD_FOLDER'], basename+'_'+filename)
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     f.save(filepath)
     with open(filepath, 'rb') as f:
         filetype = magic.from_buffer(f.read(), mime=True)
         f.close()
         if filetype in ALLOWED_FILE_TYPES:
-            res = CustomResponse(Status.SUCCESS.value, basename+'_'+f.filename)
+            res = CustomResponse(Status.SUCCESS.value, filename)
             return res.getres()
         else:
+            f.close()
+            os.remove(filepath)
             res = CustomResponse(Status.ERR_UNSUPPORTED_FILETYPE.value,None)
             return res.getres(), 400
     
