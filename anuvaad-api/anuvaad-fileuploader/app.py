@@ -59,16 +59,19 @@ def upload_file():
     basename = str(int(time.time()))
     f = request.files['file']
     filetype = magic.from_buffer(f.read(), mime=True)
-    print(filetype)
-    if filetype in ALLOWED_FILE_TYPES:
-        filepath = os.path.join(
-            app.config['UPLOAD_FOLDER'], basename+'_'+f.filename)
-        f.save(filepath)
-        res = CustomResponse(Status.SUCCESS.value, basename+'_'+f.filename)
-        return res.getres()
-    else:
-        res = CustomResponse(Status.ERR_UNSUPPORTED_FILETYPE.value,None)
-        return res.getres(), 400
+    filename = str(uuid.uuid4())+'_'+f.filename
+    filepath = os.path.join(app.config['UPLOAD_FOLDER'], basename+'_'+filename)
+    f.save(filepath)
+    with open(filepath, 'rb') as f:
+        filetype = magic.from_buffer(f.read(), mime=True)
+        f.close()
+        if filetype in ALLOWED_FILE_TYPES:
+            res = CustomResponse(Status.SUCCESS.value, basename+'_'+f.filename)
+            return res.getres()
+        else:
+            res = CustomResponse(Status.ERR_UNSUPPORTED_FILETYPE.value,None)
+            return res.getres(), 400
+    
 
 
 @app.route('/anuvaad/v1/download', methods=['GET'])
