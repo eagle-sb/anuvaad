@@ -1,5 +1,5 @@
 
-MODULE_CONTEXT = {'metadata':{'module':'CONTENT-HANDLER'}}
+MODULE_CONTEXT = {'metadata':{'module':'USER-MANAGEMENT'}}
 
 def init():
     global app_context
