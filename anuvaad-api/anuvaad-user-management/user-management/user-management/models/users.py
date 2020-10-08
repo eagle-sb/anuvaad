@@ -8,7 +8,8 @@ class UserManagementModel(object):
     def create_users(userID,name,userName,password,email,phoneNo,roleCode,roleDesc):
         try:
             collections = get_db()['sample']
-            user         = collections.insert([{'userID': userID},{'name':name},{'userName': userName},{'password': password},{'email': email},{'phoneNo': phoneNo},{'roles':[{'roleCode':roleCode},{'roleDesc':roleDesc}]}])
+            user         = collections.insert([{'userID': userID},{'name':name},{'userName': userName},{'password': password},
+            {'email': email},{'phoneNo': phoneNo},{'roles':[{'roleCode':roleCode},{'roleDesc':roleDesc}]}])
             return user
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)

@@ -29,7 +29,7 @@ class CreateUser(Resource):
         #     res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
         #     return res.getresjson(), 400
 
-        if UserManagementRepositories.store(args['userID'], args['name'], args['userName'], args['password'], args['email'], args['phoneNo'], args['roleCode'], args['roleDesc']) == False:
+        if UserManagementRepositories.create_users(args['userID'], args['name'], args['userName'], args['password'], args['email'], args['phoneNo'], args['roleCode'], args['roleDesc']) == False:
             res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
             return res.getresjson(), 400
         res = CustomResponse(Status.SUCCESS.value, None)
