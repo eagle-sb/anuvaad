@@ -8,15 +8,6 @@ PORT = 5001
 
 ENABLE_CORS = False
 
-#folders and file path
-# download_folder = 'upload'
-
-
-# BLOCK_TYPES = [{'key':'lines'},{'key':'images'},{'key':'tables'},{'key':'text_blocks'}]
-
-
-
-# new mongo config
 MONGO_DB_HOST   = os.environ.get('MONGO_IP', 'localhost')
 MONGO_DB_PORT   = os.environ.get('MONGO_PORT', 27017)
-MONGO_DB_SCHEMA = os.environ.get('user-management')
+MONGO_DB_SCHEMA = os.environ.get('MONGO_DB_IDENTIFIER', 'usermanagement')
