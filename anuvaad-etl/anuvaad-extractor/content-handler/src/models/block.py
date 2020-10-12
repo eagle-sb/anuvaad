@@ -1,14 +1,14 @@
-from utilities import MODULE_CONTEXT
+from utilities import AppContext
 from db import get_db
 from anuvaad_auditor.loghandler import log_info, log_exception
 
 class BlockModel(object):
 
     @staticmethod
-    def update_block(user_id, record_id, block):
+    def update_block(user_id, block_identifier, block):
         try:
             collections = get_db()['file_content']
-            results     = collections.update({'$and': [{'created_by': user_id}, {'record_id': record_id}, { 'block_identifier': block['block_identifier'] }]},
+            results     = collections.update({'$and': [{'created_by': user_id}, { 'block_identifier': block_identifier }]},
             { '$set': block }, upsert=True)
 
             if 'writeError' in list(results.keys()):
@@ -16,7 +16,7 @@ class BlockModel(object):
             return True
 
         except Exception as e:
-            log_exception("db connection exception ",  MODULE_CONTEXT, e)
+            log_exception("db connection exception ",  AppContext.getContext(), e)
             return False
 
     @staticmethod
@@ -27,7 +27,7 @@ class BlockModel(object):
             if len(blocks) == len(results.inserted_ids):
                 return True
         except Exception as e:
-            log_exception("db connection exception ",  MODULE_CONTEXT, e)
+            log_exception("db connection exception ",  AppContext.getContext(), e)
             return False
 
     @staticmethod
@@ -40,7 +40,7 @@ class BlockModel(object):
             })
             return docs
         except Exception as e:
-            log_exception("db connection exception ",  MODULE_CONTEXT, e)
+            log_exception("db connection exception ",  AppContext.getContext(), e)
             return False
         
 
@@ -54,7 +54,7 @@ class BlockModel(object):
                                 ])
             return results
         except Exception as e:
-            log_exception("db connection exception ",  MODULE_CONTEXT, e)
+            log_exception("db connection exception ",  AppContext.getContext(), e)
             return False
 
     @staticmethod
@@ -79,5 +79,5 @@ class BlockModel(object):
 
             return count
         except Exception as e:
-            log_exception("db connection exception ",  MODULE_CONTEXT, e)
+            log_exception("db connection exception ",  AppContext.getContext(), e)
             return 0

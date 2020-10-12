@@ -2,7 +2,7 @@ import os
 import time
 
 DEBUG = False
-API_URL_PREFIX = "/v1/users"
+API_URL_PREFIX = "/anuvaad/user-mgmt/v1/users"
 HOST = '0.0.0.0'
 PORT = 5001
 

@@ -1,51 +1,95 @@
 import config
 from models import BlockModel
 import datetime
+import uuid
+from utilities import AppContext
+from anuvaad_auditor.loghandler import log_info, log_exception
 
 class FileContentRepositories:
 
     @staticmethod
-    def update_block_info(block, record_id, page_no, data_type, user_id, src_lang, tgt_lang):
-        new_block               = {}
-        new_block['created_on'] = datetime.datetime.utcnow()
-        new_block['record_id']  = record_id
-        new_block['page_no']    = page_no
-        new_block['data_type']  = data_type
-        new_block['job_id']     = record_id.split('|')[0]
-        new_block['created_by'] = user_id
-        new_block['src_lang']   = src_lang
-        new_block['tgt_lang']   = tgt_lang
-        new_block['data']       = block
+    def create_block_info(block, record_id, page_info, data_type, user_id, src_lang, tgt_lang):
+        new_block                   = {}
+        new_block['created_on']     = datetime.datetime.utcnow()
+        new_block['record_id']      = record_id
+        new_block['page_no']        = page_info['page_no']
+        new_block['data_type']      = data_type
+        new_block['job_id']         = record_id.split('|')[0]
+        new_block['created_by']     = user_id
+        new_block['src_lang']       = src_lang
+        new_block['tgt_lang']       = tgt_lang
 
         '''
-            storing a Step-0/baseline translation
+        ' generating block_identifier to uniquely identify individual block
         '''
+        new_block['block_identifier']   = str(uuid.uuid4())
+        block['block_identifier']       = new_block['block_identifier']
+
+        new_block['data']               = block
+        new_block['data']['page_info']  = page_info
+
+        if 'tokenized_sentences' in block:
+            for elem in block['tokenized_sentences']:
+                elem['s0_tgt']    = elem['tgt']
+                elem['s0_src']    = elem['src']
+                if 'input_subwords' in elem:
+                    del elem['input_subwords']
+                if 'output_subwords' in elem:
+                    del elem['output_subwords']
+                if 'pred_score' in elem:
+                    del elem['pred_score']
+        return new_block
+
+    @staticmethod
+    def update_block_info(block):
+        new_block                   = {}
+        new_block['data']           = block
+
         if 'tokenized_sentences' in list(block.keys()):
             for elem in block['tokenized_sentences']:
                 elem['s0_tgt']    = elem['tgt']
                 elem['s0_src']    = elem['src']
-                del elem['input_subwords']
-                del elem['output_subwords']
-                del elem['pred_score'] 
+                if 'input_subwords' in elem:
+                    del elem['input_subwords']
+                if 'output_subwords' in elem:
+                    del elem['output_subwords']
+                if 'pred_score' in elem:
+                    del elem['pred_score'] 
 
-        new_block['block_identifier']   = block['block_identifier']
+        log_info("updating new block for block_identifier {}".format(block['block_identifier']), AppContext.getContext())
         return new_block
 
     @staticmethod
     def store(user_id, file_locale, record_id, pages, src_lang, tgt_lang):
         blocks = []
         for page in pages:
-            if 'images' in list(page.keys()):
-                for image in page['images']:
-                    blocks.append(FileContentRepositories.update_block_info(image, record_id, page['page_no'], 'images', user_id, src_lang, tgt_lang))
+            page_info                   = {}
+            page_info['page_no']        = page['page_no']
+            page_info['page_width']     = page['page_width']
+            page_info['page_height']    = page['page_height']
 
-            if  'lines' in list(page.keys()):
-                for line in page['lines']:
-                    blocks.append(FileContentRepositories.update_block_info(line, record_id, page['page_no'], 'lines', user_id, src_lang, tgt_lang))
-
-            if 'text_blocks' in list(page.keys()):
-                for text in page['text_blocks']:
-                    blocks.append(FileContentRepositories.update_block_info(text, record_id, page['page_no'], 'text_blocks', user_id, src_lang, tgt_lang))
+            try:
+                if 'images' in page and page['images'] != None:
+                    for image in page['images']:
+                        blocks.append(FileContentRepositories.create_block_info(image, record_id, page_info, 'images', user_id, src_lang, tgt_lang))
+            except Exception as e:
+                log_exception('images key not present, thats strange', AppContext.getContext(), e)
+            
+            try:
+                if  'lines' in page and page['lines'] != None:
+                    for line in page['lines']:
+                        blocks.append(FileContentRepositories.create_block_info(line, record_id, page_info, 'lines', user_id, src_lang, tgt_lang))
+            except Exception as e:
+                log_info('lines key is not present, ignorning further', AppContext.getContext())
+                pass
+            
+            try:
+                if 'text_blocks' in page and page['text_blocks'] != None:
+                    for text in page['text_blocks']:
+                        blocks.append(FileContentRepositories.create_block_info(text, record_id, page_info, 'text_blocks', user_id, src_lang, tgt_lang))
+            except Exception as e:
+                log_exception('text_blocks key not present, thats strange', AppContext.getContext(), e)
+                pass
 
         BlockModel.store_bulk_blocks(blocks)
         return True
@@ -86,28 +130,14 @@ class FileContentRepositories:
         return data
 
     @staticmethod
-    def update(user_id, record_id, blocks):
+    def update(user_id, blocks):
         updated_blocks  = []
 
         for block in blocks:
-            src_lang = None
-            tgt_lang = None
-
-            if src_lang not in list(block.keys()):
-                src_lang = 'NA'
-            else:
-                src_lang = block['src_lang']
-
-            if tgt_lang not in list(block.keys()):
-                tgt_lang = 'NA'
-            else:
-                tgt_lang = block['tgt_lang']
-
-            if 'data_type' in list(block.keys()) and block['data_type'] == 'text_blocks':
-                updated_blocks.append(FileContentRepositories.update_block_info(block, block['record_id'], block['page_info']['page_no'], 'text_blocks', user_id, src_lang, tgt_lang))
-
+            updated_blocks.append(FileContentRepositories.update_block_info(block))
+        
         if len(updated_blocks) > 0:
-            for block in updated_blocks:
-                if BlockModel.update_block(user_id, block['record_id'], block) == False:
+            for updated_block in updated_blocks:
+                if BlockModel.update_block(user_id, updated_block['data']['block_identifier'], updated_block) == False:
                     return False
         return True
