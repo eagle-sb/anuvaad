@@ -7,22 +7,29 @@ import bcrypt
 class UserManagementModel(object):
 
     @staticmethod
-    def create_users(name,userName,password,email,phoneNo,roleCode,roleDesc):
-        hashed        = hash_password(password.encode('utf-8'))
+    def create_users(user):
+        hashed        = hash_password(user["password"].encode('utf-8'))
         # encripted     = encrypt_password(hashed)
         userID        = generate_user_id()
     
+        user_roles=[]
+        for role in user["roles"]:
+            role_info={}
+            role_info["roleCode"]=role["roleCode"]
+            role_info["roleDesc"]=role["roleDesc"]
+            user_roles.append(role_info)
+
         try:
             collections = get_db()['sample']
-            user         = collections.insert({'userID': userID,'name':name,'userName': userName,'password':hashed,
-                                                   'email': email,'phoneNo': phoneNo,'roles':[{'roleCode':roleCode,'roleDesc':roleDesc}]})
+            user         = collections.insert({'userID': userID,'name':user["name"],'userName': user['userName'],'password':hashed,
+                                                   'email': user["email"],'phoneNo': user["phoneNo"],'roles':user_roles})
             return user
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return None
         
     @staticmethod
-    def update_users_by_u_id(user_id, s_id):
+    def update_users_by_uid(user_id, s_id):
         try:
             collections = get_db()['sample']
             record=collections.find({"userID": user_id})
