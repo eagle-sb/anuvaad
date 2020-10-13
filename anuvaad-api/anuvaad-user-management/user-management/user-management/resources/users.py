@@ -82,12 +82,18 @@ class SearchUsers(Resource):
         # users       = None
         if 'userIDs' in body:
             userIDs = body['userIDs']
+        else:
+            userIDs= None
 
         if 'userNames' in body:
             userNames = body['userNames']
+        else:
+            userNames=None
 
         if 'roleCodes' in body:
             roleCodes = body['roleCodes']
+        else:
+            roleCodes=None
 
         try:
             result = UserManagementRepositories.search_users(
