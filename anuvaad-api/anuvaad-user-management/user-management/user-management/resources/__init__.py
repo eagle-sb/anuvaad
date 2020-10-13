@@ -1,2 +1,1 @@
-from .users import CreateUsers, UpdateUsers
-# , SearchUser
+from .users import CreateUsers, UpdateUsers, SearchUsers

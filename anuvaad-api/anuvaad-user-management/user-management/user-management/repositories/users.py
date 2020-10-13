@@ -36,14 +36,14 @@ class UserManagementRepositories:
 
 
     @staticmethod
-    def update_users(userID,users):
+    def update_users(users):
         # name,userName,password,email,phoneNo,roleCode,roleDesc
         for user in users:
-            if UserManagementModel.update_users_by_uid(userID,users) == False:
+            if UserManagementModel.update_users_by_uid(user) == False:
                 return False
         return True
 
-    # @staticmethod
-    # def search_users(userIDs,userNames,roleCodes):
-    #     result = UserManagementModel.get_user_by_keys(userIDs,userNames,roleCodes)
-    #     return result
+    @staticmethod
+    def search_users(userIDs,userNames,roleCodes):
+        result = UserManagementModel.get_user_by_keys(userIDs,userNames,roleCodes)
+        return result
