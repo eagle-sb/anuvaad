@@ -48,7 +48,8 @@ class UserManagementModel(object):
                     role_info["roleDesc"] = role["roleDesc"]
                     user_roles.append(role_info)
 
-                hashed = UserUtils.hash_password(user["password"].encode('utf-8'))
+                hashed = UserUtils.hash_password(
+                    user["password"].encode('utf-8'))
 
                 results = collections.update({"userID": user_id}, {'$set': {'name': user["name"], 'userName': user['userName'], 'password': hashed,
                                                                             'email': user["email"], 'phoneNo': user["phoneNo"], 'roles': user_roles}})
@@ -64,42 +65,37 @@ class UserManagementModel(object):
     @staticmethod
     def get_user_by_keys(userIDs, userNames, roleCodes):
 
-        query = {}
-        if userIDs != None:
-            query["userID"] = {"$in": userIDs}
+        # query = {}
+        # if userIDs != None:
+        #     query["userID"] = {"$in": userIDs}
 
-        if userNames != None:
-            query["userName"] = {"$in":userNames}
+        # if userNames != None:
+        #     query["userName"] = {"$in":userNames}
 
-        if roleCodes != None:
-            query["roleCode"] = {"$in":roleCodes}
+        # if roleCodes != None:
+        #     query["roles.roleCode"] = {"$in":roleCodes}
 
         exclude = {"_id": False, "password": False}
-        
-        print(query)
+        # print(query)
 
         try:
             collections = get_db()['sample']
-            out = collections.find(query, exclude)
-            print(out)
-            result =[]
+            # out =   db.sample.find({$or:[{'userID': {'$in': ['a7de4c4f7a30491e833cd1fc5b38ba3a']}}, {'userName': {'$in': ['Bjc@123']}},{ 'roles.roleCode': {'$in': ['01']}}]})
+            out =  collections.find(
+                                    {'$or':[
+                                        {'userID': {'$in': userIDs}},
+                                        {'userName': {'$in': userNames}},
+                                        {'roles.roleCode': {'$in': roleCodes}}
+                                        ]},exclude)
+            # print(out)
+            result = []
             for record in out:
-                # result.append(record)
-                print(record)
+                result.append(record)
+
+            # print(result)
             return result
-            
 
-            # for id in userIDs:
-            #     results = collections.find({"userID": id}, {"password": 0})
-            #     return results
-
-            # for name in userNames:
-            #     results = collections.find({"userName": name}, {"password": 0})
-            #     return results
-
-            # for code in roleCodes:
-            #     results = collections.find({"roles": {'roleCode': code}}, {"password": 0})
-            #     return results
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return None
+

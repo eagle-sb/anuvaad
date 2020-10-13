@@ -61,16 +61,14 @@ class UpdateUsers(Resource):
             result = UserManagementRepositories.update_users(users)
             print(result)
             if result == False:
-                res = CustomResponse(
-                    Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
+                res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
                 return res.getresjson(), 400
 
             res = CustomResponse(Status.SUCCESS.value, result, None)
             return res.getres()
         except Exception as e:
             print(e)
-            res = CustomResponse(
-                Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
+            res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
             return res.getresjson(), 400
 
 
@@ -95,34 +93,18 @@ class SearchUsers(Resource):
         else:
             roleCodes=None
 
+        # print(userIDs, userNames, roleCodes)
+
         try:
-            result = UserManagementRepositories.search_users(
-                userIDs, userNames, roleCodes)
+            result = UserManagementRepositories.search_users(userIDs, userNames, roleCodes)
+            # print(result)
             if result == False:
-                res = CustomResponse(
-                    Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
+                res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
                 return res.getresjson(), 400
 
             res = CustomResponse(Status.SUCCESS.value, result)
             return res.getres()
         except Exception as e:
-            # log_exception("SaveSentenceResource ",  AppContext.getContext(), e)
-            res = CustomResponse(
-                Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
+            res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
             return res.getresjson(), 400
 
-        # if users is None:
-        #     res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
-        #     return res.getresjson(), 400
-
-        # parser = reqparse.RequestParser(bundle_errors=True)
-        # parser.add_argument('userIDs', type=list, location='json', help='This field cannot be empty', required=True)
-        # parser.add_argument('userNames', type=list, location='json', help='This field cannot be empty', required=True)
-        # parser.add_argument('roleCodes',  type=list, location='json', help='This field cannot be empty', required=True)
-        # args    = parser.parse_args()
-
-        # if UserManagementRepositories.search_users(args['userIDs'], args['userNames'], args['roleCodes']) == False:
-        #     res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
-        #     return res.getresjson(), 400
-        # res = CustomResponse(Status.SUCCESS.value, None)
-        # return res.getres(), 400
