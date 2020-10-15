@@ -10,8 +10,15 @@ class UserManagementModel(object):
     @staticmethod
     def create_users(user):
         hashed = UserUtils.hash_password(user["password"].encode('utf-8'))
-        # encripted     = encrypt_password(hashed)
-        userID = UserUtils.generate_user_id()
+        encripted = UserUtils.encrypt_password(hashed)
+        userId = UserUtils.generate_user_id()
+        validated_userID = UserUtils.validate_userid(userId)
+        userName = user['userName']
+        validated_userName = UserUtils.validate_username(userName)
+        print(validated_userName)
+        # try:
+        #     if validated_userName == False:
+        #         return("UserName is already taken ")
 
         user_roles = []
         for role in user["roles"]:
@@ -22,9 +29,10 @@ class UserManagementModel(object):
 
         try:
             collections = get_db()['sample']
-            user = collections.insert({'userID': userID, 'name': user["name"], 'userName': user['userName'], 'password': hashed,
+            if validated_userName != False:
+                user = collections.insert({'userID': validated_userID, 'name': user["name"], 'userName': validated_userName, 'password': encripted,
                                        'email': user["email"], 'phoneNo': user["phoneNo"], 'roles': user_roles})
-            return user
+                return user
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return None
@@ -50,6 +58,7 @@ class UserManagementModel(object):
 
                 hashed = UserUtils.hash_password(
                     user["password"].encode('utf-8'))
+                encripted = UserUtils.encrypt_password(hashed)
 
                 results = collections.update({"userID": user_id}, {'$set': {'name': user["name"], 'userName': user['userName'], 'password': hashed,
                                                                             'email': user["email"], 'phoneNo': user["phoneNo"], 'roles': user_roles}})
@@ -65,29 +74,18 @@ class UserManagementModel(object):
     @staticmethod
     def get_user_by_keys(userIDs, userNames, roleCodes):
 
-        # query = {}
-        # if userIDs != None:
-        #     query["userID"] = {"$in": userIDs}
-
-        # if userNames != None:
-        #     query["userName"] = {"$in":userNames}
-
-        # if roleCodes != None:
-        #     query["roles.roleCode"] = {"$in":roleCodes}
-
         exclude = {"_id": False, "password": False}
-        # print(query)
 
         try:
             collections = get_db()['sample']
             # out =   db.sample.find({$or:[{'userID': {'$in': ['a7de4c4f7a30491e833cd1fc5b38ba3a']}}, {'userName': {'$in': ['Bjc@123']}},{ 'roles.roleCode': {'$in': ['01']}}]})
-            out =  collections.find(
-                                    {'$or':[
-                                        {'userID': {'$in': userIDs}},
-                                        {'userName': {'$in': userNames}},
-                                        {'roles.roleCode': {'$in': roleCodes}}
-                                        ]},exclude)
-            # print(out)
+            out = collections.find(
+                {'$or': [
+                    {'userID': {'$in': userIDs}},
+                    {'userName': {'$in': userNames}},
+                    {'roles.roleCode': {'$in': roleCodes}}
+                ]}, exclude)
+            # print(out.count())
             result = []
             for record in out:
                 result.append(record)
@@ -98,4 +96,3 @@ class UserManagementModel(object):
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return None
-

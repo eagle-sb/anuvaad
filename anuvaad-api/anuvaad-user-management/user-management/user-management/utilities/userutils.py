@@ -1,62 +1,66 @@
 import uuid
 import re
 import bcrypt
-from cryptography.fernet import Fernet
-
+from db import get_db
+from passlib.hash import sha256_crypt
 
 class UserUtils:
-        
-        def __init__(self):
-                pass
 
-        def generate_user_id():
-                return(uuid.uuid4().hex)
+    def __init__(self):
+        pass
 
-        def validate_email(email):
-                regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
-                if (re.search(regex, email)):
-                        return email
-                else:
-                        return("Invalid mail id")
+    def generate_user_id():
+        return(uuid.uuid4().hex)
 
-        def validate_phone(phone):
-                pass
-        
-        def hash_password(password):
-                salt = bcrypt.gensalt()
-                return(bcrypt.hashpw(password, salt))
+    def validate_email(email):
+        regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+        if (re.search(regex, email)):
+            return email
+        else:
+            return("Invalid mail id")
+
+    def validate_phone(phone):
+        Pattern = re.compile("(0/91)?[6-9][0-9]{9}")
+        if (Pattern.match(phone)) and len(phone) == 10:
+            return phone
+        else:
+            return("Invalid phone number")
+
+    def hash_password(password):
+        salt = bcrypt.gensalt()
+        return(bcrypt.hashpw(password, salt))
 
 
+    def encrypt_password(password):
+            encrypted_password = sha256_crypt.encrypt(password)
+            return(encrypted_password)
 
-        def generate_key():
-                """
-                Generates a key and save it into a file
-                """
-                key = Fernet.generate_key()
-                with open("secret.key", "wb") as key_file:
-                        key_file.write(key)
+#     def decrypt_password(encrypted_password):
+#             """
+#             Decrypts an encrypted message
+#             """
+#             key = load_key()
+#             f = Fernet(key)
+#             decrypted_password = f.decrypt(encrypted_password)
+#             return(decrypted_password.decode())
 
-        def load_key():
-                """
-                Load the previously generated key
-                """
-                return open("secret.key", "rb").read()
+    def validate_userid(usrId):
+            collections = get_db()['sample']
+            valid = collections.find({ 'userID': {'$in': [usrId]}})
+            if valid.count() != 0:
+                    userID = UserUtils.generate_user_id()
+                    validate_userid(userID)
+            else:
+                    return(usrId)
 
-        def encrypt_password(password):
-                """
-                Encrypts a message
-                """
-                key = load_key()
-                encoded_password = password.encode()
-                f = Fernet(key)
-                encrypted_password = f.encrypt(encoded_password)
-                return(encrypted_password)
+    def validate_username(usrName):
+            collections = get_db()['sample']
+            valid = collections.find({ 'userName': {'$in': [usrName]}})
+            if valid.count() != 0:
+                    return(False)
+            else:
+                    return(usrName)
 
-                # def decrypt_password(encrypted_password):
-                #     """
-                #     Decrypts an encrypted message
-                #     """
-                #     key = load_key()
-                #     f = Fernet(key)
-                #     decrypted_password = f.decrypt(encrypted_password)
-                #     return(decrypted_password.decode())
+                    
+
+

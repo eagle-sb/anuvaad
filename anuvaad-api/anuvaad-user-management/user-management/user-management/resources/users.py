@@ -12,20 +12,31 @@ class CreateUsers(Resource):
     def post(self):
 
         body = request.get_json()
+        # print(body)
         users = None
         if 'users' in body:
             users = body['users']
-
+        
+        # print(users)
         if users is None:
             res = CustomResponse(
                 Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
             return res.getresjson(), 400
 
-        # AppContext.addRecordID(None)
-        # log_info("SaveSentenceResource for user {}, number sentences to update {}".format(user_id, len(sentences)), AppContext.getContext())
+        not_valid=[]
+        for user in users:
+            if not user["userName"] or user["password"] or user["email"] or user["phoneNo"]:
+                res = CustomResponse(
+                Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
+            return res.getresjson(), 400
+
+
+
+
 
         try:
             result = UserManagementRepositories.create_users(users)
+            print(result)
             if result == False:
                 res = CustomResponse(
                     Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
@@ -34,6 +45,7 @@ class CreateUsers(Resource):
             res = CustomResponse(Status.SUCCESS.value, result)
             return res.getres()
         except Exception as e:
+            print(e)
             # log_exception("SaveSentenceResource ",  AppContext.getContext(), e)
             res = CustomResponse(
                 Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
@@ -53,22 +65,24 @@ class UpdateUsers(Resource):
             return res.getresjson(), 400
 
         users = body['users']
-        print(users)
+        # print(users)
         # AppContext.addRecordID(None)
         # log_info("FileContentUpdateResource for user ({}), to update ({}) blocks".format(user_id, len(blocks)), AppContext.getContext())
 
         try:
             result = UserManagementRepositories.update_users(users)
-            print(result)
+            # print(result)
             if result == False:
-                res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
+                res = CustomResponse(
+                    Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
                 return res.getresjson(), 400
 
             res = CustomResponse(Status.SUCCESS.value, result, None)
             return res.getres()
         except Exception as e:
-            print(e)
-            res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
+            # print(e)
+            res = CustomResponse(
+                Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
             return res.getresjson(), 400
 
 
@@ -77,34 +91,33 @@ class SearchUsers(Resource):
     def post(self):
 
         body = request.get_json()
-        # users       = None
         if 'userIDs' in body:
             userIDs = body['userIDs']
         else:
-            userIDs= None
+            userIDs = None
 
         if 'userNames' in body:
             userNames = body['userNames']
         else:
-            userNames=None
+            userNames = None
 
         if 'roleCodes' in body:
             roleCodes = body['roleCodes']
         else:
-            roleCodes=None
-
-        # print(userIDs, userNames, roleCodes)
+            roleCodes = None
 
         try:
-            result = UserManagementRepositories.search_users(userIDs, userNames, roleCodes)
+            result = UserManagementRepositories.search_users(
+                userIDs, userNames, roleCodes)
             # print(result)
             if result == False:
-                res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
+                res = CustomResponse(
+                    Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
                 return res.getresjson(), 400
 
             res = CustomResponse(Status.SUCCESS.value, result)
             return res.getres()
         except Exception as e:
-            res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
+            res = CustomResponse(
+                Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
             return res.getresjson(), 400
-
