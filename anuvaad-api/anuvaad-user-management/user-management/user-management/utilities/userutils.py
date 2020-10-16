@@ -35,14 +35,7 @@ class UserUtils:
             encrypted_password = sha256_crypt.encrypt(password)
             return(encrypted_password)
 
-#     def decrypt_password(encrypted_password):
-#             """
-#             Decrypts an encrypted message
-#             """
-#             key = load_key()
-#             f = Fernet(key)
-#             decrypted_password = f.decrypt(encrypted_password)
-#             return(decrypted_password.decode())
+
 
     def validate_userid(usrId):
             collections = get_db()['sample']
@@ -62,5 +55,17 @@ class UserUtils:
                     return(usrName)
 
                     
+    def validate_user(usrName,password):
+        collections = get_db()['sample']
+        result= collections.find({'userName': {'$eq':usrName }},{'password':1,'_id':0})
+        for value in result:
+            password_in_db=value["password"]
+        print(password_in_db)
+        # print(password)
+        if sha256_crypt.verify(password_in_db, password) == True:
+            return True
+        else:
+            return False
+
 
 

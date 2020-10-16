@@ -11,44 +11,47 @@ class CreateUsers(Resource):
 
     def post(self):
 
+        #getting the post body and checking for the key and values
         body = request.get_json()
-        # print(body)
-        users = None
+        # users = None
         if 'users' in body:
             users = body['users']
-        
         # print(users)
-        if users is None:
-            res = CustomResponse(
-                Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
+        
+        if not users:
+            res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
             return res.getresjson(), 400
-
+        
         not_valid=[]
         for user in users:
-            if not user["userName"] or user["password"] or user["email"] or user["phoneNo"]:
-                res = CustomResponse(
-                Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
-            return res.getresjson(), 400
 
-
-
-
-
+            username=user["userName"]
+            password=user["password"]
+            email=user["email"]
+            phone=user["phoneNo"]
+            if not username or not password or not email or not phone:
+                not_valid.append(user)
+                users.remove(user)
+                # print(not_valid,users,"here")
+                if not users:
+                    res = CustomResponse(Status.FAILURE_USR_CREATION.value, None)
+                return res.getresjson(), 400
+       
         try:
             result = UserManagementRepositories.create_users(users)
-            print(result)
+            # print(result)
             if result == False:
                 res = CustomResponse(
-                    Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
-                return res.getresjson(), 400
+                    Status.FAILURE_GLOBAL_SYSTEM.value, None)
+                return res.getresjson(), 500
 
-            res = CustomResponse(Status.SUCCESS.value, result)
+            res = CustomResponse(Status.SUCCESS_USR_CREATION.value, result)
             return res.getres()
         except Exception as e:
             print(e)
             # log_exception("SaveSentenceResource ",  AppContext.getContext(), e)
             res = CustomResponse(
-                Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
+                Status.FAILURE_USR_CREATION.value, None)
             return res.getresjson(), 400
 
 
@@ -56,7 +59,6 @@ class UpdateUsers(Resource):
 
     def post(self):
         body = request.get_json()
-        # userID     = request.headers.get('userID')
         print(body.keys())
 
         if 'users' not in body.keys():
