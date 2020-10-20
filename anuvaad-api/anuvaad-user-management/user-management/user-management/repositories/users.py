@@ -4,20 +4,16 @@ from models import UserManagementModel
 
 
 class UserManagementRepositories:
+
     @staticmethod
     def create_users(users):
-        for user in users:
-            if UserManagementModel.create_users(user) == False:
-                return False
-
-        return True
+        if UserManagementModel.create_users(users)!=True:
+            return False
 
     @staticmethod
     def update_users(users):
-        for user in users:
-            if UserManagementModel.update_users_by_uid(user) == False:
-                return False
-        return True
+        if UserManagementModel.update_users_by_uid(users)!= True:
+            return False
 
     @staticmethod
     def search_users(userIDs, userNames, roleCodes):

@@ -8,64 +8,81 @@ import bcrypt
 class UserManagementModel(object):
 
     @staticmethod
-    def create_users(user):
-        hashed = UserUtils.hash_password(user["password"].encode('utf-8'))
-        encripted = UserUtils.encrypt_password(hashed)
-        userId = UserUtils.generate_user_id()
-        validated_userID = UserUtils.validate_userid(userId)
-        userName = user['userName']
-        validated_userName = UserUtils.validate_username(userName)
-        print(validated_userName)
-        # try:
-        #     if validated_userName == False:
-        #         return("UserName is already taken ")
+    def create_users(users):
+        # print(users)
 
-        user_roles = []
-        for role in user["roles"]:
-            role_info = {}
-            role_info["roleCode"] = role["roleCode"]
-            role_info["roleDesc"] = role["roleDesc"]
-            user_roles.append(role_info)
+        records=[]
+        for user in users:
+            users_data={}
+            hashed = UserUtils.hash_password(user["password"])
+            userId = UserUtils.generate_user_id()
+            validated_userID = UserUtils.validate_userid(userId)
+            userName = user['userName']
+            validated_userName = UserUtils.validate_username(userName)
+            if validated_userName == False:
+                break
+            
+            user_roles = []
+            for role in user["roles"]:
+                role_info = {}
+                role_info["roleCode"] = role["roleCode"]
+                role_info["roleDesc"] = role["roleDesc"]
+                user_roles.append(role_info)
 
+            users_data['userID']=validated_userID
+            users_data['name']=user["name"]
+            users_data['userName']=userName
+            users_data['password']=hashed.decode("utf-8")
+            users_data['email']=user["email"]
+            users_data['phoneNo']=user["phoneNo"]
+            users_data['roles']=user_roles
+
+            records.append(users_data)
+
+        if not records:
+            return(False)
         try:
             collections = get_db()['sample']
-            if validated_userName != False:
-                user = collections.insert({'userID': validated_userID, 'name': user["name"], 'userName': validated_userName, 'password': encripted,
-                                       'email': user["email"], 'phoneNo': user["phoneNo"], 'roles': user_roles})
-                return user
+            result=collections.insert(records)
+            return True
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return None
 
     @staticmethod
-    def update_users_by_uid(user):
+    def update_users_by_uid(users):
         try:
-            collections = get_db()['sample']
-            user_id = user["userID"]
+            for user in users:
+                collections = get_db()['sample']
+                user_id = user["userID"]
+                record = collections.find({"userID": user_id})           
+                if record.count()==0:
+                    break
+                else:
+                    users_data={}
+                    userName = user['userName']
+                    hashed = UserUtils.hash_password(user["password"])
+                    
+                    
+                    user_roles = []
+                    for role in user["roles"]:
+                        role_info = {}
+                        role_info["roleCode"] = role["roleCode"]
+                        role_info["roleDesc"] = role["roleDesc"]
+                        user_roles.append(role_info)
 
-            record = collections.find({"userID": user_id})
 
-            if record == None:
-                return("No record for the given user Id")
-            else:
+                    users_data['name']=user["name"]
+                    users_data['userName']=userName
+                    users_data['password']=hashed.decode("utf-8")
+                    users_data['email']=user["email"]
+                    users_data['phoneNo']=user["phoneNo"]
+                    users_data['roles']=user_roles
 
-                user_roles = []
-                for role in user["roles"]:
-                    role_info = {}
-                    role_info["roleCode"] = role["roleCode"]
-                    role_info["roleDesc"] = role["roleDesc"]
-                    user_roles.append(role_info)
+                    results=collections.update({"userID": user_id},{'$set':users_data})
+                    # print(results)
 
-                hashed = UserUtils.hash_password(
-                    user["password"].encode('utf-8'))
-                encripted = UserUtils.encrypt_password(hashed)
-
-                results = collections.update({"userID": user_id}, {'$set': {'name': user["name"], 'userName': user['userName'], 'password': hashed,
-                                                                            'email': user["email"], 'phoneNo': user["phoneNo"], 'roles': user_roles}})
-
-                if 'writeError' in list(results.keys()):
-                    return False
-                return True
+            return True
 
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
@@ -78,21 +95,19 @@ class UserManagementModel(object):
 
         try:
             collections = get_db()['sample']
-            # out =   db.sample.find({$or:[{'userID': {'$in': ['a7de4c4f7a30491e833cd1fc5b38ba3a']}}, {'userName': {'$in': ['Bjc@123']}},{ 'roles.roleCode': {'$in': ['01']}}]})
             out = collections.find(
                 {'$or': [
                     {'userID': {'$in': userIDs}},
                     {'userName': {'$in': userNames}},
                     {'roles.roleCode': {'$in': roleCodes}}
                 ]}, exclude)
-            # print(out.count())
             result = []
             for record in out:
                 result.append(record)
-
-            # print(result)
             return result
 
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return None
+
+
