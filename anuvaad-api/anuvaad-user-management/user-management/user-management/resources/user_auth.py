@@ -1,6 +1,7 @@
 from flask_restful import fields, marshal_with, reqparse, Resource
 from repositories import UserAuthenticationRepositories
 from models import CustomResponse, Status
+from utilities import UserUtils
 # from utilities import AppContext
 import ast
 from anuvaad_auditor.loghandler import log_info, log_exception
@@ -14,16 +15,14 @@ class UserLogin(Resource):
         userName = body["userName"]
         password = body["password"]
 
-        if not userName or not password:
-            res = CustomResponse(
-                Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
-            # print(res)
-            return res.getresjson(), 400
+        validity=UserUtils.validate_user_login_input(userName, password)
+        if validity is not None:
+                return validity, 400
+
 
         try:
             result = UserAuthenticationRepositories.user_login(
                 userName, password)
-            # print(result)
             if result == False:
                 res = CustomResponse(
                     Status.FAILURE_USR_LOGIN.value, None)
@@ -32,8 +31,6 @@ class UserLogin(Resource):
             res = CustomResponse(Status.SUCCESS_USR_LOGIN.value, result)
             return res.getres()
         except Exception as e:
-            # print(e)
-            # log_exception("SaveSentenceResource ",  AppContext.getContext(), e)
             res = CustomResponse(
                 Status.FAILURE_USR_LOGIN.value, None)
             return res.getresjson(), 400
@@ -74,12 +71,11 @@ class AuthTokenSearch(Resource):
     def post(self):
         body = request.get_json()
         token = body["token"]
-        # print(token)
-        if not token:
-            res = CustomResponse(
-                Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
-            # print(res)
-            return res.getresjson(), 400
+
+        validity=UserUtils.token_validation(token)
+        # print(validity,"heree")
+        if validity is not None:
+                return validity, 400
 
         try:
             result = UserAuthenticationRepositories.token_search(token)

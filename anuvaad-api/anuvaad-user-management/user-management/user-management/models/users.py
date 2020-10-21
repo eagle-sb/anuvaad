@@ -3,24 +3,20 @@ from db import get_db
 from utilities import UserUtils
 from anuvaad_auditor.loghandler import log_info, log_exception
 import bcrypt
+from anuvaad_auditor.errorhandler import post_error
 
 
 class UserManagementModel(object):
 
     @staticmethod
     def create_users(users):
-        # print(users)
-
+        print(users)
         records=[]
         for user in users:
             users_data={}
             hashed = UserUtils.hash_password(user["password"])
             userId = UserUtils.generate_user_id()
             validated_userID = UserUtils.validate_userid(userId)
-            userName = user['userName']
-            validated_userName = UserUtils.validate_username(userName)
-            if validated_userName == False:
-                break
             
             user_roles = []
             for role in user["roles"]:
@@ -31,7 +27,7 @@ class UserManagementModel(object):
 
             users_data['userID']=validated_userID
             users_data['name']=user["name"]
-            users_data['userName']=userName
+            users_data['userName']=user["userName"]
             users_data['password']=hashed.decode("utf-8")
             users_data['email']=user["email"]
             users_data['phoneNo']=user["phoneNo"]
@@ -55,32 +51,26 @@ class UserManagementModel(object):
             for user in users:
                 collections = get_db()['sample']
                 user_id = user["userID"]
-                record = collections.find({"userID": user_id})           
-                if record.count()==0:
-                    break
-                else:
-                    users_data={}
-                    userName = user['userName']
-                    hashed = UserUtils.hash_password(user["password"])
+                users_data={}
+                userName = user['userName']
+                hashed = UserUtils.hash_password(user["password"])
                     
-                    
-                    user_roles = []
-                    for role in user["roles"]:
-                        role_info = {}
-                        role_info["roleCode"] = role["roleCode"]
-                        role_info["roleDesc"] = role["roleDesc"]
-                        user_roles.append(role_info)
+                user_roles = []
+                for role in user["roles"]:
+                    role_info = {}
+                    role_info["roleCode"] = role["roleCode"]
+                    role_info["roleDesc"] = role["roleDesc"]
+                    user_roles.append(role_info)
 
 
-                    users_data['name']=user["name"]
-                    users_data['userName']=userName
-                    users_data['password']=hashed.decode("utf-8")
-                    users_data['email']=user["email"]
-                    users_data['phoneNo']=user["phoneNo"]
-                    users_data['roles']=user_roles
+                users_data['name']=user["name"]
+                users_data['userName']=userName
+                users_data['password']=hashed.decode("utf-8")
+                users_data['email']=user["email"]
+                users_data['phoneNo']=user["phoneNo"]
+                users_data['roles']=user_roles
 
-                    results=collections.update({"userID": user_id},{'$set':users_data})
-                    # print(results)
+                results=collections.update({"userID": user_id},{'$set':users_data})
 
             return True
 

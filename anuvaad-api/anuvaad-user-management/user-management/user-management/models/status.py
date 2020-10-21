@@ -19,7 +19,7 @@ class Status(enum.Enum):
                             'why': "On input errors causing failure in user account updation"}
 
     SUCCESS_USR_SEARCH = {'ok': True, 'http': {'status': 200},
-                          'why': "users were updated successfully"}
+                          'why': "users were searched successfully"}
     FAILURE_USR_SEARCH = {'ok': True, 'http': {'status': 400},
                           'why': "On input errors causing failure in user account updation"}
 

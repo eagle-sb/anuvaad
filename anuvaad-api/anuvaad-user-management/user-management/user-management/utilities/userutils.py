@@ -3,8 +3,10 @@ import re
 import bcrypt
 from db import get_db
 from anuvaad_auditor.loghandler import log_info, log_exception
+from anuvaad_auditor.errorhandler import post_error
 import jwt
 from utilities import MODULE_CONTEXT
+import config
 
 
 class UserUtils:
@@ -31,6 +33,14 @@ class UserUtils:
             return True
         else:
             return False
+
+    @staticmethod
+    def validate_password(password):
+        if len(password)<config.MIN_LENGTH:
+            return False
+        else:
+            return True
+
 
     @staticmethod
     def hash_password(password):
@@ -69,10 +79,11 @@ class UserUtils:
             collections = get_db()['sample']
             result = collections.find({'userName': {'$eq': usrName}}, {
                 'password': 1, '_id': 0})
+            if result.count()==0:
+                return False
             for value in result:
                 password_in_db = value["password"].encode("utf-8")
                 if bcrypt.checkpw(password.encode("utf-8"), password_in_db):
-                    # print("check",bcrypt.checkpw(password.encode("utf-8"),password_in_db))
                     return True
                 else:
                     return False
@@ -83,31 +94,62 @@ class UserUtils:
     @staticmethod
     def token_validation(token):
 
-        collections = get_db()['usertokens']
-        result = collections.find(
-            {"token": token}, {"_id": 0, "user": 1, "active": 1, "secret_key": 1})
-        # print(result,"result")
-        for value in result:
-            # print(value)
-            if value["active"] == True:
-                secret_key = value["secret_key"]
-                user = value["user"]
-                try:
-                    data = jwt.decode(token, secret_key, algorithm='HS256')
-                    # print(data)
-                    return({"status": True, "data": user})
-                except jwt.exceptions.ExpiredSignatureError:
-                    collections.update({"token": token}, {
-                                       "$set": {"active": False}})
-                    return({"status": "Token has expired", "data": None})
-                except:
-                    return({"status": "Invalid token", "data": None})
+        token_received=token
+        if not token_received:
+            return post_error("Invalid token","Token recieved is empty",None)
+        else:
+            try:
+                collections = get_db()['usertokens']
+                # print(collections)
+                result = collections.find({"token": token_received}, {"_id": 0, "user": 1, "active": 1, "secret_key": 1})
+                # print(result)
+                if result.count() == 0:
+                    return post_error("Invalid token","Token recieved is not matching",None)
+                for value in result:
+                    if value["active"] == False:
+                        return post_error("Invalid token","Token has expired", None)         
+                    if value["active"] == True:
+                        secret_key = value["secret_key"]
+                        # user = value["user"]
+        
+                        try:
+                            jwt.decode(token, secret_key, algorithm='HS256')
+                            # return ({"status": True, "data": user})
+                        except jwt.exceptions.ExpiredSignatureError:
+                            collections.update({"token": token}, {
+                                        "$set": {"active": False}})
+                            return post_error("Invalid token","Token has expired", None)
+                        except:
+                            return post_error("Invalid token", "Not a valid token", None)
+            except:                
+                return post_error("Database connection exception","An error occurred while connecting to the database",None)
+
+    @staticmethod
+    def get_user_from_token(token):
+        token_received=token
+        try:
+            collections = get_db()['usertokens']
+            result = collections.find({"token": token_received}, {"_id": 0, "user": 1})
+            for record in result:
+                username=record["user"]
+                
+        except:
+            return post_error("Database connection exception","An error occurred while connecting to the database",None)
+        try:
+            # print(username)
+            collections_usr=get_db()['sample']
+            result_usr = collections_usr.find({"userName": username}, {"_id": 0, "password": 0})
+            for record in result_usr:
+                return record
+        except:
+            return post_error("Database connection exception","An error occurred while connecting to the database",None)
+
 
     @staticmethod
     def get_token(userName):
         collections = get_db()['usertokens']
         record = collections.find(
-            {"user": userName, "active": True}, {"_id": 0, "token": 1})
+            {"user": userName, "active": True}, {"_id": 0, "token": 1, "secret_key": 1})
         if record.count() == 0:
             return {"status": "No token vailable for the user", "data": None}
         else:
@@ -126,14 +168,69 @@ class UserUtils:
                     return({"status": "Invalid token", "data": None})
 
     @staticmethod
-    def validate_user_input(user):
+    def validate_user_input_creation(user):
+        # print(user)
         username = user["userName"]
         password = user["password"]
         email = user["email"]
         phone = user["phoneNo"]
         if not username or not password or not email or not phone:
-            return False
+            return post_error("Data missing", "Username,password,email,phone numbers are mandatory fields, they cannot be empty", None)
+        if UserUtils.validate_password(password) == False:
+            return post_error("Data not valid", "Password given is not valid", None)  
         if UserUtils.validate_email(email) == False:
-            return False
+            return post_error("Data not valid", "Email Id given is not valid", None)
         if UserUtils.validate_phone(phone) == False:
-            return False
+            return post_error("Data not valid", "Phone number given is not valid", None)
+        try:
+            collections = get_db()['sample']
+            record = collections.find({'userName':username})
+            if record.count() != 0:
+                return post_error("Data not valid", "Username given is already taken,try with another username", None)
+        except:
+            return post_error("Database connection exception","An error occurred while connecting to the database",None)
+
+
+    @staticmethod
+    def validate_user_input_updation(user):
+        userId = user["userID"]
+        username = user["userName"]
+        password = user["password"]
+        email = user["email"]
+        phone = user["phoneNo"]
+
+        if not userId:
+            return post_error("Id missing", "UserID field cannot be empty", None)
+        if not username or not password or not email or not phone:
+            return post_error("Data missing", "Username,password,email,phone numbers are mandatory fields, they cannot be empty", None)
+        if UserUtils.validate_password(password) == False:
+            return post_error("Data not valid", "Password given is not valid", None) 
+        if UserUtils.validate_email(email) == False:
+            return post_error("Data not valid", "Email Id given is not valid", None)
+        if UserUtils.validate_phone(phone) == False:
+            return post_error("Data not valid", "Phone number given is not valid", None)
+        try:
+            collections = get_db()['sample']
+            record = collections.find({'userID':userId})
+            if record.count() == 0:
+                return post_error("Data not valid", "User Id given is not valid", None)
+            for value in record:
+                if value["userName"] != username:
+                    return post_error("Data not valid","Username is not valid for the given User Id",None)
+        except:
+            return post_error("Database connection exception","An error occurred while connecting to the database",None)
+
+        
+    @staticmethod
+    def validate_user_login_input(userName,Password):
+        username = userName
+        password = Password
+        if not username:
+            return post_error("Username missing", "Username field cannot be empty", None)
+        if not password:
+            return post_error("Password missing", "Password field cannot be empty", None)
+        if UserUtils.validate_user(username,password)==False:
+            return post_error("Invalid credentials","username and password doesn't match",None)
+        if UserUtils.validate_user(username,password)==None:
+            return post_error("Database connection exception","An error occurred while connecting to the database",None)
+
