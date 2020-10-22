@@ -55,7 +55,7 @@ class UserUtils:
 
     @staticmethod
     def validate_userid(usrId):
-        collections = get_db()['sample']
+        collections = get_db()[config.USR_MONGO_COLLECTION]
         valid = collections.find({'userID': {'$in': [usrId]}})
         if valid.count() != 0:
             userID = UserUtils.generate_user_id()
@@ -65,7 +65,7 @@ class UserUtils:
 
     @staticmethod
     def validate_username(usrName):
-        collections = get_db()['sample']
+        collections = get_db()[config.USR_MONGO_COLLECTION]
         valid = collections.find({'userName': {'$in': [usrName]}})
         # print(valid.count(),"count")
         if valid.count() != 0:
@@ -76,7 +76,7 @@ class UserUtils:
     @staticmethod
     def validate_user(usrName, password):
         try:
-            collections = get_db()['sample']
+            collections = get_db()[config.USR_MONGO_COLLECTION]
             result = collections.find({'userName': {'$eq': usrName}}, {
                 'password': 1, '_id': 0})
             if result.count()==0:
@@ -99,7 +99,7 @@ class UserUtils:
             return post_error("Invalid token","Token recieved is empty",None)
         else:
             try:
-                collections = get_db()['usertokens']
+                collections = get_db()[config.USR_TOKEN_MONGO_COLLECTION]
                 # print(collections)
                 result = collections.find({"token": token_received}, {"_id": 0, "user": 1, "active": 1, "secret_key": 1})
                 # print(result)
@@ -128,7 +128,7 @@ class UserUtils:
     def get_user_from_token(token):
         token_received=token
         try:
-            collections = get_db()['usertokens']
+            collections = get_db()[config.USR_TOKEN_MONGO_COLLECTION]
             result = collections.find({"token": token_received}, {"_id": 0, "user": 1})
             for record in result:
                 username=record["user"]
@@ -137,7 +137,7 @@ class UserUtils:
             return post_error("Database connection exception","An error occurred while connecting to the database",None)
         try:
             # print(username)
-            collections_usr=get_db()['sample']
+            collections_usr=get_db()[config.USR_MONGO_COLLECTION]
             result_usr = collections_usr.find({"userName": username}, {"_id": 0, "password": 0})
             for record in result_usr:
                 return record
@@ -147,7 +147,7 @@ class UserUtils:
 
     @staticmethod
     def get_token(userName):
-        collections = get_db()['usertokens']
+        collections = get_db()[config.USR_TOKEN_MONGO_COLLECTION]
         record = collections.find(
             {"user": userName, "active": True}, {"_id": 0, "token": 1, "secret_key": 1})
         if record.count() == 0:
@@ -183,7 +183,7 @@ class UserUtils:
         if UserUtils.validate_phone(phone) == False:
             return post_error("Data not valid", "Phone number given is not valid", None)
         try:
-            collections = get_db()['sample']
+            collections = get_db()[config.USR_MONGO_COLLECTION]
             record = collections.find({'userName':username})
             if record.count() != 0:
                 return post_error("Data not valid", "Username given is already taken,try with another username", None)
@@ -210,7 +210,7 @@ class UserUtils:
         if UserUtils.validate_phone(phone) == False:
             return post_error("Data not valid", "Phone number given is not valid", None)
         try:
-            collections = get_db()['sample']
+            collections = get_db()[config.USR_MONGO_COLLECTION]
             record = collections.find({'userID':userId})
             if record.count() == 0:
                 return post_error("Data not valid", "User Id given is not valid", None)

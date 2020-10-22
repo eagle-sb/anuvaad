@@ -13,7 +13,7 @@ if config.ENABLE_CORS:
 
 for blueprint in vars(routes).values():
     if isinstance(blueprint, Blueprint):
-        server.register_blueprint(blueprint, url_prefix=config.API_URL_PREFIX)
+        server.register_blueprint(blueprint, url_prefix=config.CONTEXT_PATH)
 
 if __name__ == "__main__":
     log_info('starting server at {} at port {}'.format(config.HOST, config.PORT), MODULE_CONTEXT)

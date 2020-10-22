@@ -8,6 +8,7 @@ import datetime
 import secrets
 from utilities import UserUtils
 import time
+import config
 SECRET_KEY = secrets.token_bytes()
 
 
@@ -17,7 +18,7 @@ class UserAuthenticationModel(object):
     def user_login(userName, password):
 
         try:
-            collections = get_db()['usertokens']
+            collections = get_db()[config.USR_TOKEN_MONGO_COLLECTION]
             if (UserUtils.get_token(userName)["status"] != True):
                 timeLimit = datetime.datetime.utcnow() + datetime.timedelta(seconds=1800)  # set limit for user
                 payload = {"userName": userName, "password": str(
@@ -44,7 +45,7 @@ class UserAuthenticationModel(object):
     def user_logout(userName):
 
         try:
-            collections = get_db()['usertokens']
+            collections = get_db()[config.USR_TOKEN_MONGO_COLLECTION]
             record = collections.find({"user": userName,"active": True})
             if record.count() == 0:
                 return False

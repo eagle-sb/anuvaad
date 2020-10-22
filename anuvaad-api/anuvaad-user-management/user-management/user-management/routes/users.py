@@ -6,25 +6,25 @@ from resources import CreateUsers, UpdateUsers, SearchUsers, UserLogin, UserLogo
 USER_MANAGEMENT_BLUEPRINT = Blueprint("user-management", __name__)
 
 Api(USER_MANAGEMENT_BLUEPRINT).add_resource(
-    CreateUsers, "/create"
+    CreateUsers, "/v1/users/create"
 )
 
 Api(USER_MANAGEMENT_BLUEPRINT).add_resource(
-    UpdateUsers, "/update"
+    UpdateUsers, "/v1/users/update"
 )
 
 Api(USER_MANAGEMENT_BLUEPRINT).add_resource(
-    SearchUsers, "/search"
+    SearchUsers, "/v1/users/search"
 )
 
 Api(USER_MANAGEMENT_BLUEPRINT).add_resource(
-    UserLogin, "/login"
+    UserLogin, "/v1/users/login"
 )
 
 Api(USER_MANAGEMENT_BLUEPRINT).add_resource(
-    UserLogout, "/logout"
+    UserLogout, "/v1/users/logout"
 )
 
 Api(USER_MANAGEMENT_BLUEPRINT).add_resource(
-    AuthTokenSearch, "/auth-token-search"
+    AuthTokenSearch, "/v1/users/auth-token-search"
 )

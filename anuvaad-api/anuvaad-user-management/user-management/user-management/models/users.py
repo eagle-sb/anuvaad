@@ -4,6 +4,7 @@ from utilities import UserUtils
 from anuvaad_auditor.loghandler import log_info, log_exception
 import bcrypt
 from anuvaad_auditor.errorhandler import post_error
+import config
 
 
 class UserManagementModel(object):
@@ -38,7 +39,7 @@ class UserManagementModel(object):
         if not records:
             return(False)
         try:
-            collections = get_db()['sample']
+            collections = get_db()[config.USR_MONGO_COLLECTION]
             result=collections.insert(records)
             return True
         except Exception as e:
@@ -49,7 +50,7 @@ class UserManagementModel(object):
     def update_users_by_uid(users):
         try:
             for user in users:
-                collections = get_db()['sample']
+                collections = get_db()[config.USR_MONGO_COLLECTION]
                 user_id = user["userID"]
                 users_data={}
                 userName = user['userName']
@@ -84,7 +85,7 @@ class UserManagementModel(object):
         exclude = {"_id": False, "password": False}
 
         try:
-            collections = get_db()['sample']
+            collections = get_db()[config.USR_MONGO_COLLECTION]
             out = collections.find(
                 {'$or': [
                     {'userID': {'$in': userIDs}},
