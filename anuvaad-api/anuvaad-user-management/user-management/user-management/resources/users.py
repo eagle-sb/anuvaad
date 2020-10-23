@@ -112,3 +112,8 @@ class SearchUsers(Resource):
             res = CustomResponse(
                 Status.FAILURE_GLOBAL_SYSTEM.value, None)
             return res.getresjson(), 500
+
+class Health(Resource):
+    def get(self):
+        response = {"code": "200", "status": "ACTIVE"}
+        return jsonify(response)

@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask_restful import Api
-from resources import CreateUsers, UpdateUsers, SearchUsers, UserLogin, UserLogout, AuthTokenSearch
+from resources import CreateUsers, UpdateUsers, SearchUsers, UserLogin, UserLogout, AuthTokenSearch, Health
 
 
 USER_MANAGEMENT_BLUEPRINT = Blueprint("user-management", __name__)
@@ -27,4 +27,8 @@ Api(USER_MANAGEMENT_BLUEPRINT).add_resource(
 
 Api(USER_MANAGEMENT_BLUEPRINT).add_resource(
     AuthTokenSearch, "/v1/users/auth-token-search"
+)
+
+Api(USER_MANAGEMENT_BLUEPRINT).add_resource(
+    Health, "/health"
 )
