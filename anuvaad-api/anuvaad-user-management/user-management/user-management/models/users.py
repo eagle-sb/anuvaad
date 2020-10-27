@@ -22,7 +22,7 @@ class UserManagementModel(object):
             user_roles = []
             for role in user["roles"]:
                 role_info = {}
-                role_info["roleCode"] = role["roleCode"]
+                role_info["roleCode"] = role["roleCode"].upper()
                 role_info["roleDesc"] = role["roleDesc"]
                 user_roles.append(role_info)
 
@@ -59,9 +59,11 @@ class UserManagementModel(object):
                 user_roles = []
                 for role in user["roles"]:
                     role_info = {}
-                    role_info["roleCode"] = role["roleCode"]
+                    role_info["roleCode"] = role["roleCode"].upper()
                     role_info["roleDesc"] = role["roleDesc"]
                     user_roles.append(role_info)
+
+         
 
 
                 users_data['name']=user["name"]

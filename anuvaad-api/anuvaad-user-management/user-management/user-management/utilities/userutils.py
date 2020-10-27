@@ -74,6 +74,13 @@ class UserUtils:
             return(True)
 
     @staticmethod
+    def validate_rolecodes(roles):
+        roles=[x.upper() for x in roles]
+        for role in roles:
+            if role not in config.ROLE_CODES:
+                return False
+
+    @staticmethod
     def validate_user(usrName, password):
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
@@ -174,8 +181,11 @@ class UserUtils:
         password = user["password"]
         email = user["email"]
         phone = user["phoneNo"]
-        if not username or not password or not email or not phone:
-            return post_error("Data missing", "Username,password,email,phone numbers are mandatory fields, they cannot be empty", None)
+        roles =user["roles"]
+        rolecodes=[]
+
+        if not username or not password or not email or not phone or not roles:
+            return post_error("Data missing", "Username,password,email,phone numbers,roles are mandatory fields, they cannot be empty", None) 
         if UserUtils.validate_password(password) == False:
             return post_error("Data not valid", "Password given is not valid", None)  
         if UserUtils.validate_email(email) == False:
@@ -189,6 +199,14 @@ class UserUtils:
                 return post_error("Data not valid", "Username given is already taken,try with another username", None)
         except:
             return post_error("Database connection exception","An error occurred while connecting to the database",None)
+        for rol in roles:
+            rolecodes.append(rol["roleCode"])
+        if not rolecodes:
+            return post_error("Data Missing","No rolecodes are given",None)
+        if UserUtils.validate_rolecodes(rolecodes)==False:
+            return post_error("Data not valid","Rolecode given is not valid",None)
+
+
 
 
     @staticmethod
@@ -198,11 +216,15 @@ class UserUtils:
         password = user["password"]
         email = user["email"]
         phone = user["phoneNo"]
+        roles =user["roles"]
+        rolecodes=[]
+
+        
 
         if not userId:
             return post_error("Id missing", "UserID field cannot be empty", None)
-        if not username or not password or not email or not phone:
-            return post_error("Data missing", "Username,password,email,phone numbers are mandatory fields, they cannot be empty", None)
+        if not username or not password or not email or not phone or not roles:
+            return post_error("Data missing", "Username,password,email,phone numbers,roles are mandatory fields, they cannot be empty", None)
         if UserUtils.validate_password(password) == False:
             return post_error("Data not valid", "Password given is not valid", None) 
         if UserUtils.validate_email(email) == False:
@@ -219,6 +241,13 @@ class UserUtils:
                     return post_error("Data not valid","Username is not valid for the given User Id",None)
         except:
             return post_error("Database connection exception","An error occurred while connecting to the database",None)
+        for rol in roles:
+            rolecodes.append(rol["roleCode"])
+        if not rolecodes:
+            return post_error("Data Missing","No rolecodes are given",None)
+        if UserUtils.validate_rolecodes(rolecodes)==False:
+            return post_error("Data not valid","Rolecode given is not valid",None)
+
 
         
     @staticmethod
@@ -234,3 +263,6 @@ class UserUtils:
         if UserUtils.validate_user(username,password)==None:
             return post_error("Database connection exception","An error occurred while connecting to the database",None)
 
+
+
+ 
