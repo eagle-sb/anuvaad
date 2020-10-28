@@ -12,7 +12,7 @@ import json
 
 
 role_codes_filepath = config.ROLE_CODES_URL
-json_file_dir ="/home/jainy/Documents/usrmgmt/"  #config.ROLE_CODES_DIR_PATH  
+json_file_dir =config.ROLE_CODES_DIR_PATH  #"/home/jainy/Documents/usrmgmt/"  
 json_file_name = config.ROLE_CODES_FILE_NAME
 
 
