@@ -81,7 +81,7 @@ class UserManagementModel(object):
                 users_data['roles']=user_roles
 
                 results=collections.update({"userID": user_id},{'$set':users_data})
-                log_info("user updated:"+results,MODULE_CONTEXT)
+                log_info("user updated:{}".format(results),MODULE_CONTEXT)
 
             return True
 
@@ -102,7 +102,7 @@ class UserManagementModel(object):
                     {'userName': {'$in': userNames}},
                     {'roles.roleCode': {'$in': roleCodes}}
                 ]}, exclude)
-            log_info("user search is executed:"+out,MODULE_CONTEXT)
+            log_info("user search is executed:{}".format(out),MODULE_CONTEXT)
             result = []
             for record in out:
                 result.append(record)
