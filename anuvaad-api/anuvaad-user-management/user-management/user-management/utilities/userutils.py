@@ -76,7 +76,7 @@ class UserUtils:
     def validate_username(usrName):
         collections = get_db()[config.USR_MONGO_COLLECTION]
         valid = collections.find({'userName': {'$in': [usrName]}})
-        # print(valid.count(),"count")
+        log_info("search result on db for username validation:{}".format(valid),MODULE_CONTEXT)
         if valid.count() != 0:
             return(False)
         else:
@@ -95,16 +95,18 @@ class UserUtils:
             collections = get_db()[config.USR_MONGO_COLLECTION]
             result = collections.find({'userName': {'$eq': usrName}}, {
                 'password': 1, '_id': 0})
+            log_info("searching for password of the requested user:{}".format(result),MODULE_CONTEXT)
             if result.count()==0:
                 return False
             for value in result:
                 password_in_db = value["password"].encode("utf-8")
+                log_info("password stored on db is retrieved",MODULE_CONTEXT)
                 if bcrypt.checkpw(password.encode("utf-8"), password_in_db):
                     return True
                 else:
                     return False
         except Exception as e:
-            log_exception("Invalid credentials ",  MODULE_CONTEXT, e)
+            log_exception("exception while validating username and password"+str(e),  MODULE_CONTEXT, e)
             return None
 
     @staticmethod
@@ -118,7 +120,7 @@ class UserUtils:
                 collections = get_db()[config.USR_TOKEN_MONGO_COLLECTION]
                 # print(collections)
                 result = collections.find({"token": token_received}, {"_id": 0, "user": 1, "active": 1, "secret_key": 1})
-                # print(result)
+                log_info("searching for record with the recieved token:{}".format(result),MODULE_CONTEXT)
                 if result.count() == 0:
                     return post_error("Invalid token","Token recieved is not matching",None)
                 for value in result:
@@ -131,13 +133,17 @@ class UserUtils:
                         try:
                             jwt.decode(token, secret_key, algorithm='HS256')
                             # return ({"status": True, "data": user})
-                        except jwt.exceptions.ExpiredSignatureError:
+                        except jwt.exceptions.ExpiredSignatureError as e:
+                            log_exception("token expired",  MODULE_CONTEXT, e)
                             collections.update({"token": token}, {
                                         "$set": {"active": False}})
                             return post_error("Invalid token","Token has expired", None)
-                        except:
+                        except Exception as e:
+                            log_exception("invalid token",  MODULE_CONTEXT, e)
                             return post_error("Invalid token", "Not a valid token", None)
-            except:                
+            except Exception as e:
+                
+                log_exception("db connection exception ",  MODULE_CONTEXT, e)                
                 return post_error("Database connection exception","An error occurred while connecting to the database",None)
 
     @staticmethod
@@ -146,42 +152,56 @@ class UserUtils:
         try:
             collections = get_db()[config.USR_TOKEN_MONGO_COLLECTION]
             result = collections.find({"token": token_received}, {"_id": 0, "user": 1})
+            log_info("search result for username in usertokens db matching the recieved token:{}".format(result),MODULE_CONTEXT)
             for record in result:
                 username=record["user"]
                 
-        except:
+        except Exception as e:
+
+            log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return post_error("Database connection exception","An error occurred while connecting to the database",None)
         try:
             # print(username)
             collections_usr=get_db()[config.USR_MONGO_COLLECTION]
             result_usr = collections_usr.find({"userName": username}, {"_id": 0, "password": 0})
+            log_info("record in users db matching the recieved token:{}".format(result),MODULE_CONTEXT)
             for record in result_usr:
                 return record
-        except:
+        except Exception as e:
+
+            log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return post_error("Database connection exception","An error occurred while connecting to the database",None)
 
 
     @staticmethod
     def get_token(userName):
-        collections = get_db()[config.USR_TOKEN_MONGO_COLLECTION]
-        record = collections.find(
-            {"user": userName, "active": True}, {"_id": 0, "token": 1, "secret_key": 1})
-        if record.count() == 0:
-            return {"status": "No token vailable for the user", "data": None}
-        else:
-            for value in record:
+        try:
+            collections = get_db()[config.USR_TOKEN_MONGO_COLLECTION]
+            record = collections.find(
+                {"user": userName, "active": True}, {"_id": 0, "token": 1, "secret_key": 1})
+            log_info("search result for an active token matching the username:{}".format(record),MODULE_CONTEXT)
+        
+            if record.count() == 0:
+                return {"status": "No token vailable for the user", "data": None}
+            else:
+                for value in record:
 
-                secret_key = value["secret_key"]
-                token = value["token"]
-                try:
-                    result = jwt.decode(token, secret_key, algorithm='HS256')
-                    return({"status": True, "data": token})
-                except jwt.exceptions.ExpiredSignatureError:
-                    collections.update({"token": token}, {
-                                       "$set": {"active": False}})
-                    return({"status": "Token has expired", "data": None})
-                except:
-                    return({"status": "Invalid token", "data": None})
+                    secret_key = value["secret_key"]
+                    token = value["token"]
+                    try:
+                        result = jwt.decode(token, secret_key, algorithm='HS256')
+                        return({"status": True, "data": token})
+                    except jwt.exceptions.ExpiredSignatureError as e:
+                        log_exception("token matching the username has expired "+str(e),  MODULE_CONTEXT, e)
+                        collections.update({"token": token}, {
+                                        "$set": {"active": False}})
+                        return({"status": "Token has expired", "data": None})
+                    except Exception as e:
+                        log_exception("invalid token for the given username",  MODULE_CONTEXT, e)
+                        return({"status": "Invalid token ", "data": None})
+        except Exception as e:
+            log_exception("db connection exception ",  MODULE_CONTEXT, e)
+            return({"status":"Database connection exception","data":None})
 
     @staticmethod
     def validate_user_input_creation(user):
@@ -206,7 +226,8 @@ class UserUtils:
             record = collections.find({'userName':username})
             if record.count() != 0:
                 return post_error("Data not valid", "Username given is already taken,try with another username", None)
-        except:
+        except Exception as e:
+            log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return post_error("Database connection exception","An error occurred while connecting to the database",None)
         for rol in roles:
             rolecodes.append(rol["roleCode"])
@@ -248,7 +269,8 @@ class UserUtils:
             for value in record:
                 if value["userName"] != username:
                     return post_error("Data not valid","Username is not valid for the given User Id",None)
-        except:
+        except Exception as e:
+            log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return post_error("Database connection exception","An error occurred while connecting to the database",None)
         for rol in roles:
             rolecodes.append(rol["roleCode"])

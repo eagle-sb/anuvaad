@@ -12,7 +12,7 @@ import json
 
 
 role_codes_filepath = config.ROLE_CODES_URL
-json_file_dir =  config.ROLE_CODES_DIR_PATH                               #"/home/jainy/Documents/usrmgmt/"
+json_file_dir ="/home/jainy/Documents/usrmgmt/"  #config.ROLE_CODES_DIR_PATH  
 json_file_name = config.ROLE_CODES_FILE_NAME
 
 
@@ -21,18 +21,21 @@ def read_role_codes():
         file = requests.get(role_codes_filepath, allow_redirects=True)
         file_path = json_file_dir + json_file_name
         open(file_path, 'wb').write(file.content)
+        log_info("data read from git and pushed to local",MODULE_CONTEXT)
         with open(file_path, 'r') as stream:
             parsed = json.load(stream)
             roles = parsed['roles']
+            log_info("roles read from json are {}".format(roles),MODULE_CONTEXT)
             rolecodes = []
             for role in roles:
                 rolecodes.append(role["code"])
+            log_info("rolecodes read from json is stored on to rolecodes array ",MODULE_CONTEXT)
             return rolecodes
     except Exception as exc:
         log_exception("Exception while reading configs: " +
-                      str(exc), None, exc)
+                      str(exc), MODULE_CONTEXT, exc)
         post_error("CONFIG_READ_ERROR",
-                   "Exception while reading configs: " + str(exc), None)
+                   "Exception while reading configs: " + str(exc), MODULE_CONTEXT)
 
 
 # global ROLE_CODES
@@ -48,6 +51,5 @@ for blueprint in vars(routes).values():
         server.register_blueprint(blueprint, url_prefix=config.CONTEXT_PATH)
 
 if __name__ == "__main__":
-    log_info('starting server at {} at port {}'.format(
-        config.HOST, config.PORT), MODULE_CONTEXT)
+    log_info('starting server at {} at port {}'.format(config.HOST, config.PORT), MODULE_CONTEXT)
     server.run(host=config.HOST, port=config.PORT, debug=config.DEBUG)

@@ -2,7 +2,7 @@ from flask_restful import fields, marshal_with, reqparse, Resource
 from repositories import UserAuthenticationRepositories
 from models import CustomResponse, Status
 from utilities import UserUtils
-# from utilities import AppContext
+from utilities import MODULE_CONTEXT
 import ast
 from anuvaad_auditor.loghandler import log_info, log_exception
 from flask import request
@@ -16,13 +16,14 @@ class UserLogin(Resource):
         password = body["password"]
 
         validity=UserUtils.validate_user_login_input(userName, password)
+        log_info("User validation:{}".format(validity),MODULE_CONTEXT)
         if validity is not None:
                 return validity, 400
-
 
         try:
             result = UserAuthenticationRepositories.user_login(
                 userName, password)
+            log_info("User logout result:{}".format(result),MODULE_CONTEXT)
             if result == False:
                 res = CustomResponse(
                     Status.FAILURE_USR_LOGIN.value, None)
@@ -31,6 +32,8 @@ class UserLogin(Resource):
             res = CustomResponse(Status.SUCCESS_USR_LOGIN.value, result)
             return res.getres()
         except Exception as e:
+            log_exception("Exception while  user login: " +
+                      str(e), MODULE_CONTEXT, e)
             res = CustomResponse(
                 Status.FAILURE_USR_LOGIN.value, None)
             return res.getresjson(), 400
@@ -45,12 +48,11 @@ class UserLogout(Resource):
         if not userName:
             res = CustomResponse(
                 Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
-            # print(res)
             return res.getresjson(), 400
 
         try:
             result = UserAuthenticationRepositories.user_logout(userName)
-            # print(result,"in resource")
+            log_info("User logout result:{}".format(result),MODULE_CONTEXT)
             if result == False:
                 res = CustomResponse(
                     Status.FAILURE_USR_LOGOUT.value, None)
@@ -59,8 +61,8 @@ class UserLogout(Resource):
                 res = CustomResponse(Status.SUCCESS_USR_LOGOUT.value, None)
             return res.getres()
         except Exception as e:
-            print(e,"in resource exception")
-            # log_exception("SaveSentenceResource ",  AppContext.getContext(), e)
+            log_exception("Exception while logout: " +
+                      str(e), MODULE_CONTEXT, e)
             res = CustomResponse(
                 Status.FAILURE_USR_LOGOUT.value, None)
             return res.getresjson(), 400
@@ -73,13 +75,13 @@ class AuthTokenSearch(Resource):
         token = body["token"]
 
         validity=UserUtils.token_validation(token)
-        # print(validity,"heree")
+        log_info("Token validation result:{}".format(validity),MODULE_CONTEXT)
         if validity is not None:
                 return validity, 400
 
         try:
             result = UserAuthenticationRepositories.token_search(token)
-            # print(result,"reso")
+            log_info("User auth token search result:{}".format(result),MODULE_CONTEXT)
             if result == False:
                 res = CustomResponse(
                     Status.FAILURE_USR_TOKEN.value, None)
@@ -88,8 +90,8 @@ class AuthTokenSearch(Resource):
                 res = CustomResponse(Status.SUCCESS_USR_TOKEN.value, result)
             return res.getres()
         except Exception as e:
-            # print(e,"resource-except")
-            # log_exception("SaveSentenceResource ",  AppContext.getContext(), e)
+            log_exception("Exception while user auth search: " +
+                      str(e), MODULE_CONTEXT, e)
             res = CustomResponse(
                 Status.FAILURE_USR_TOKEN.value, None)
             return res.getresjson(), 400
