@@ -11,7 +11,7 @@ class UserManagementModel(object):
 
     @staticmethod
     def create_users(users):
-        print(users)
+        # print(users)
         records=[]
         for user in users:
             users_data={}

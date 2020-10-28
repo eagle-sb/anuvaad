@@ -12,6 +12,9 @@ from anuvaad_auditor.errorhandler import post_error
 class CreateUsers(Resource):
 
     def post(self):
+
+        # print(UserUtils.read_role_codes())
+
         body = request.get_json()
         if 'users' in body:
             users = body['users']

@@ -19,4 +19,4 @@ USR_TOKEN_MONGO_COLLECTION = os.environ.get(
 
 MIN_LENGTH = os.environ.get('UMS_PASSWORD_MIN_LENGTH', 6)
 
-ROLE_CODES = ["SUPERUSER","ADMIN","TRANSLATOR","DEVELOPER"]
+ROLE_CODES_URL = os.environ.get('USM_ROLE_CODES_URL','https://raw.githubusercontent.com/project-anuvaad/anuvaad/zuul_gateway/anuvaad-api/anuvaad-zuul-api-gw/dev-configs/roles.json')

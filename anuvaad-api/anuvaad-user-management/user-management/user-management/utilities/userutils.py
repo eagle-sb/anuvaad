@@ -7,7 +7,16 @@ from anuvaad_auditor.errorhandler import post_error
 import jwt
 from utilities import MODULE_CONTEXT
 import config
+import json
+import codecs
+from app import ROLE_CODES
 
+
+
+# role_codes_json= json.load(codecs.open(role_codes_filepath, 'r', 'utf-8-sig'))
+# role_codes_data=role_codes_json["roles"]
+
+# print(role_codes_data)
 
 class UserUtils:
 
@@ -77,7 +86,7 @@ class UserUtils:
     def validate_rolecodes(roles):
         roles=[x.upper() for x in roles]
         for role in roles:
-            if role not in config.ROLE_CODES:
+            if role not in ROLE_CODES:
                 return False
 
     @staticmethod
@@ -263,6 +272,8 @@ class UserUtils:
         if UserUtils.validate_user(username,password)==None:
             return post_error("Database connection exception","An error occurred while connecting to the database",None)
 
+    # @staticmethod
 
 
+        
  
