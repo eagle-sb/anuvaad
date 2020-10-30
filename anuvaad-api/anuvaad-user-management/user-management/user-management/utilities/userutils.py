@@ -9,13 +9,14 @@ from utilities import MODULE_CONTEXT
 import config
 import json
 import codecs
+import requests
 
 role_codes_filepath = config.ROLE_CODES_URL
-json_file_dir = config.ROLE_CODES_DIR_PATH  # "/home/jainy/Documents/usrmgmt/"
+json_file_dir = config.ROLE_CODES_DIR_PATH  
 json_file_name = config.ROLE_CODES_FILE_NAME
 
-ROLE_CODES=[]
 
+role_codes=[]
 
 # role_codes_json= json.load(codecs.open(role_codes_filepath, 'r', 'utf-8-sig'))
 # role_codes_data=role_codes_json["roles"]
@@ -23,6 +24,9 @@ ROLE_CODES=[]
 # print(role_codes_data)
 
 class UserUtils:
+
+    
+    
 
     def __init__(self):
         pass
@@ -88,13 +92,15 @@ class UserUtils:
 
     @staticmethod
     def validate_rolecodes(roles):
-        
-        if not ROLE_CODES:
-            ROLE_CODES=UserUtils.read_role_codes()
-        log_info("ROLE_CODES:{}".format(ROLE_CODES),MODULE_CONTEXT)
+        global role_codes
+        print(role_codes)
+        if not role_codes:
+            log_info("reading from remote location",MODULE_CONTEXT)
+            role_codes=UserUtils.read_role_codes()
+        log_info("ROLE_CODES:{}".format(role_codes),MODULE_CONTEXT)
         log_info("roles : {}".format(roles),MODULE_CONTEXT)
         for role in roles:
-            if role not in ROLE_CODES:
+            if role not in role_codes:
                 return False
 
     @staticmethod
@@ -307,8 +313,7 @@ class UserUtils:
 
         
  
-    def read_role_codes():
-  
+    def read_role_codes():  
         try:
             file = requests.get(role_codes_filepath, allow_redirects=True)
             file_path = json_file_dir + json_file_name
@@ -323,8 +328,7 @@ class UserUtils:
                 for role in roles:
                     if role["active"]:
                         rolecodes.append(role["code"])
-                        log_info(
-                    "rolecodes read from json is stored on to rolecodes array:{} ".format(rolecodes), MODULE_CONTEXT)
+            log_info("rolecodes read from json is stored on to rolecodes array:{} ".format(rolecodes), MODULE_CONTEXT)
             return rolecodes
         except Exception as exc:
             log_exception("Exception while reading configs: " +
