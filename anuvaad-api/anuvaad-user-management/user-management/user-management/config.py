@@ -21,6 +21,6 @@ MIN_LENGTH = os.environ.get('UMS_PASSWORD_MIN_LENGTH', 6)
 
 ROLE_CODES_URL = os.environ.get('UMS_ROLE_CODES_URL','https://raw.githubusercontent.com/project-anuvaad/anuvaad/zuul_gateway/anuvaad-api/anuvaad-zuul-api-gw/dev-configs/roles.json')
 
-ROLE_CODES_DIR_PATH=os.environ.get('UMS_ROLE_DIR_PATH','/app/config/')
+ROLE_CODES_DIR_PATH=os.environ.get('UMS_ROLE_DIR_PATH','/app/configs/')
 
 ROLE_CODES_FILE_NAME=os.environ.get('UMS_FILE_NAME','roles.json')
