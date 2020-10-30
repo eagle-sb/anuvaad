@@ -85,7 +85,8 @@ class UserUtils:
 
     @staticmethod
     def validate_rolecodes(roles):
-        roles=[x.upper() for x in roles]
+        log_info("ROLE_CODES:{}".format(ROLE_CODES),MODULE_CONTEXT)
+        log_info("roles : {}".format(roles),MODULE_CONTEXT)
         for role in roles:
             if role not in ROLE_CODES:
                 return False

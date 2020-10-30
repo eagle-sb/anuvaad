@@ -29,9 +29,10 @@ def read_role_codes():
                 roles), MODULE_CONTEXT)
             rolecodes = []
             for role in roles:
-                rolecodes.append(role["code"])
-            log_info(
-                "rolecodes read from json is stored on to rolecodes array ", MODULE_CONTEXT)
+                if role["active"]:
+                    rolecodes.append(role["code"])
+                    log_info(
+                "rolecodes read from json is stored on to rolecodes array:{} ".format(rolecodes), MODULE_CONTEXT)
             return rolecodes
     except Exception as exc:
         log_exception("Exception while reading configs: " +
