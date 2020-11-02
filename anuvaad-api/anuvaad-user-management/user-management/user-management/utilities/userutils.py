@@ -219,7 +219,19 @@ class UserUtils:
 
     @staticmethod
     def validate_user_input_creation(user):
-        # print(user)
+        if "name" not in user.keys():
+            return post_error("Key error", "name not found",None)
+        if "userName" not in user.keys():
+            return post_error("Key error", "userName not found",None)
+        if "password" not in user.keys():
+            return post_error("Key error","password not found",None)
+        if "email" not in user.keys():
+            return post_error("Key error","email not found",None)
+        if "phoneNo" not in user.keys():
+            return post_error("Key error", "phoneNo not found",None)
+        if "roles" not in user.keys():
+            return post_error("Key error", "roles not found",None)
+        
         username = user["userName"]
         password = user["password"]
         email = user["email"]
@@ -244,6 +256,10 @@ class UserUtils:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return post_error("Database connection exception","An error occurred while connecting to the database",None)
         for rol in roles:
+            if "roleCode" not in rol.keys():
+                return post_error("Key error","roleCode not found",None)
+            if "roleDesc" not in rol.keys():
+                return post_error("Key error","roleDesc not found",None)    
             rolecodes.append(rol["roleCode"])
         if not rolecodes:
             return post_error("Data Missing","No rolecodes are given",None)
@@ -255,15 +271,28 @@ class UserUtils:
 
     @staticmethod
     def validate_user_input_updation(user):
+        if "userID" not in user.keys():
+            return post_error("Key error", "userID not found",None)
+        if "name" not in user.keys():
+            return post_error("Key error", "name not found",None)
+        if "userName" not in user.keys():
+            return post_error("Key error", "userName not found",None)
+        if "password" not in user.keys():
+            return post_error("Key error","password not found",None)
+        if "email" not in user.keys():
+            return post_error("Key error","email not found",None)
+        if "phoneNo" not in user.keys():
+            return post_error("Key error", "phoneNo not found",None)
+        if "roles" not in user.keys():
+            return post_error("Key error", "roles not found",None)
+
         userId = user["userID"]
         username = user["userName"]
         password = user["password"]
         email = user["email"]
         phone = user["phoneNo"]
         roles =user["roles"]
-        rolecodes=[]
-
-        
+        rolecodes=[]     
 
         if not userId:
             return post_error("Id missing", "UserID field cannot be empty", None)
@@ -287,6 +316,10 @@ class UserUtils:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return post_error("Database connection exception","An error occurred while connecting to the database",None)
         for rol in roles:
+            if "roleCode" not in rol.keys():
+                return post_error("Key error", "roleCode not found",None)
+            if "roleDesc" not in rol.keys():
+                return post_error("Key error", "roleDesc not found",None)
             rolecodes.append(rol["roleCode"])
         if not rolecodes:
             return post_error("Data Missing","No rolecodes are given",None)

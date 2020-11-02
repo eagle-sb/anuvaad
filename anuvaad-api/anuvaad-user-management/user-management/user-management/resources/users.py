@@ -12,10 +12,11 @@ from anuvaad_auditor.errorhandler import post_error
 class CreateUsers(Resource):
 
     def post(self):
-
-        # print(UserUtils.read_role_codes())
-
         body = request.get_json()
+        print(body.keys())
+        if 'users' not in body.keys():
+            return post_error("Key error","users not found",None)
+
         if 'users' in body:
             users = body['users']
         log_info("data recieved for user creation is:{}".format(users),MODULE_CONTEXT)
@@ -56,6 +57,9 @@ class UpdateUsers(Resource):
 
     def post(self):
         body = request.get_json()
+        if 'users' not in body.keys():
+            return post_error("Key error", "users not found",None)
+
         users = body['users']
         log_info("data recieved for user updation is:{}".format(users),MODULE_CONTEXT)
         if not users:
@@ -97,6 +101,14 @@ class SearchUsers(Resource):
     def post(self):
 
         body = request.get_json()
+        if "userIDs" not in body.keys():
+            return post_error("Key error","userIDs not found",None)
+        if "userNames" not in body.keys():
+            return post_error("Key error","userNames not found",None)
+        if "roleCodes" not in body.keys():
+            return post_error("Key error","roleCodes not found",None)
+        
+
         userIDs = body['userIDs']
         userNames = body['userNames']
         roleCodes = body['roleCodes']

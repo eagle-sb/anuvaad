@@ -6,12 +6,18 @@ from utilities import MODULE_CONTEXT
 import ast
 from anuvaad_auditor.loghandler import log_info, log_exception
 from flask import request
+from anuvaad_auditor.errorhandler import post_error
 
 
 class UserLogin(Resource):
 
     def post(self):
         body = request.get_json()
+        if "userName" not in body.keys():
+            return post_error("Key error","userName not found",None)
+        if "password" not in body.keys():
+            return post_error("Key error","password not found",None)
+        
         userName = body["userName"]
         password = body["password"]
 
@@ -43,6 +49,8 @@ class UserLogout(Resource):
 
     def post(self):
         body = request.get_json()
+        if "userName" not in body.keys():
+            return post_error("Key error","userName not found",None)
         userName = body["userName"]
 
         if not userName:
@@ -72,8 +80,9 @@ class AuthTokenSearch(Resource):
 
     def post(self):
         body = request.get_json()
+        if "token" not in body.keys():
+            return post_error("Key error","token not found",None)
         token = body["token"]
-
         validity=UserUtils.token_validation(token)
         log_info("Token validation result:{}".format(validity),MODULE_CONTEXT)
         if validity is not None:
