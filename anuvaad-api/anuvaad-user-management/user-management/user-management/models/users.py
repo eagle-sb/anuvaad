@@ -42,12 +42,12 @@ class UserManagementModel(object):
             return(False)
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
-            result=collections.insert(records)
-            log_info("users created:{}".format(result),MODULE_CONTEXT)
+            results=collections.insert(records)
+            log_info("users created:{}".format(results),MODULE_CONTEXT)
+            # if 'writeError' in list(results.keys()):
+            #     return False
             return True
 
-        # except  result.writeError as e:
-        #     log_exception("write error in db"+str(e),MODULE_CONTEXT,e)
         except Exception as e:
             log_exception("db connection exception "+str(e),  MODULE_CONTEXT, e)
             return None
@@ -82,7 +82,9 @@ class UserManagementModel(object):
 
                 results=collections.update({"userID": user_id},{'$set':users_data})
                 log_info("user updated:{}".format(results),MODULE_CONTEXT)
-
+                # if 'writeError' in list(results.keys()):
+                #     return False
+            
             return True
 
         except Exception as e:

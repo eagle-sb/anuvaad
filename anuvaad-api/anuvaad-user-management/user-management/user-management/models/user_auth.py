@@ -25,6 +25,8 @@ class UserAuthenticationModel(object):
                 UserUtils.hash_password(password)), "exp": timeLimit}
                 token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
                 collections.insert({"user": userName, "token": token.decode("utf-8"), "secret_key": SECRET_KEY, "active": True, "start_time": eval(str(time.time()).replace('.', '')[0:13]), "end_time": 0})
+                # if 'writeError' in list(results.keys()):
+                #     return False
                 log_info("user login details are stored on db:",MODULE_CONTEXT) 
                 return_data = {
                     "userName": userName,
