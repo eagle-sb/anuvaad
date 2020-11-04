@@ -14,9 +14,9 @@ class UserLogin(Resource):
     def post(self):
         body = request.get_json()
         if "userName" not in body.keys():
-            return post_error("Key error","userName not found",None)
+            return post_error("Key error","userName not found",None), 400
         if "password" not in body.keys():
-            return post_error("Key error","password not found",None)
+            return post_error("Key error","password not found",None), 400
         
         userName = body["userName"]
         password = body["password"]
@@ -36,13 +36,12 @@ class UserLogin(Resource):
                 return res.getresjson(), 400
 
             res = CustomResponse(Status.SUCCESS_USR_LOGIN.value, result)
-            return res.getres()
+            return res.getresjson(), 200
         except Exception as e:
             log_exception("Exception while  user login: " +
                       str(e), MODULE_CONTEXT, e)
-            res = CustomResponse(
-                Status.FAILURE_USR_LOGIN.value, None)
-            return res.getresjson(), 400
+            return post_error("Exception occurred", "Exception while performing user login", None), 400
+            
 
 
 class UserLogout(Resource):
@@ -71,9 +70,8 @@ class UserLogout(Resource):
         except Exception as e:
             log_exception("Exception while logout: " +
                       str(e), MODULE_CONTEXT, e)
-            res = CustomResponse(
-                Status.FAILURE_USR_LOGOUT.value, None)
-            return res.getresjson(), 400
+            return post_error("Exception occurred", "Exception while performing user creation", None), 400
+            
 
 
 class AuthTokenSearch(Resource):
@@ -101,6 +99,5 @@ class AuthTokenSearch(Resource):
         except Exception as e:
             log_exception("Exception while user auth search: " +
                       str(e), MODULE_CONTEXT, e)
-            res = CustomResponse(
-                Status.FAILURE_USR_TOKEN.value, None)
-            return res.getresjson(), 400
+            return post_error("Exception occurred", "Exception while performing user creation", None), 400
+            

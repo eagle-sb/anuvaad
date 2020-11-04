@@ -137,7 +137,6 @@ class UserUtils:
         else:
             try:
                 collections = get_db()[config.USR_TOKEN_MONGO_COLLECTION]
-                # print(collections)
                 result = collections.find({"token": token_received}, {
                                           "_id": 0, "user": 1, "active": 1, "secret_key": 1})
                 log_info("searching for record with the recieved token:{}".format(
@@ -149,7 +148,6 @@ class UserUtils:
                         return post_error("Invalid token", "Token has expired", None)
                     if value["active"] == True:
                         secret_key = value["secret_key"]
-                        # user = value["user"]
 
                         try:
                             jwt.decode(token, secret_key, algorithm='HS256')

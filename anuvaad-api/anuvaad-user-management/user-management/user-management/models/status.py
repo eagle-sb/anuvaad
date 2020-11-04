@@ -20,8 +20,8 @@ class Status(enum.Enum):
 
     SUCCESS_USR_SEARCH = {'ok': True, 'http': {'status': 200},
                           'why': "users were searched successfully"}
-    FAILURE_USR_SEARCH = {'ok': True, 'http': {'status': 400},
-                          'why': "On input errors causing failure in user account updation"}
+    EMPTY_USR_SEARCH = {'ok': True, 'http': {'status': 200},
+                          'why': "No such users"}
 
     SUCCESS_USR_LOGIN = {'ok': True, 'http': {'status': 200},
                          'why': "Logged in successfully"}
