@@ -4,6 +4,7 @@ import TextField from '@material-ui/core/TextField';
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import { highlightSentence } from '../../../../flux/actions/apis/translator_actions';
+const PAGE_OPS = require("../../../../utils/page.operations");
 
 // const { v4 } = require('uuid');
 
@@ -28,7 +29,6 @@ class PageCard extends React.Component {
      * render Sentences
      */
     renderText = (text, block) => {
-
         let style = {
             position: "absolute",
             top: (text.block_id === this.state.selectedSentenceID ? text.text_top - block.text_top - 20 : text.text_top - block.text_top) + 'px',
@@ -81,7 +81,7 @@ class PageCard extends React.Component {
     /**
      * render sentence edit
      */
-    renderTextField = () => {
+    renderTextField = (text) => {
         return (
             <TextField
                 style={{ width: "100%", background: "white" }}
@@ -90,7 +90,7 @@ class PageCard extends React.Component {
                 variant="outlined"
                 id="mui-theme-provider-outlined-input"
                 onChange={this.handleTextChange}
-                onBlur={() => { this.handleClickAway() }}
+                onBlur={() => { this.handleClickAway(text) }}
                 autoFocus={true}
                 fullWidth
                 multiline
@@ -106,13 +106,13 @@ class PageCard extends React.Component {
     handleSelectedSentenceId = (text) => {
         this.setState({ selectedSentenceID: text.block_id, text: text.text })
         this.props.highlightSentence(text)
-
     }
     /**
      * click away listner
      */
-    handleClickAway = () => {
-
+    handleClickAway = (pageNo) => {
+        let data = PAGE_OPS.get_updated_page_blocks(this.props.document_contents, pageNo.page_no, this.state.text, this.state.selectedSentenceID)
+         this.props.onAction("SENTENCE_SOURCE_EDITED", pageNo, [data], "") 
         this.setState({ selectedSentenceID: '' })
     }
 

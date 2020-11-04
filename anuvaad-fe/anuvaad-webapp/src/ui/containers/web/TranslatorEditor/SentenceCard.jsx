@@ -23,6 +23,7 @@ import InteractiveTranslateAPI from "../../../../flux/actions/apis/intractive_tr
 import copy from 'copy-to-clipboard';
 import SENTENCE_ACTION from './SentenceActions'
 import { value } from 'jsonpath';
+const TELEMETRY = require('../../../../utils/TelemetryManager')
 
 const styles = {
     card_active: {
@@ -110,19 +111,11 @@ class SentenceCard extends React.Component {
         }
 
         if (prevProps.sentence_highlight !== this.props.sentence_highlight && this.props.sentence_highlight && this.props.sentence_highlight.sentence_id) {
-            this.handleSourceScroll(this.props.sentence_highlight.sentence_id)
+            // this.handleSourceScroll(this.props.sentence_highlight.sentence_id)
             if (this.props.sentence_highlight && this.props.sentence_highlight.sentence_id === this.props.sentence.s_id) {
                 this.setState({ cardInFocus: true })
             }
         }
-    }
-
-    handleSourceScroll(id) {
-        this.refs[id] && this.refs[id].scrollIntoView({
-            behavior: "smooth",
-            block: "center"
-        });
-       
     }
 
     /**
@@ -221,6 +214,7 @@ class SentenceCard extends React.Component {
         if (this.props.onAction) {
 
             let sentence = { ...this.props.sentence };
+            TELEMETRY.sentenceChanged(sentence.tgt, this.state.value , sentence.s_id , "translation")
             sentence.save = true;
             sentence.tgt = this.state.value;
             delete sentence.block_identifier;
@@ -307,7 +301,7 @@ class SentenceCard extends React.Component {
          * Unroll the card only in normal operation
          * - in merge mode do not collapse the current card.
          */
-        if (!this.state.isModeMerge) {
+        if (!this.state.isModeMerge && !this.props.sentence_highlight.sentence_id) {
             this.setState({
                 cardInFocus: false,
                 parallel_words:null
@@ -594,9 +588,8 @@ class SentenceCard extends React.Component {
     }
 
     render() {
-
         return (
-            <div ref={this.props.sentence.s_id}>
+            <div>
             <ClickAwayListener mouseEvent="onMouseDown" onClickAway={this.handleClickAway}>
                 <div key={12} style={{ padding: "1%" }}>
                     <Card style={this.isSentenceSaved() ? styles.card_saved : styles.card_inactive}>
