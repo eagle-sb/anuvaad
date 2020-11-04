@@ -8,6 +8,17 @@ const PAGE_OPS = require("../../../../utils/page.operations");
 
 // const { v4 } = require('uuid');
 
+
+const styles = {
+    textField: {
+        width: "100%", background: "white",
+        background: 'rgb(211,211,211)',
+        borderRadius: 10,
+        border: 0,
+        color: 'green',
+    }
+}
+
 class PageCard extends React.Component {
     constructor(props) {
         super(props);
@@ -31,7 +42,7 @@ class PageCard extends React.Component {
     renderText = (text, block) => {
         let style = {
             position: "absolute",
-            top: (text.block_id === this.state.selectedSentenceID ? text.text_top - block.text_top - 20 : text.text_top - block.text_top) + 'px',
+            top: (text.block_id === this.props.sele ? text.text_top - block.text_top - 20 : text.text_top - block.text_top) + 'px',
             left: text.text_left - block.text_left + 'px',
             width: text.text_width + 'px',
             height: text.text_height + 'px',
@@ -84,7 +95,7 @@ class PageCard extends React.Component {
     renderTextField = (text) => {
         return (
             <TextField
-                style={{ width: "100%", background: "white" }}
+                style= {styles.textField} 
                 type="text" className="form-control"
                 value={this.state.text}
                 variant="outlined"
@@ -94,7 +105,6 @@ class PageCard extends React.Component {
                 autoFocus={true}
                 fullWidth
                 multiline
-
             />
         )
     }
@@ -126,13 +136,12 @@ class PageCard extends React.Component {
 
     renderBlock = (block) => {
         return (
-
             <div style={{
                 position: "relative", top: block.text_top + 'px',
                 left: block.text_left + 'px',
                 width: block.text_width + 'px',
                 height: block.text_height + 'px',
-
+                zIndex:2,
                 border: this.props.block_highlight.block_identifier == block.block_identifier ? "2px solid #1C9AB7" : ''
             }}
                 id={block.block_identifier}
@@ -170,7 +179,6 @@ class PageCard extends React.Component {
                     </Paper>
                     <Divider />
                 </div>
-
             )
         }
         return (
@@ -188,10 +196,10 @@ class PageCard extends React.Component {
 
 }
 
-
 const mapStateToProps = state => ({
     document_contents: state.document_contents,
-    block_highlight: state.block_highlight
+    block_highlight: state.block_highlight,
+    sentence_highlight: state.sentence_highlight
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(

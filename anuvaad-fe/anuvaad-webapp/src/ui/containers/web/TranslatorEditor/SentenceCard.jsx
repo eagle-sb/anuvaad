@@ -46,6 +46,10 @@ const styles = {
     },
     expandOpen: {
         transform: 'rotate(180deg)',
+        
+    },
+    card_open: {
+        background: "#F4FDFF"
     }
 }
 
@@ -76,7 +80,9 @@ class SentenceCard extends React.Component {
             sentenceSource:'',
             isopenMenuItems:false,
             parallel_words:null,
-            dictionaryWord:''
+            dictionaryWord:'',
+            startIndex: null,
+            endIndex: null
 
         };
         this.textInput = React.createRef();
@@ -196,6 +202,7 @@ class SentenceCard extends React.Component {
                     delete sentence.block_identifier;
 
                     this.props.onAction(SENTENCE_ACTION.SENTENCE_SAVED, this.props.pageNumber, [sentence])
+                    return;
                 }
             }
 
@@ -233,9 +240,7 @@ class SentenceCard extends React.Component {
         }
     }
 
-    processSplitButtonClicked() {
-        let start_index = 0;
-        let end_index = 0;
+    processSplitButtonClicked(start_index, end_index) {
         if (this.props.onAction) {
             this.props.onAction(SENTENCE_ACTION.SENTENCE_SPLITTED, this.props.pageNumber, [this.props.sentence], start_index, end_index)
         }
@@ -309,13 +314,14 @@ class SentenceCard extends React.Component {
         }
     };
 
-    getSelectionText = (event) =>{
+    getSelectionText = (event) => {
         let selectedSentence    = window.getSelection().toString();
+        let endIndex            = window.getSelection().focusOffset;
+        let startIndex          = window.getSelection().anchorOffset;
         let sentenceSource      = event.target.innerHTML;
         if(selectedSentence && sentenceSource.includes(selectedSentence)){
-            this.setState({selectedSentence, sentenceSource, positionX: event.clientX , positionY:event.clientY, isopenMenuItems : true})
+            this.setState({selectedSentence, sentenceSource, positionX: event.clientX,startIndex, endIndex, positionY:event.clientY, isopenMenuItems : true})
         }
-        
     }
 
     renderSourceSentence = () => {
@@ -468,56 +474,50 @@ class SentenceCard extends React.Component {
             body: JSON.stringify(apiObj.getBody()),
             headers: apiObj.getHeaders().headers
         }).then ( (response)=> {
-                    if (response.status >= 400 && response.status < 600) {
-                        console.log('api failed because of server or network')
-                        this.props.sentenceActionApiStopped()
-                    }
-                    response.text().then( (data)=> {
-                        let val = JSON.parse(data)
-                        return val.data;
-                    }).then((result)=>{
-                        let parallel_words = []
-                        result.parallel_words.map((words) =>{
-                            if(this.props.tgt_locale === words.locale)
-                                parallel_words.push(words.name)
-                        } )
-                        
-                        this.setState({
-                            parallel_words: parallel_words
-                    })
+            if (response.status >= 400 && response.status < 600) {
+                console.log('api failed because of server or network')
+                this.props.sentenceActionApiStopped()
+            }
+            response.text().then( (data)=> {
+                let val = JSON.parse(data)
+                return val.data;
+            }).then((result)=>{
+                let parallel_words = []
+                result.parallel_words.map((words) => {
+                    if(this.props.tgt_locale === words.locale)
+                        parallel_words.push(words.name)
+                } )
+                this.setState({
+                    parallel_words: parallel_words
                 })
-                })
-             
-              
-
-            
-            
-       
-      }
+            })
+        })
+    }
 
     handleClose = () => {
-        this.setState({selectedSentence: '',  positionX:0, positionY:0,isopenMenuItems : false})
+        this.setState({selectedSentence: '',  positionX:0, positionY:0,isopenMenuItems : false, endIndex : null, startIndex: null})
     }
 
     handleCopy = () => {
         copy(this.state.selectedSentence)
         this.handleClose()
     
-      }
+    }
       
     handleOperation = (action) =>{
         switch(action) {
-            case "Dictionary": {
+            case 0: {
               this.makeAPICallDictionary();
               this.handleClose();
               return;
             }
     
-            case "Split sentence": {
-              this.processSplitButtonClicked()
+            case 1: {
+                this.processSplitButtonClicked(this.state.startIndex, this.state.endIndex);
+              this.handleClose();
               return;
             }
-            case "Copy": {
+            case 2: {
     
                 this.handleCopy()
               return;
@@ -525,8 +525,7 @@ class SentenceCard extends React.Component {
           }
     }
 
-    renderMenuItems = () =>{
-
+    renderMenuItems = () => {
         return (
         <MenuItems
             splitValue={this.state.selectedSentence}
@@ -592,7 +591,7 @@ class SentenceCard extends React.Component {
             <div>
             <ClickAwayListener mouseEvent="onMouseDown" onClickAway={this.handleClickAway}>
                 <div key={12} style={{ padding: "1%" }}>
-                    <Card style={this.isSentenceSaved() ? styles.card_saved : styles.card_inactive}>
+                    <Card style={this.state.cardInFocus ? styles.card_open : this.isSentenceSaved() ? styles.card_saved : styles.card_inactive}>
                         <CardContent style={{ display: "flex", flexDirection: "row" }}>
                             <div style={{ width: "90%" }}>
                                 {this.renderSourceSentence()}
@@ -641,7 +640,8 @@ class SentenceCard extends React.Component {
 const mapStateToProps = state => ({
     document_contents: state.document_contents,
     sentence_action_operation: state.sentence_action_operation,
-    sentence_highlight: state.sentence_highlight
+    sentence_highlight: state.sentence_highlight,
+    block_highlight: state.block_highlight,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(

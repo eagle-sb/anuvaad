@@ -15,7 +15,6 @@ class MenuClass extends React.Component {
   }
   render() {
     const { positionX,positionY, splitValue } = this.props;
-    console.log(positionX, positionY)
     return (
       <Popover
         id="menu-appbar"
@@ -39,7 +38,7 @@ class MenuClass extends React.Component {
               width: "100%",
               justifyContent: "left",
             }}
-            onClick={() => this.props.handleOperation("Dictionary")}
+            onClick={() => this.props.handleOperation(0)}
           >
             {" "}
             lookup dictionary{" "}
@@ -52,7 +51,7 @@ class MenuClass extends React.Component {
             <div>
               <Button
                 style={{ width: "100%", justifyContent: "left" }}
-                onClick={() => this.props.handleOperation("Split sentence")}
+                onClick={() => this.props.handleOperation(1)}
               >
                 Split sentence
               </Button>
@@ -63,7 +62,7 @@ class MenuClass extends React.Component {
                   width: "100%",
                   justifyContent: "left",
                 }}
-                onClick={() => this.props.handleOperation('Copy')}
+                onClick={() => this.props.handleOperation(2)}
               >
                 {" "}
                 Copy
