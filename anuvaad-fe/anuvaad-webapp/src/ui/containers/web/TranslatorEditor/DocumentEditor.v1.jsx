@@ -85,10 +85,9 @@ class DocumentEditor extends React.Component {
         }
       }
 
-      if (prevProps.sentence_highlight !== this.props.sentence_highlight && this.props.sentence_highlight && this.props.sentence_highlight.sentence_id) {
-        console.log(this.props.sentence_highlight)
-  
-        // this.handleSourceScroll(this.props.sentence_highlight.sentence_id)
+      // if (prevProps.sentence_highlight !== this.props.sentence_highlight && this.props.sentence_highlight && this.props.sentence_highlight && this.props.sentence_highlight.sentence_id) {
+      if (prevProps.sentence_highlight !== this.props.sentence_highlight) {
+        this.handleSourceScroll(this.props.sentence_highlight.sentence_id)
       }
     }
 
@@ -498,6 +497,7 @@ class DocumentEditor extends React.Component {
                 {this.state.isModeSentences ? this.renderSentences() : this.renderPDFDocument()}
             </Grid>
             {(this.state.snackBarMessage || this.state.snackBarSavedMessage) && this.snackBarMessage()}
+            {(this.props.document_contents.pages.length<1) && < Spinner />}
         </div>
         )
     }
@@ -506,7 +506,7 @@ class DocumentEditor extends React.Component {
 const mapStateToProps = state => ({
     saveContent: state.saveContent,
     document_contents: state.document_contents,
-    // sentence_highlight: state.sentence_highlight,
+    sentence_highlight: state.sentence_highlight.sentence,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(

@@ -116,8 +116,8 @@ class SentenceCard extends React.Component {
             this.setState({dictionaryWord: prevState.selectedSentence})
         }
 
-        if (prevProps.sentence_highlight !== this.props.sentence_highlight && this.props.sentence_highlight && this.props.sentence_highlight.sentence_id) {
-            // this.handleSourceScroll(this.props.sentence_highlight.sentence_id)
+        if (prevProps.sentence_highlight !== this.props.sentence_highlight) {
+        
             if (this.props.sentence_highlight && this.props.sentence_highlight.sentence_id === this.props.sentence.s_id) {
                 this.setState({ cardInFocus: true })
             }
@@ -306,7 +306,7 @@ class SentenceCard extends React.Component {
          * Unroll the card only in normal operation
          * - in merge mode do not collapse the current card.
          */
-        if (!this.state.isModeMerge && !this.props.sentence_highlight.sentence_id) {
+        if (!this.state.isModeMerge) {
             this.setState({
                 cardInFocus: false,
                 parallel_words:null
@@ -587,8 +587,10 @@ class SentenceCard extends React.Component {
     }
 
     render() {
+        // console.log(this.props.sentence_highlight)
+
         return (
-            <div>
+            <div ref={this.props.sentence.s_id}>
             <ClickAwayListener mouseEvent="onMouseDown" onClickAway={this.handleClickAway}>
                 <div key={12} style={{ padding: "1%" }}>
                     <Card style={this.state.cardInFocus ? styles.card_open : this.isSentenceSaved() ? styles.card_saved : styles.card_inactive}>
@@ -640,7 +642,7 @@ class SentenceCard extends React.Component {
 const mapStateToProps = state => ({
     document_contents: state.document_contents,
     sentence_action_operation: state.sentence_action_operation,
-    sentence_highlight: state.sentence_highlight,
+    sentence_highlight: state.sentence_highlight.sentence,
     block_highlight: state.block_highlight,
 });
 

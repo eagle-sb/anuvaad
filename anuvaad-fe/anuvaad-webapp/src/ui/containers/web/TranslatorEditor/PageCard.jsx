@@ -3,11 +3,10 @@ import { Paper, Divider } from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { highlightSentence } from '../../../../flux/actions/apis/translator_actions';
+import { highlightSentence, clearHighlighBlock } from '../../../../flux/actions/apis/translator_actions';
+
 const PAGE_OPS = require("../../../../utils/page.operations");
-
 // const { v4 } = require('uuid');
-
 
 const styles = {
     textField: {
@@ -32,7 +31,6 @@ class PageCard extends React.Component {
     componentDidUpdate(prevProps) {
         if (prevProps.block_highlight !== this.props.block_highlight && this.props.block_highlight && this.props.block_highlight.block_identifier) {
             this.handleSourceScroll(this.props.block_highlight.block_identifier)
-            console.log(this.props.block_highlight)
         }
     }
 
@@ -42,7 +40,7 @@ class PageCard extends React.Component {
     renderText = (text, block) => {
         let style = {
             position: "absolute",
-            top: (text.block_id === this.props.sele ? text.text_top - block.text_top - 20 : text.text_top - block.text_top) + 'px',
+            top: (text.block_id === (this.props.sentence_highlight && this.props.sentence_highlight.block_id) ? text.text_top - block.text_top - 20 : text.text_top - block.text_top) + 'px',
             left: text.text_left - block.text_left + 'px',
             width: text.text_width + 'px',
             height: text.text_height + 'px',
@@ -52,13 +50,13 @@ class PageCard extends React.Component {
             textAlign: "justify",
             lineHeight: text.avg_line_height + 'px',
             // textAlignLast: "justify",
-            zIndex: text.block_id === this.state.selectedSentenceID ? 100000 : 2
+            zIndex: text.block_id === (this.props.sentence_highlight && this.props.sentence_highlight.block_id) ? 100000 : 2
             // textDecorationLine: this.props.sentence.underline ? "underline" : ""
         };
         return (
-
+            
             <div style={style} key={text.block_id} ref={text.block_identifier}>
-                {text.block_id === this.state.selectedSentenceID ?
+                {text.block_id == (this.props.sentence_highlight && this.props.sentence_highlight.block_id) ?
                     this.renderTextField(text)
                     :
                     this.renderTextSpan(text)
@@ -97,6 +95,7 @@ class PageCard extends React.Component {
             <TextField
                 style= {styles.textField} 
                 type="text" className="form-control"
+                defaultValue = {text.text}
                 value={this.state.text}
                 variant="outlined"
                 id="mui-theme-provider-outlined-input"
@@ -114,7 +113,7 @@ class PageCard extends React.Component {
      * render sentence edit
      */
     handleSelectedSentenceId = (text) => {
-        this.setState({ selectedSentenceID: text.block_id, text: text.text })
+        // this.setState({text: text.text })
         this.props.highlightSentence(text)
     }
     /**
@@ -122,8 +121,8 @@ class PageCard extends React.Component {
      */
     handleClickAway = (pageNo) => {
         let data = PAGE_OPS.get_updated_page_blocks(this.props.document_contents, pageNo.page_no, this.state.text, this.state.selectedSentenceID)
-         this.props.onAction("SENTENCE_SOURCE_EDITED", pageNo, [data], "") 
-        this.setState({ selectedSentenceID: '' })
+        //  this.props.onAction("SENTENCE_SOURCE_EDITED", pageNo, [data], "") 
+        this.props.clearHighlighBlock()
     }
 
     handleSourceScroll(id) {
@@ -199,12 +198,13 @@ class PageCard extends React.Component {
 const mapStateToProps = state => ({
     document_contents: state.document_contents,
     block_highlight: state.block_highlight,
-    sentence_highlight: state.sentence_highlight
+    sentence_highlight: state.sentence_highlight.sentence
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(
     {
         highlightSentence,
+        clearHighlighBlock
     },
     dispatch
 );
