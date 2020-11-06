@@ -29,11 +29,16 @@ import SaveSentenceAPI from '../../../../flux/actions/apis/savecontent';
 import SentenceCard from './SentenceCard';
 import PageCard from "./PageCard";
 import SENTENCE_ACTION from './SentenceActions'
+// import PAGE_OPS from "../../../../utils/page.operations";
+// import BLOCK_OPS from "../../../../utils/block.operations";
+// import TELEMETRY from '../../../../utils/TelemetryManager';
 
 import { sentenceActionApiStarted, sentenceActionApiStopped, contentUpdateStarted } from '../../../../flux/actions/apis/translator_actions';
 import { update_sentences, update_blocks } from '../../../../flux/actions/apis/update_page_content';
 
 const { v4 }        = require('uuid');
+
+
 
 const PAGE_OPS = require("../../../../utils/page.operations");
 const BLOCK_OPS = require("../../../../utils/block.operations");
@@ -78,10 +83,6 @@ class DocumentEditor extends React.Component {
       if (prevProps.document_contents.content_updated !== this.props.document_contents.content_updated) {
         if (this.props.document_contents.content_updated) {
           this.props.sentenceActionApiStopped()
-          this.setState({ snackBarMessage:'',apiCall: false })
-            // setTimeout(() => {
-            //   this.setState({ isShowSnackbar: false, snackBarSavedMessage:'', })
-            // }, 3000)
         }
       }
 
@@ -122,6 +123,13 @@ class DocumentEditor extends React.Component {
     async makeAPICallMergeSentence(sentences, pageNumber) {
       let sentence_ids   = sentences.map(sentence => sentence.s_id)
       let updated_blocks = BLOCK_OPS.do_sentences_merging_v1(this.props.document_contents.pages, sentence_ids);
+
+      /**
+       * telemetry information.
+       */
+      let initial_sentences = sentences.map(sentence => sentence.src);
+      let final_sentence    = updated_blocks['blocks'][0].tokenized_sentences.src;
+      TELEMETRY.mergeSentencesEvent(initial_sentences, final_sentence)
 
       let apiObj      = new WorkFlowAPI("WF_S_TR", updated_blocks.blocks, this.props.match.params.jobid, this.props.match.params.locale, 
                                           '', '', parseInt(this.props.match.params.modelId))
@@ -168,8 +176,9 @@ class DocumentEditor extends React.Component {
 
     async makeAPICallSplitSentence(sentence, pageNumber, startIndex, endIndex) {
       let updated_blocks = BLOCK_OPS.do_sentence_splitting_v1(this.props.document_contents.pages, sentence.block_identifier, sentence, startIndex, endIndex);
+      TELEMETRY.splitSentencesEvent(sentence.src, updated_blocks.splitted_sentences)
 
-      let apiObj      = new WorkFlowAPI("WF_S_TR", updated_blocks, this.props.match.params.jobid, this.props.match.params.locale, 
+      let apiObj      = new WorkFlowAPI("WF_S_TR", updated_blocks.blocks, this.props.match.params.jobid, this.props.match.params.locale, 
                                                 '', '', parseInt(this.props.match.params.modelId))
       const apiReq    = fetch(apiObj.apiEndPoint(), {
           method: 'post',
@@ -194,7 +203,6 @@ class DocumentEditor extends React.Component {
 
       let apiObj = new WorkFlowAPI("WF_S_TKTR", sentence, this.props.match.params.jobid, this.props.match.params.locale,
         '', '', parseInt(this.props.match.params.modelId))
-        debugger
       const apiReq = fetch(apiObj.apiEndPoint(), {
         method: 'post',
         body: JSON.stringify(apiObj.getBody()),
@@ -206,7 +214,7 @@ class DocumentEditor extends React.Component {
           return Promise.reject('');
         } else {
           this.props.contentUpdateStarted()
-          this.props.update_sentences(pageNumber, rsp_data.data);
+          this.props.update_blocks(pageNumber, rsp_data.output.textBlocks);
         }
       }).catch((error) => {
         console.log('api failed because of server or network')
@@ -249,27 +257,14 @@ class DocumentEditor extends React.Component {
            */
           this.props.sentenceActionApiStarted(null)
 
-          let telemetryFinalData = ""
-          let initialArr = []
-          if(sentences && Array.isArray(sentences) && sentences.length > 0) {
-            sentences.map((text, i) => {
-              if(i !== 0) {
-                telemetryFinalData += " "
-              }
-              telemetryFinalData += text.src
-              initialArr.push(text.src)
-            })
-          }
-  
-          TELEMETRY.mergeSentencesEvent(initialArr, telemetryFinalData)
           this.makeAPICallMergeSentence(sentences, pageNumber);
           this.setMessages(SENTENCE_ACTION.SENTENCE_MERGED, "mergedMessage")
           return;
         }
         case SENTENCE_ACTION.SENTENCE_SOURCE_EDITED: {
-          this.props.sentenceActionApiStarted(sentences)
+          this.props.sentenceActionApiStarted(null)
           this.makeAPICallSourceSaveSentence(sentences, pageNumber)
-          this.setState({ snackBarMessage: translate("common.page.label.saveMessage") })
+          this.setMessages(SENTENCE_ACTION.SENTENCE_SOURCE_EDITED, "editedMessage")
           return;
         }
       }
@@ -278,7 +273,7 @@ class DocumentEditor extends React.Component {
     setMessages = (pendingAction, completedAction) =>{
               this.setState({snackBarMessage:translate(`common.page.label.${pendingAction}`), 
               snackBarSavedMessage:translate(`common.page.label.${completedAction}`), 
-              apiCall:true
+              
             })
     }
 
@@ -287,10 +282,10 @@ class DocumentEditor extends React.Component {
         <div>
         <Snackbar
             anchorOrigin={{ vertical: "top", horizontal: "right" }}
-            open={this.state.isShowSnackbar}
-            autoHideDuration={!this.state.apiCall && 2000}
-            variant={this.state.apiCall ? "info" : "success"}
-            message={this.state.apiCall ? this.state.snackBarMessage : this.state.snackBarSavedMessage}
+            open={this.props.sentence_action_operation}
+            autoHideDuration={!this.props.sentence_action_operation && 2000}
+            variant={this.props.sentence_action_operation ? "info" : "success"}
+            message={this.props.sentence_action_operation ? this.state.snackBarMessage : this.state.snackBarSavedMessage}
           />
           </div>
       )
@@ -323,7 +318,7 @@ class DocumentEditor extends React.Component {
         return (
             <Grid container
                 spacing={2}
-                style={{ marginTop: "-10px", padding: "10px 5px 0px ", width: "100%", position: "fixed", zIndex: 1000, background: "#F5F9FA" }}>
+                style={{ marginTop: "-3px", padding: "10px 5px 0px 17px", width: "100%", position: "fixed", zIndex: 1000, background: "#F5F9FA" }}>
             
                 <Grid item xs={12} sm={6} lg={2} xl={2} className="GridFileDetails">
                     <Button
@@ -429,7 +424,7 @@ class DocumentEditor extends React.Component {
       }
       return(
         <Grid item xs={12} sm={6} lg={6} xl={6}>
-          <InfiniteScroll  style={{
+          <InfiniteScroll  height={1200} style={{
             maxHeight: window.innerHeight - 160,
             overflowY: "auto",
           }}
@@ -439,7 +434,7 @@ class DocumentEditor extends React.Component {
             loader={<div style={{ textAlign: "center" }}> <CircularProgress size={20} style={{zIndex: 1000}}/></div>}
             endMessage={ <div style={{ textAlign: "center" }}><b>You have seen it all</b></div> }
           >
-            {pages.map(page => <PageCard key={v4()} page={page} />)}
+            {pages.map(page => <PageCard key={v4()} page={page} onAction={this.processSentenceAction}/>)}
           </InfiniteScroll>
         </Grid>
       )
@@ -458,7 +453,7 @@ class DocumentEditor extends React.Component {
       return (
           <Grid item xs={12} sm={6} lg={6} xl={6}>
             
-            <InfiniteScroll  style={{
+            <InfiniteScroll  height={1200}  style={{
             maxHeight: window.innerHeight - 160,
             overflowY: "auto",
           }}
@@ -468,7 +463,7 @@ class DocumentEditor extends React.Component {
                 loader={<div style={{ textAlign: "center" }}> <CircularProgress size={20} style={{zIndex: 1000}}/></div>}
                 endMessage={ <div style={{ textAlign: "center" }}><b>You have seen it all</b></div> }
             >
-              {pages.map(page => page['translated_texts'].map(sentence => <div ref={sentence.s_id}><SentenceCard key={v4()} 
+              {pages.map(page => page['translated_texts'].map(sentence => <div key={v4()}  ref={sentence.s_id}><SentenceCard key={v4()} 
                                                                                   pageNumber={page.page_no} 
                                                                                   modelId={parseInt(this.props.match.params.modelId)}
                                                                                   word_locale={this.props.match.params.locale}
@@ -491,7 +486,7 @@ class DocumentEditor extends React.Component {
         return (
         <div>
             {this.renderToolBar()}
-            <Grid container spacing={2} style={{ padding: "70px 24px 0px 24px" }}>
+            <Grid container spacing={2} style={{ padding: "73px 24px 0px 24px" }}>
                 {this.renderDocumentPages()}
                 {this.state.isModeSentences ? this.renderSentences() : this.renderPDFDocument()}
             </Grid>
@@ -506,6 +501,7 @@ const mapStateToProps = state => ({
     saveContent: state.saveContent,
     document_contents: state.document_contents,
     sentence_highlight: state.sentence_highlight.sentence,
+    sentence_action_operation : state.sentence_action_operation.api_status
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(

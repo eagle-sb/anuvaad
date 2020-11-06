@@ -9,19 +9,19 @@ import Save from "@material-ui/icons/CheckCircleOutline";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import Checkbox from "@material-ui/core/Checkbox";
-import ValidationIcon from "@material-ui/icons/SettingsEthernet";
+//import ValidationIcon from "@material-ui/icons/SettingsEthernet";
 import AutoComplete from "../../../components/web/common/AutoComplete1";
 import IntractiveApi from "../../../../flux/actions/apis/intractive_translate";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import CancelIcon from '@material-ui/icons/Cancel';
+//import CancelIcon from '@material-ui/icons/Cancel';
 import APITransport from "../../../../flux/actions/apitransport/apitransport";
 import { withRouter } from "react-router-dom";
 
 //var getCaretCoordinates = require("textarea-caret");
 
 let arr = [];
-var tex=""
+var tex = ""
 class Block extends Component {
   constructor() {
     super();
@@ -68,6 +68,7 @@ class Block extends Component {
 
     if (prevProps.sentence !== this.props.sentence) {
       this.setState({
+        sentence: this.props.sentence,
         editedText: this.props.sentence && this.props.sentence.hasOwnProperty("tgt") && this.props.sentence.tgt
       })
     }
@@ -80,14 +81,13 @@ class Block extends Component {
 
   handleChangeEvent = (event) => {
     this.setState({ editedText: event.target.value, enteredData: true })
-    
 
     // this.props.updateSentence(event.target.value)
-    if(this.props.buttonStatus === "typing"){
+    if (this.props.buttonStatus === "typing") {
       tex = event.target.value
     }
     if (this.props.buttonStatus === "selected") {
-      
+
       this.props.handleClick("typing")
     }
 
@@ -120,9 +120,9 @@ class Block extends Component {
   }
 
   handleSuggestionClick(suggestion, value, src, tokenObject) {
-    let editedSentence = this.state.editedText + suggestion
+    //let editedSentence = this.state.editedText + suggestion
     // this.props.updateSentence(this.state.caret + suggestion)
-    let data = this.state.caret
+    //let data = this.state.caret
 
     let editedData = this.state.caret + suggestion + this.state.editedText.slice(this.state.caret.length)
     tex = editedData;
@@ -155,21 +155,23 @@ class Block extends Component {
     this.setState({ highlightDivider: true, highlightId: id });
   }
 
-  handleShowTarget(id) {
+  handleShowTarget(id, prevId) {
+
+    id !== prevId && this.handleApiCallSave();
     if (this.props.selectedBlock && this.props.selectedBlock.s_id === id) {
+      if (this.props.sentence && this.props.sentence.hasOwnProperty("s0_tgt") && this.props.sentence.s0_tgt) {
+        this.setState({
+          editedText: this.props.sentence && this.props.sentence.hasOwnProperty("s0_tgt") && this.props.sentence.s0_tgt,
+          enteredData: true,
+          // dontShowDialog: true
+        });
 
-      this.setState({
-        editedText: this.props.sentence && this.props.sentence.hasOwnProperty("s0_tgt") && this.props.sentence.s0_tgt,
-        enteredData: true,
-        // dontShowDialog: true
-      });
-
-
-
-
-      this.props.handleClick("copy")
-      this.props.showTargetData(id)
-      this.props.handleEditorClick(id)
+        this.props.handleClick("copy")
+        this.props.showTargetData(id)
+        this.props.handleEditorClick(id)
+      } else {
+        this.props.handleSaveDialog("Machine translation is not available for the sentence")
+      }
     } else {
       this.props.handleSentenceClick(this.props.sentence)
     }
@@ -177,19 +179,14 @@ class Block extends Component {
   }
 
   getSelectionText(event, text) {
-
     const sentenceStartId = text.s_id;
     const split_index = window.getSelection().focusOffset;
     const selectedText = window.getSelection().toString();
-
-    let targetDict = false;
     let opeartion = "Split sentence";
-    // eslint-disable-next-line
-    let actual_text = text.src;
-    actual_text = actual_text.replace(/\s{2,}/g, " ");
-    actual_text = actual_text.trim();
 
-    if (this.props.selectedBlock && this.props.selectedBlock.src.includes(selectedText)) {
+    
+    if (this.props.selectedBlock && this.props.selectedBlock.src.includes(selectedText.split(" ").splice(0,2).join(" "))) {
+      // this.setState({enteredData: false})
       this.props.popUp(this.props.block_id,
         sentenceStartId,
         split_index,
@@ -197,28 +194,26 @@ class Block extends Component {
         opeartion, selectedText)
     }
 
-  
-    
   }
 
   handleBlurCard = (event, id) => {
-      if (this.state.editedText !== this.props.selectedBlock.tgt && this.state.editedText && this.state.enteredData) {
-        let operation = "Save";
-        let isEdited = false;
+    if (this.state.editedText !== this.props.selectedBlock.tgt && this.state.editedText && this.state.enteredData) {
+      let operation = "Save";
+      let isEdited = false;
 
-        if ((!event.relatedTarget || event.relatedTarget && event.relatedTarget.type !== "button") && !this.state.dontShowDialog) {
-          if (this.props.selectedBlock && !this.props.selectedBlock.hasOwnProperty("save")) {
-            isEdited = true
-          }
-
-          this.props.getUpdatedBlock(this.props.selectedBlock, operation, this.state.editedText, isEdited)
-
-          // this.props.handleDialogMessage(this.props.selectedBlock, "", "", operation, message, this.state.editedText)
+      if ((!event.relatedTarget || (event.relatedTarget && event.relatedTarget.type) !== "button") && !this.state.dontShowDialog) {
+        if (this.props.selectedBlock && !this.props.selectedBlock.hasOwnProperty("save") && !this.props.selectedBlock.save) {
+          isEdited = true
         }
 
+        this.props.getUpdatedBlock(this.props.selectedBlock, operation, this.state.editedText, isEdited)
 
-        // this.handleSave(this.props.selectedBlock.s_id) 
+        // this.props.handleDialogMessage(this.props.selectedBlock, "", "", operation, message, this.state.editedText)
       }
+
+
+      // this.handleSave(this.props.selectedBlock.s_id) 
+    }
 
   }
 
@@ -231,33 +226,36 @@ class Block extends Component {
     this.setState({ selectedValueArray: arr });
   };
 
-  handleBlurSave(selectedSentence, text){
-    this.props.saveUpdatedSentence("",selectedSentence, "", text, true)
-  }
+  handleSave(id, prevId) {
+    id !== prevId && this.handleApiCallSave();
 
-  handleSave(id) {
     if (this.props.selectedBlock && this.props.selectedBlock.s_id === id) {
-      let block = this.props.sen
-      let isEdited = false
-      this.setState({ enteredData: false, dontShowDialog: true })
+      if (this.state.editedText) {
+        let block = this.props.sen
+        let isEdited = false
+        let index;
+        this.setState({ enteredData: false, dontShowDialog: true })
 
-      block && block.tokenized_sentences && Array.isArray(block.tokenized_sentences) && block.tokenized_sentences.length > 0 && block.tokenized_sentences.map((tokenObj, i) => {
-        if (this.state.sentence && this.state.sentence.s_id === tokenObj.s_id) {
-          let sentence = this.state.sentence
+        block && block.tokenized_sentences && Array.isArray(block.tokenized_sentences) && block.tokenized_sentences.length > 0 && block.tokenized_sentences.map((tokenObj, i) => {
+          if (this.props.sentence && this.props.sentence.s_id === tokenObj.s_id) {
+            let sentence = this.props.sentence
 
-          if (sentence && !sentence.hasOwnProperty("save")) {
-            isEdited = true
+            if ((sentence && sentence.hasOwnProperty("save") && !sentence.save) || (sentence && !sentence.hasOwnProperty("save"))) {
+              isEdited = true
+            }
+
+            sentence.save = true
+            tokenObj = this.props.sentence
+
           }
-
-          sentence.save = true
-          tokenObj = this.state.sentence
-
-          // this.setState({sentence})
-        }
-        return null;
-      })
-      this.props.handleClick("")
-      this.props.saveUpdatedSentence(block, this.state.sentence, this.props.blockIdentifier, this.state.editedText, isEdited)
+          return null;
+        })
+        this.props.handleClick("")
+        this.props.saveUpdatedSentence(block, this.props.sentence, this.props.blockIdentifier, this.state.editedText, isEdited)
+        tex = ""
+      } else {
+        this.props.handleSaveDialog("Please enter the translation before you save")
+      }
     } else {
       this.props.handleSentenceClick(this.props.sentence)
     }
@@ -292,20 +290,23 @@ class Block extends Component {
 
   }
 
-  handleCardClick(sentence, editedText) {
-
-    if(this.props.buttonStatus==="typing"){
-      this.handleBlurSave(this.props.selectedBlock, tex)
-      // this.handleSave(sentence.s_id);
+  handleApiCallSave() {
+    if (this.props.buttonStatus === "typing" && tex) {
+      this.props.saveUpdatedSentence("", this.props.selectedBlock, "", tex, true)
     }
     else if(this.props.buttonStatus==="copy"){
-      debugger
       this.handleBlurSave(this.props.selectedBlock, this.props.selectedBlock.s0_tgt)
     }
+
+  }
+
+  handleCardClick(sentence, editedText) {
+
+    this.handleApiCallSave()
     let saveData = false
     let block = this.props.sen
-
     this.props.handleSentenceClick(this.props.sentence, saveData, block, this.props.blockIdentifier)
+    tex = ""
   }
 
   render() {
@@ -328,31 +329,31 @@ class Block extends Component {
               : "2px solid #D6D6D6",
         }}
       >
-        <Grid container spacing={2} style={{ padding: "7px" }}>
-          <Grid item xs={12} sm={12} lg={12} xl={12}>
+        <Grid container spacing={2} style={{ padding: "7px 7px 0px 7px" }}>
+          <Grid item xs={12} sm={12} lg={12} xl={12} style={{ paddingBottom: "0px" }}>
             <div style={{ display: "flex", flexDirection: "row" }}
             >
               <div
                 style={{ width: "100%", paddingLeft: "10px" }}
-                  onMouseDown = {() => selectedBlock &&
+                onMouseDown={() => selectedBlock &&
                   sentence &&
                   sentence.s_id !== selectedBlock.s_id && this.props.buttonStatus !== "split" && this.handleCardClick(this.props.sentence)}
-                  onDoubleClick = {(event)=>event.preventDefault() }
+                onDoubleClick={(event) => event.preventDefault()}
 
-                  onMouseUp={(event)=>{this.getSelectionText(event,sentence)}}
-                  onKeyUp={(event)=>{this.getSelectionText(event,sentence)}}
+                onMouseUp={(event) => { this.getSelectionText(event, sentence) }}
+                onKeyUp={(event) => { this.getSelectionText(event, sentence) }}
 
-                  
-                  >
-                    
+
+              >
+
                 <div
                   style={{ minHeight: "45px", padding: "5px", fontSize: "16px" }}
                 // onClick={() => this.props.handleSentenceClick(sentence)}
                 >
                   {sentence.src}
                 </div>
-                <hr style={{ border: (selectedBlock && sentence && sentence.s_id === selectedBlock.s_id && (this.props.buttonStatus === "copy" || this.props.buttonStatus === "typing")) ? "1px dashed #1C9AB7" : "1px dashed #00000014" }} />
-                {((selectedBlock && sentence &&sentence.hasOwnProperty("s_id") && sentence.s_id === selectedBlock.s_id) || (this.state.sentence && this.state.sentence.hasOwnProperty("save") && this.state.sentence.save)) ?
+                <hr style={{ border: (selectedBlock && sentence && sentence.hasOwnProperty("s_id") && sentence.s_id === selectedBlock.s_id && (this.props.buttonStatus === "copy" || this.props.buttonStatus === "selected" || this.props.buttonStatus === "typing")) ? "1px dashed #1C9AB7" : "1px dashed #00000014" }} />
+                {((selectedBlock && sentence && sentence.hasOwnProperty("s_id") && selectedBlock.hasOwnProperty("s_id") && sentence.s_id === selectedBlock.s_id) || (this.props.sentence && this.props.sentence.hasOwnProperty("save") && this.props.sentence.save)) ?
                   <AutoComplete
                     aId={sentence.s_id}
                     refId={sentence.s_id}
@@ -372,17 +373,17 @@ class Block extends Component {
                     }}
                     tokenIndex={this.props.tokenIndex}
                     // value={(this.props.selectedTargetId === this.state.sentence.s_id || this.state.enteredData) ? this.state.sentence.tgt : ""}
-                    value={(this.state.sentence.hasOwnProperty("s_id") && (this.props.selectedTargetId === this.state.sentence.s_id) || this.state.enteredData || (this.props.sentence.hasOwnProperty("save") && this.state.sentence.save)) ? this.state.editedText : ""}
-                    sentence={this.state.sentence}
+                    value={(this.props.sentence && this.props.sentence.hasOwnProperty("s_id") && (this.props.buttonStatus !== "selected" && this.props.buttonStatus !== "apiCalled" && this.props.selectedTargetId === this.props.sentence.s_id) || ( this.props.buttonStatus !== "selected" && this.props.buttonStatus !== "apiCalled" && this.state.enteredData) || (this.props.sentence && this.props.sentence.hasOwnProperty("save") && this.props.sentence.save)) ? this.state.editedText : ""}
+                    sentence={this.props.sentence}
                     sourceText={sentence.src}
                     page_no={this.props.page_no}
                     handleSuggestion={this.props.handleSuggestion}
                     heightToBeIncreased={sentence.font_size}
-                    handleBlur={this.props.handleBlur}
+                    // handleBlur={this.props.handleBlur}
                     showSuggestions={this.props.showSuggestions}
                     handleSuggestionClose={this.props.handleSuggestionClose}
                     tokenObject={sentence}
-                    showTargetLang={this.props.selectedTargetId === sentence.s_id && true}
+                    showTargetLang={this.props.selectedTargetId === sentence.hasOwnProperty("s_id") && sentence.s_id && true}
                     modelId={this.props.modelId}
                     autoCompleteText={this.state.autoCompleteText}
                     autoCompleteTextTaggetTgt={this.state.autoCompleteTextTaggetTgt}
@@ -390,7 +391,7 @@ class Block extends Component {
                     fetchSuggestions={this.fetchSuggestions.bind(this)}
                     handleSuggestionClick={this.handleSuggestionClick.bind(this)}
                     handleEditorClick={this.handleEditorClick.bind(this)}
-                    autoFocus={this.state.sentence.hasOwnProperty("save")}
+                    autoFocus={this.props.sentence && this.props.sentence.hasOwnProperty("save")}
                     showSuggestions={this.showSuggestions.bind(this)}
                     caretLength={this.state.caretLength}
                     caretData={this.state.caretData}
@@ -418,7 +419,7 @@ class Block extends Component {
                           <IconButton
                             aria-label="validation mode"
                             onClick={() => {
-                              this.handleShowTarget(sentence.s_id);
+                              this.handleShowTarget(sentence.s_id, selectedBlock.s_id);
                             }}
                             style={selectedBlock &&
                               sentence &&
@@ -435,7 +436,7 @@ class Block extends Component {
                             <Save style={selectedBlock &&
                               sentence &&
                               sentence.s_id === selectedBlock.s_id && (this.props.buttonStatus === "typing" || this.props.buttonStatus === "copy") ? { color: "#1C9AB7" } : {}} onClick={(event) => {
-                                this.handleSave(sentence.s_id);
+                                this.handleSave(sentence.s_id, selectedBlock.s_id);
                               }} />
                           </IconButton>
                         </Tooltip>
@@ -467,7 +468,7 @@ class Block extends Component {
           </Grid>
         </Grid>
 
-       
+
       </Paper >
     );
   }

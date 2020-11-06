@@ -291,6 +291,7 @@ const localization_EN_Data = {
   "common.page.label.selectLanguage": "Select Language",
   "common.page.label.savedMessage": "Translation saved.",
   "common.page.label.mergedMessage": "Merged sentence successfully",
+  "common.page.label.savedSuccessfully": "Sentence saved successfully !...",
   "common.page.label.splittedMessage":"Splitted sentence successfully",
   "common.page.label.SENTENCE_SAVED": "Translation saving...",
   "common.page.label.SENTENCE_MERGED": "Merging sentences...",
@@ -398,7 +399,9 @@ const localization_EN_Data = {
   "common.page.label.addDropDocument":"Please Add/Drop Document here",
   "intractive_translate.page.message.enterOneWord": "Please enter at least one word. Then I can make suggestions.",
   "intractive_translate.page.message.loading": "Getting suggestions for you",
-  "intractive_translate.page.message.endOfSuggestion": "You have reached the end of the sentence."
+  "intractive_translate.page.message.endOfSuggestion": "You have reached the end of the sentence.",
+  "common.page.label.editedMessage": "Sentence edited successfully",
+  "common.page.label.SENTENCE_SOURCE_EDITED": "Saving sentence...",
   // 'newCorpus.page.array.addFileTargetAndDetails':["Add Source file", 'Add target file', 'Add file details']
 };
 
@@ -771,7 +774,8 @@ const localization_HI_Data = {
   "intractive_translate.page.message.enterOneWord": "कृपया कम से कम एक शब्द लिखिए। तब मैं सुझाव दे सकता हूं।",
   "intractive_translate.page.message.loading": "आपके लिए सुझाव ढूंढ रहा हूँ।",
   "intractive_translate.page.message.endOfSuggestion": "आप सजा के अंत तक पहुँच चुके हैं।",
-
+  "common.page.label.editedMessage": "Sentence edited successfully",
+  "common.page.label.SENTENCE_SOURCE_EDITED": "Saving sentence...",
 };
 
 export function translate(locale_text) {

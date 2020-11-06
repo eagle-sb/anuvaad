@@ -99,7 +99,8 @@ class AutoComplete extends React.Component {
             this.setState({ showSuggestions: true })
             this.props.showSuggestions(true)
             // this.props.fetchSuggestions(this.props.sourceText, this.props.value)
-            this.props.fetchSuggestions(this.props.sourceText, this.handleCalc(caretVal, this.state.tokenObject), this.state.tokenObject)
+            // this.props.fetchSuggestions(this.props.sourceText, this.handleCalc(caretVal, this.state.tokenObject), this.state.tokenObject)
+            this.props.fetchSuggestions(this.props.sourceText, caretVal, this.state.tokenObject)
 
         }
         // this.setState({
@@ -107,14 +108,6 @@ class AutoComplete extends React.Component {
         //     previousPressedKeyCode: event.keyCode
         // })
 
-    }
-
-    fetchSuggestions(srcText, targetTxt, tokenObject) {
-        let targetVal = targetTxt
-        this.props.showSuggestions(false)
-        this.setState({ showSuggestions: true, autoCompleteText: null })
-        const apiObj = new IntractiveApi(srcText, targetVal, { model_id: this.props.modelId }, true, true);
-        this.props.APITransport(apiObj);
     }
 
     handleCalc(value, tokenText) {
@@ -250,8 +243,8 @@ class AutoComplete extends React.Component {
                 <textarea
                     id={aId}
                     ref={refId}
-                    // maxRows={4}
-                    // multiline={true}
+                    rows={4}
+                    multiline={true}
                     autoFocus={this.props.value && !this.props.autoFocus ? true : false}
                     // autoFocus={true}
                     placeholder="Type your translation here"

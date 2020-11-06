@@ -26,7 +26,7 @@ import LanguageCodes from "../../../components/web/common/Languages.json"
 import DownloadIcon from "@material-ui/icons/ArrowDownward";
 import DocumentConverter from "../../../../flux/actions/apis/documentconverter";
 import TranslateView from "./DocumentTranslator";
-import wfcodes from '../../../../configs/workflowcodes'
+//import wfcodes from '../../../../configs/workflowcodes'
 import SaveContent from "../../../../flux/actions/apis/savecontent";
 
 const BLOCK_OPS = require("../../../../utils/block.operations");
@@ -133,10 +133,10 @@ class PdfFileEditor extends React.Component {
                   children = this.props.saveContent
                   return true
                 }
-              })
-            })
+              return null;})
+            return null;})
           }
-        })
+       return null; })
       }
 
       this.setState({
@@ -160,11 +160,11 @@ class PdfFileEditor extends React.Component {
       } else {
         temp.map(page => {
           page.text_blocks = page.text_blocks && BLOCK_OPS.get_sorted_blocks(page.text_blocks);
-        })
+        return null;})
         this.setState({
           sentences: temp,
           open: this.state.apiStatus && true,
-          message: this.state.apiStatus && (this.state.apiCall === "Merge sentence" ? "Sentence merged successfully!" : this.state.apiCall === "Split sentence" ? "Sentence Splitted Sucessfully" : "Translated sentence saved...!"),
+          message: this.state.apiStatus && (this.state.apiCall === "Merge sentence" ? "Sentence merged successfully!" : this.state.apiCall === "Split sentence" ? "Sentence Splitted Sucessfully" : "Sentence updated successfully...!"),
           apiStatus: false,
           apiCall: false,
           showLoader: false,
@@ -708,7 +708,6 @@ class PdfFileEditor extends React.Component {
             >
               <Grid item xs={12} sm={6} lg={2} xl={2} className="GridFileDetails">
                 <Button
-                  // variant="outlined"
                   onClick={event => {
                     this.handleOnClose();
                   }}
@@ -718,10 +717,9 @@ class PdfFileEditor extends React.Component {
                   {translate("common.page.title.document")}
                 </Button>
               </Grid>
-              <Grid item xs={12} sm={5} lg={7} xl={7} className="GridFileDetails">
+              <Grid item xs={12} sm={6} lg={7} xl={7} className="GridFileDetails">
                 <Button
                   color="primary"
-                  // variant="outlined"
                   className="GridFileDetails"
                   style={{
                     textTransform: "capitalize",
@@ -757,8 +755,6 @@ class PdfFileEditor extends React.Component {
               </Grid>
               <Grid item xs={12} sm={6} lg={2} xl={2}>
                 <Button
-                  // variant="contained"
-                  // color="primary"
                   style={{
                     color: "#233466",
                     textTransform: "capitalize",
@@ -777,7 +773,6 @@ class PdfFileEditor extends React.Component {
               </Grid>
 
               {this.state.tokenized &&
-                // <Grid container spacing={2}>
                 <Grid item xs={12} sm={6} lg={6} xl={6}>
                   <Paper elevation={3}>
 
@@ -786,18 +781,6 @@ class PdfFileEditor extends React.Component {
                         Extracted Document
                      </Typography>
 
-                      {/* {this.state.tokenized && !this.state.apiCall && (
-                        <Toolbar
-                          onClick={event => {
-                            this.handleClick(this.state.mergeButton === "save" ? "Merge" : "save");
-                          }}
-                          style={{ paddingRight: "0px" }}
-                        >
-                          <Typography value="" variant="subtitle2" style={{ cursor: "pointer", color: "#233466", paddingLeft: "7px" }}>
-                            {this.state.mergeButton === "save" ? "Save" : "Merge Blocks"}
-                          </Typography>
-                        </Toolbar>
-                      )} */}
                     </Toolbar>
 
                   </Paper>

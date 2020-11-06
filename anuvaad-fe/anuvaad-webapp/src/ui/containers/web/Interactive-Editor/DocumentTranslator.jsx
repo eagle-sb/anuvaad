@@ -15,13 +15,14 @@ import CancelIcon from "@material-ui/icons/Cancel";
 import Typography from "@material-ui/core/Typography";
 import Toolbar from "@material-ui/core/Toolbar";
 import WordDictionary from "../../../../flux/actions/apis/word_dictionary";
-import BLOCK_OPS from "../../../../utils/block.operations";
+// import BLOCK_OPS from "../../../../utils/block.operations";
 import Dictionary from "./Dictionary";
 import InfiniteScroll from "react-infinite-scroll-component";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import MenuItems from "./PopUp";
 import Dialog from "../../../components/web/common/SimpleDialog";
-
+import copy from 'copy-to-clipboard';
+const BLOCK_OPS = require("../../../../utils/block.operations");
 const TELEMETRY = require("../../../../utils/TelemetryManager");
 
 class PdfFileEditor extends React.Component {
@@ -87,7 +88,7 @@ class PdfFileEditor extends React.Component {
             parallel_words.push(words.name)
           }
 
-        })
+        return null;})
 
       }
       else {
@@ -102,16 +103,16 @@ class PdfFileEditor extends React.Component {
     //   this.setState({
     //     prevActiveState: prevState.activeSentence
     //   })
-      // if (this.state.editedText && this.state.editedText) {
-      //   if (prevState.activeSentence.tgt !== this.state.editedText) {
-      //     this.setState({
-      //       openDialog: true,
-      //       title: "Save",
-      //       dialogMessage: "Do you want to save the updated sentence"
-      //     })
-      //   }
+    // if (this.state.editedText && this.state.editedText) {
+    //   if (prevState.activeSentence.tgt !== this.state.editedText) {
+    //     this.setState({
+    //       openDialog: true,
+    //       title: "Save",
+    //       dialogMessage: "Do you want to save the updated sentence"
+    //     })
+    //   }
 
-      // }
+    // }
 
     // }
 
@@ -129,17 +130,17 @@ class PdfFileEditor extends React.Component {
 
   handleSentenceClick(value, saveData, block, blockIdentifier) {
     // this.setState({ activeSentence: value, selectedTargetId: value.s_id })
-
     if (block && this.state.activeSentence && this.state.activeSentence.s_id && this.state.activeSentence.s_id !== value.s_id)
 
       this.handleClick("");
     this.handleClose();
     this.setState({
       activeSentence: value,
+      SentenceOperationId: blockIdentifier,
       updateData: saveData && block,
       updateBlockId: blockIdentifier,
       buttonStatus: "selected",
-      parallel_words:[]
+      parallel_words: []
     });
   }
 
@@ -196,7 +197,6 @@ class PdfFileEditor extends React.Component {
         sentence_id,
         sentence_index
       );
-      debugger
       SentenceOperationId = this.state.activeSentence.s_id;
 
       TELEMETRY.splitSentencesEvent(data, [data.slice(0, this.state.sentence_index), data.slice(this.state.sentence_index)])
@@ -242,9 +242,14 @@ class PdfFileEditor extends React.Component {
     this.getUpdatedBlock(sentence, "Save", editedText, isSaved)
   }
 
+  handleCopy() {
+    copy(this.state.selectedText)
+    this.handleClose()
+
+  }
+
   getUpdatedBlock(tokenObj, operationType, editedText, isSaved) {
     let callApi = false
-    debugger
     this.props.sentences && Array.isArray(this.props.sentences) && this.props.sentences.length > 0 && this.props.sentences.map((element) => {
       element && element.text_blocks && element.text_blocks.map((sentence) => {
         sentence.tokenized_sentences.map((value, tokenIndex) => {
@@ -280,9 +285,12 @@ class PdfFileEditor extends React.Component {
 
           }
 
-        })
+        return null;
       })
+      return null;
     })
+    return null;
+  })
   }
 
 
@@ -290,7 +298,6 @@ class PdfFileEditor extends React.Component {
   popUp = (selected_block_id,
     sentence_id,
     sentence_index, event, operation, selectedText) => {
-
     window.getSelection().toString() && this.setState({
       operation_type: operation,
       openEl: true,
@@ -301,17 +308,17 @@ class PdfFileEditor extends React.Component {
       sentence_id,
       sentence_index,
       selectedText,
-      parallel_words:[]
+      parallel_words: []
 
 
 
     });
   };
 
-  handlePopApi(status){
-    if(status==="Split sentence"){
-      if(this.state.activeSentence.src.length!==this.state.sentence_index && this.state.sentence_index>0){
-        this.handleDialog( this.state.selected_block_id,this.state.sentence_id,this.state.sentence_index,this.state.operation_type )
+  handlePopApi(status) {
+    if (status === "Split sentence") {
+      if (this.state.activeSentence.src.length !== this.state.sentence_index && this.state.sentence_index > 0) {
+        this.handleDialog(this.state.selected_block_id, this.state.sentence_id, this.state.sentence_index, this.state.operation_type)
       }
       else {
         alert("Please select split sentence correctly")
@@ -324,7 +331,7 @@ class PdfFileEditor extends React.Component {
       let word_locale = this.props.match.params.locale
       let tgt_locale = this.props.match.params.tgt_locale
 
-        this.handleDictionary(this.state.selectedText, word_locale, tgt_locale)
+      this.handleDictionary(this.state.selectedText, word_locale, tgt_locale)
 
 
     }
@@ -354,6 +361,12 @@ class PdfFileEditor extends React.Component {
       this.setState({ dialogToken: false })
     }
   };
+
+  handleSaveDialog(message) {
+    this.setState({
+      displayMsg: true, displayTitle: message
+    })
+  }
 
   handleSentences(sentence, element) {
     return sentence.tokenized_sentences.map((value, tokenIndex) => {
@@ -388,6 +401,8 @@ class PdfFileEditor extends React.Component {
           scroll={this.props.scroll}
           handleDictionary={this.handleDictionary.bind(this)}
           popUp={this.popUp.bind(this)}
+          handleSaveDialog={this.handleSaveDialog.bind(this)}
+          handleDialogClose={this.handleDialogClose.bind(this)}
         />
       </div>
     });
@@ -507,22 +522,26 @@ class PdfFileEditor extends React.Component {
                   lg={12}
                   xl={12}
                   style={{ height: "50%" }}
+                  id="myDiv"
                 >
                   <MachineTranslation
                     sentence={this.state.activeSentence}
                     buttonStatus={this.state.buttonStatus}
-                  />
-                  <Grid
-                    item
-                    xs={12}
-                    sm={12}
-                    lg={12}
-                    xl={12}
-                    style={{ height: "50%" }}
-                  >
+                    offsetHeight={document.getElementById('myDiv') && document.getElementById('myDiv').offsetHeight}
+                  /></Grid>
 
-                    <Dictionary parallel_words={this.state.parallel_words} selectedText={this.state.selectedText} loading={this.state.loading} />
-                  </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  sm={12}
+                  lg={12}
+                  xl={12}
+                  style={{ height: "50%", marginTop: '20px' }}
+                  id="dictionary"
+                >
+                  <Dictionary parallel_words={this.state.parallel_words} selectedText={this.state.selectedText} loading={this.state.loading}
+                    offsetHeight={document.getElementById('dictionary') && document.getElementById('dictionary').offsetHeight}
+                  />
                 </Grid>
               </Grid>
             </Grid>
@@ -554,7 +573,7 @@ class PdfFileEditor extends React.Component {
             operation_type={this.state.operation_type}
             handleClose={this.handleClose.bind(this)}
             handleDialog={this.handlePopApi.bind(this)}
-
+            handleCopy={this.handleCopy.bind(this)}
 
           // handleCheck={this.handleCheck.bind(this)}
 
