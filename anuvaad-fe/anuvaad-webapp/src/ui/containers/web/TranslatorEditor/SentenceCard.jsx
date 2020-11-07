@@ -385,7 +385,7 @@ class SentenceCard extends React.Component {
                             return (<Typography>{option.tgt[0]}</Typography>)
                         }}
                         options={this.state.suggestions}
-
+                        disableClearable
                         inputValue={this.state.value}
                         fullWidth
                         open={this.state.showSuggestions}
@@ -602,7 +602,6 @@ class SentenceCard extends React.Component {
     }
 
     handleCardExpandClick = () => {
-        debugger
         if (this.props.sentence_highlight && this.props.sentence_highlight.sentence_id === this.props.sentence.s_id || (this.props.block_highlight && this.props.block_highlight.s_id === this.props.sentence.s_id)) {
             this.props.clearHighlighBlock()
         } else {
