@@ -25,12 +25,7 @@ export default class Pagination extends API {
 
     apiEndPoint() {
         let url = `${super.apiEndPointAuto()}${this.endpoint}?record_id=${this.job_id}` 
-        if(this.start_page && this.end_page) {
-            url += `&start_page=${this.start_page}&end_page=${this.end_page}`;
-        }
-        else{
-            url+= `&all=true`;
-        }
+        url += `&start_page=${this.start_page}&end_page=${this.end_page}`;
         return url    
     }
 

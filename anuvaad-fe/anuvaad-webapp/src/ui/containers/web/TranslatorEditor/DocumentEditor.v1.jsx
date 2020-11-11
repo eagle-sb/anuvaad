@@ -31,7 +31,7 @@ import PageCard from "./PageCard";
 import SENTENCE_ACTION from './SentenceActions'
 import DocumentConverterAPI from "../../../../flux/actions/apis/documentconverter";
 
-import { sentenceActionApiStarted, sentenceActionApiStopped, contentUpdateStarted, clearFetchContent } from '../../../../flux/actions/users/translator_actions';
+import { sentenceActionApiStarted, sentenceActionApiStopped, fetchContent, contentUpdateStarted, clearFetchContent } from '../../../../flux/actions/users/translator_actions';
 import { update_sentences, update_blocks } from '../../../../flux/actions/apis/update_page_content';
 
 const { v4 }      = require('uuid');
@@ -79,7 +79,9 @@ class DocumentEditor extends React.Component {
     }
 
     componentDidUpdate(prevProps) {
+      console.log('componentDidUpdate')
       if (prevProps.document_contents.content_updated !== this.props.document_contents.content_updated) {
+        console.log('componentDidUpdate', this.props.document_contents.content_updated)
         if (this.props.document_contents.content_updated) {
           this.props.sentenceActionApiStopped()
         }
@@ -116,9 +118,24 @@ class DocumentEditor extends React.Component {
       let start_page    = this.props.document_contents.pages.length + 1;
       let end_page      = start_page + 1;
       console.log(`fetching document content, start_page: ${start_page}, end_page: ${end_page}`);
-
+      
       const apiObj      = new FileContent(this.props.match.params.jobid, start_page, end_page);
-      this.props.APITransport(apiObj);
+      fetch(apiObj.apiEndPoint(), {
+        method: 'get',
+        headers: apiObj.getHeaders().headers
+      }).then(async response => {
+        const rsp_data = await response.json();
+          if (!response.ok) {
+            this.props.sentenceActionApiStopped()
+            return Promise.reject('');
+          } else {
+            console.log(rsp_data)
+            this.props.fetchContent(rsp_data.count, rsp_data.data);
+          }
+      }).catch((error) => {
+          console.log('api failed because of server or network')
+          this.props.sentenceActionApiStopped()
+      });
     }
 
     makeAPICallFetchContentPerPage = (start_page) => {
@@ -161,7 +178,6 @@ class DocumentEditor extends React.Component {
     }
 
     async makeAPICallSaveSentence(sentence, pageNumber) {
-      
       let apiObj      = new SaveSentenceAPI(sentence)
       const apiReq    = fetch(apiObj.apiEndPoint(), {
           method: 'post',
@@ -208,7 +224,6 @@ class DocumentEditor extends React.Component {
     }
 
     async makeAPICallSourceSaveSentence(sentence, pageNumber) {
-
       let apiObj = new WorkFlowAPI("WF_S_TKTR", sentence, this.props.match.params.jobid, this.props.match.params.locale,
         '', '', parseInt(this.props.match.params.modelId))
       const apiReq = fetch(apiObj.apiEndPoint(), {
@@ -231,7 +246,6 @@ class DocumentEditor extends React.Component {
     }
 
     handleTargetDownload() {
-    
       let recordId = this.props.match.params.jobid
       let user_profile = JSON.parse(localStorage.getItem('userProfile'))
   
@@ -264,12 +278,8 @@ class DocumentEditor extends React.Component {
     /**
      * workhorse functions
      */
-    handleSourceChange = (evt, blockValue) => {
-    }
-    saveUpdatedSentence(sentenceObj, pageNo) {
-    }
-    workFlowApi(workflow, blockDetails, update, type) {
-    }
+    
+
 
     processSentenceAction = (action, pageNumber, sentences, startIndex, endIndex) => {
       switch(action) {
@@ -499,7 +509,7 @@ class DocumentEditor extends React.Component {
                 loader={<div style={{ textAlign: "center" }}> <CircularProgress size={20} style={{zIndex: 1000}}/></div>}
                 endMessage={ <div style={{ textAlign: "center" }}><b>You have seen it all</b></div> }
             >
-              {pages.map(page => page['translated_texts'].map(sentence => <div key={v4()}  ref={sentence.s_id}><SentenceCard key={v4()} 
+              {pages.map(page => page['translated_texts'].map(sentence => <div key={v4()}  ref={sentence.s_id}><SentenceCard key={sentence.s_id} 
                                                                                   pageNumber={page.page_no} 
                                                                                   modelId={parseInt(this.props.match.params.modelId)}
                                                                                   word_locale={this.props.match.params.locale}
@@ -534,11 +544,10 @@ class DocumentEditor extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    saveContent: state.saveContent,
     document_contents: state.document_contents,
     sentence_highlight: state.sentence_highlight.sentence,
     sentence_action_operation : state.sentence_action_operation.api_status,
-    show_pdf: state.show_pdf.open
+    show_pdf: state.show_pdf.open,
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(
@@ -550,7 +559,8 @@ const mapDispatchToProps = dispatch => bindActionCreators(
       update_sentences,
       update_blocks,
       ClearContent,
-      clearFetchContent
+      clearFetchContent,
+      fetchContent
     },
     dispatch
 );

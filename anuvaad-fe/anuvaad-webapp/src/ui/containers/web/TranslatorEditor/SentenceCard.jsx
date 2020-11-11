@@ -685,8 +685,6 @@ class SentenceCard extends React.Component {
         */
         this.textInput && this.textInput.current && this.textInput.current.focus();
         }
-
-        
     }
 
     cardBlockCompare = () =>{
@@ -713,15 +711,13 @@ class SentenceCard extends React.Component {
         return false;
     }
 
-    
-
     render() {
+        console.log('sentencecard render')
         return (
             <div >
                 {this.renderSentenceCard()}
                 {this.state.isopenMenuItems && this.renderMenuItems()}
             </div>
-
         )
     }
 }
