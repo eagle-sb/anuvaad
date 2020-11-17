@@ -24,8 +24,9 @@ import DocumentEditorV1 from './ui/containers/web/TranslatorEditor/DocumentEdito
 
 import FileUpload from './ui/containers/web/Interactive-Editor/FileUpload';
 import ViewDocument from './ui/containers/web/ViewDocument';
+import Login from './ui/containers/web/Login'
 
-const PrivateRoute = ({ headerAttribute: headerAttribute,  component: Component, userRoles, title, drawer, showLogo, forDemo, dontShowLoader, dontShowHeader, currentMenu, authenticate, ...rest }) => (
+const PrivateRoute = ({ headerAttribute: headerAttribute, component: Component, userRoles, title, drawer, showLogo, forDemo, dontShowLoader, dontShowHeader, currentMenu, authenticate, ...rest }) => (
   <Route
     {...rest}
     render={props =>
@@ -35,7 +36,7 @@ const PrivateRoute = ({ headerAttribute: headerAttribute,  component: Component,
           currentMenu={currentMenu}
           showLogo={showLogo}
           component={Component}
-          headerAttribute= {headerAttribute}
+          headerAttribute={headerAttribute}
           title={title}
           forDemo={forDemo}
           drawer={drawer}
@@ -85,10 +86,15 @@ class AppRoutes extends React.Component {
       <Router history={history} basename="/dev">
         <div>
           <Switch>
-            <Route exact path={`${process.env.PUBLIC_URL}/`} component={Home} />
-            <Route exact path={`${process.env.PUBLIC_URL}/callback`} component={Callback} />
+            <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
+            {/* <Route exact path={`${process.env.PUBLIC_URL}/callback`} component={Callback} /> */}
             <Route exact path={`${process.env.PUBLIC_URL}/logout`} component={Logout} />
 
+            <PrivateRoute
+              path={`${process.env.PUBLIC_URL}/callback`}
+              component={Callback} 
+              authenticate={this.authenticateUser}
+              />
             <PrivateRoute
               path={`${process.env.PUBLIC_URL}/profile`}
               title={translate('webroutes.page.title.profile')}
@@ -163,7 +169,7 @@ class AppRoutes extends React.Component {
               dontShowHeader={true}
               currentMenu="set-password"
             />
-            
+
             <PrivateRoute
               path={`${process.env.PUBLIC_URL}/interactive-translate`}
               title={translate('webroutes.page.title.anuvaadEditor')}
@@ -183,7 +189,21 @@ class AppRoutes extends React.Component {
               currentMenu="view-document"
               dontShowHeader={true}
             />
-            <PrivateRoute path={`${process.env.PUBLIC_URL}/*`} component={NotFound} authenticate={this.authenticateUser} />
+            <PrivateRoute
+              path={`${process.env.PUBLIC_URL}/signin`}
+              dontShowLoader
+              title={"Document Translate"}
+              userRoles={["editor", "dev", "grader", "interactive-editor"]}
+              component={Login}
+              authenticate={this.authenticateUser}
+              currentMenu="view-document"
+              dontShowHeader={true}
+            />
+            <PrivateRoute
+              path={`${process.env.PUBLIC_URL}/*`}
+              component={NotFound}
+              authenticate={this.authenticateUser}
+            />
           </Switch>
         </div>
       </Router>
