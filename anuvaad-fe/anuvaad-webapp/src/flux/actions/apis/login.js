@@ -16,7 +16,8 @@ export default class LoginAPI extends API {
     this.userid = null;
     this.name = null;
     this.type = C.LOGIN;
-    this.endpoint = `${super.apiEndPointAuto()}${ENDPOINTS.login}`;
+    // this.endpoint = `${super.apiEndPointAuto()}${ENDPOINTS.login}`;
+    this.endpoint = 'https://poczuul.anuvaad.org/anuvaad/user-mgmt/v1/users/login'
   }
 
   toString() {
@@ -26,6 +27,8 @@ export default class LoginAPI extends API {
   processResponse(res) {
     super.processResponse(res);
     if (res.token) {
+    debugger
+
       this.token = res.token;
       this.expires = res.expires;
       this.role = res.role;
@@ -41,11 +44,11 @@ export default class LoginAPI extends API {
 
   getBody() {
     return {
-      email: this.email,
+      userName: this.email,
       password: this.password,
-      role: this.role,
-      userid: this.userid,
-      name: this.name
+      // role: this.role,
+      // userid: this.userid,
+      // name: this.name
     };
   }
 
@@ -60,21 +63,23 @@ export default class LoginAPI extends API {
 
   getPayload() {
     return {
-      email: this.email,
-      token: this.token,
-      role: this.role,
-      name: this.name,
-      userid: this.userid
+      userName: this.email,
+      password: this.password,
+      // email: this.email,
+      // token: this.token,
+      // role: this.role,
+      // name: this.name,
+      // userid: this.userid
     };
   }
 
-  getCustomConfigs() {
-    return {
-      auth: {
-        username: CONFIGS.DEV_SALT,
-        password: CONFIGS.DEV_PEPPER
-      },
-      timeout: this.timeout
-    };
-  }
+  // getCustomConfigs() {
+  //   return {
+  //     auth: {
+  //       username: CONFIGS.DEV_SALT,
+  //       password: CONFIGS.DEV_PEPPER
+  //     },
+  //     timeout: this.timeout
+  //   };
+  // }
 }
