@@ -71,6 +71,7 @@ export default function dispatchAPI(api) {
         });
     };
   } else if (api.method === "POST") {
+    debugger
     return dispatch => {
       dispatch(apiStatusAsync(api.dontShowApiLoader() ? false : true, false, "", null, null, true));
       axios
