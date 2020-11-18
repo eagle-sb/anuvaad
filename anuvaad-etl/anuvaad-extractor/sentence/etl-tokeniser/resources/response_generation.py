@@ -16,6 +16,7 @@ import json
 file_ops = FileOperation()
 
 class Response(object):
+
     def __init__(self, json_data, DOWNLOAD_FOLDER):
         self.json_data =json_data
         self.DOWNLOAD_FOLDER = DOWNLOAD_FOLDER
@@ -26,8 +27,14 @@ class Response(object):
         error_validator = ValidationResponse(self.DOWNLOAD_FOLDER)
         tokenisation = Tokenisation(self.DOWNLOAD_FOLDER, self.json_data)
         try:
+<<<<<<< Updated upstream
             error_validator.wf_keyerror(jobid, workflow_id, tool_name, step_order)
             error_validator.inputfile_list_empty(input_key)
+=======
+            error_validator.wf_keyerror(jobid, workflow_id, tool_name, step_order,user_id)    # Validating Workflow key-values
+            error_validator.inputfile_list_empty(input_key)                           # Validating Input key for files input and only text input
+            # input key is a dictionary data for files input, "files" as a key
+>>>>>>> Stashed changes
             if not isinstance(input_key, list):
                 if 'files' in input_key.keys():
                     output_file_response = list()

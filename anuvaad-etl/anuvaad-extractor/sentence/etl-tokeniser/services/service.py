@@ -5,6 +5,7 @@ from repositories.tamil_sentence_tokeniser import AnuvaadTamilTokenizer
 from repositories.malayalam_sentence_tokeniser import AnuvaadMalayalamTokenizer
 from repositories.general_tokeniser import AnuvaadTokenizer
 from errors.errors_exception import ServiceError
+from errors.errors_exception import FileErrors
 from utilities.utils import FileOperation
 from anuvaad_auditor.loghandler import log_info
 from anuvaad_auditor.loghandler import log_error
@@ -28,6 +29,7 @@ class Tokenisation(object):
             if paragraph is not None:
                 try:
                     paragraph = self.remove_extra_spaces(paragraph)
+<<<<<<< Updated upstream
                     if text_locale == 'en':
                         tokenised_sentence_data = AnuvaadEngTokenizer().tokenize(paragraph)
                         tokenised_text.extend(tokenised_sentence_data)
@@ -43,6 +45,30 @@ class Tokenisation(object):
                     elif text_locale == 'ml':
                         tokenised_sentence_data = AnuvaadMalayalamTokenizer().tokenize(paragraph)
                         tokenised_text.extend(tokenised_sentence_data)
+=======
+                    if file_ops.detect_language(paragraph[:500])!=text_locale:
+                        # print(file_ops.detect_language(paragraph[:500]),text_locale,"****************************")
+                        raise FileErrors("LOCALE_ERROR", "Language input doesnot matches with the actual file content.")
+                    else:
+                        if text_locale == 'en':
+                            tokenised_sentence_data = AnuvaadEngTokenizer().tokenize(paragraph)
+                            tokenised_text.extend(tokenised_sentence_data)
+                        elif text_locale == 'hi' or text_locale == 'mr':
+                            tokenised_sentence_data = AnuvaadHindiTokenizer().tokenize(paragraph)
+                            tokenised_text.extend(tokenised_sentence_data)
+                        elif text_locale == 'kn':
+                            tokenised_sentence_data = AnuvaadKannadaTokenizer().tokenize(paragraph)
+                            tokenised_text.extend(tokenised_sentence_data)
+                        elif text_locale == 'ta':
+                            tokenised_sentence_data = AnuvaadTamilTokenizer().tokenize(paragraph)
+                            tokenised_text.extend(tokenised_sentence_data)
+                        elif text_locale == 'ml':
+                            tokenised_sentence_data = AnuvaadMalayalamTokenizer().tokenize(paragraph)
+                            tokenised_text.extend(tokenised_sentence_data)
+                        elif text_locale == 'te':
+                            tokenised_sentence_data = AnuvaadTeluguTokenizer().tokenize(paragraph)
+                            tokenised_text.extend(tokenised_sentence_data)
+>>>>>>> Stashed changes
                 except:
                     log_exception("Received error in this text :  %s"%(paragraph), self.input_json_data, None)
                     raise ServiceError(400, "Tokenisation failed. Something went wrong during tokenisation.")
@@ -72,6 +98,7 @@ class Tokenisation(object):
             blocks = input_json_data_pagewise['text_blocks']
             if blocks is not None:
                 for block_id, item in enumerate(blocks):
+                    del item['tokenized_sentences']
                     text_data = item['text']
                     tokenised_text = self.tokenisation_core([text_data], in_locale)
                     item['tokenized_sentences'] = [self.making_object_for_tokenised_text(text) for i, text in enumerate(tokenised_text)]

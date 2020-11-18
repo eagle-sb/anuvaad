@@ -52,6 +52,12 @@ class FileOperation(object):
             input_txt_filepath = self.input_path(input_filename)
             with open(input_txt_filepath, 'r', encoding='utf-16') as f:
                 input_file_data = f.readlines()
+<<<<<<< Updated upstream
+=======
+                
+            input_file_data = [' '.join([re.sub('\r\n|\n', '', text) for text in input_file_data])]
+            
+>>>>>>> Stashed changes
             return input_file_data
         except:
             raise FileEncodingError( 400, "Tokenisation failed due to encoding. Service supports only utf-16 encoded file.")
@@ -110,3 +116,19 @@ class FileOperation(object):
             message = ""
             error = post_error(code, message, None)
             return error
+
+    def detect_language(self,line):
+        maxchar = max(line)
+        if u'\u0C00' <= maxchar   <= u'\u0C7F':
+            return 'te'
+        elif u'\u0900' <= maxchar <= u'\u097F':
+            return 'hi'
+        elif u'\u0C80' <= maxchar <= u'\u0CFF':
+            return 'kn'
+        elif u'\u0B80' <= maxchar <= u'\u0BFF':
+            return 'ta'
+        elif u'\u0D00' <= maxchar <= u'\u0D7F':
+            return 'ml'
+        elif u'\u0020' <= maxchar <= u'\u007F':
+            return 'en'
+        return None

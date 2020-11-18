@@ -10,6 +10,8 @@ import config
 import json
 import codecs
 import requests
+from flask_mail import Mail, Message
+from app import mail
 
 role_codes_filepath = config.ROLE_CODES_URL
 json_file_dir = config.ROLE_CODES_DIR_PATH
@@ -17,11 +19,7 @@ json_file_name = config.ROLE_CODES_FILE_NAME
 
 
 role_codes = []
-
-# role_codes_json= json.load(codecs.open(role_codes_filepath, 'r', 'utf-8-sig'))
-# role_codes_data=role_codes_json["roles"]
-
-# print(role_codes_data)
+# sender_email=config.MAIL_SETTINGS
 
 
 class UserUtils:
@@ -41,13 +39,13 @@ class UserUtils:
         else:
             return False
 
-    @staticmethod
-    def validate_phone(phone):
-        Pattern = re.compile("(0/91)?[6-9][0-9]{9}")
-        if (Pattern.match(phone)) and len(phone) == 10:
-            return True
-        else:
-            return False
+    # @staticmethod
+    # def validate_phone(phone):
+    #     Pattern = re.compile("(0/91)?[6-9][0-9]{9}")
+    #     if (Pattern.match(phone)) and len(phone) == 10:
+    #         return True
+    #     else:
+    #         return False
 
     
     @staticmethod
@@ -259,8 +257,8 @@ class UserUtils:
             return password_validity
         if UserUtils.validate_email(email) == False:
             return post_error("Data not valid", "Email Id given is not valid", None)
-        if UserUtils.validate_phone(phone) == False:
-            return post_error("Data not valid", "Phone number given is not valid", None)
+        # if UserUtils.validate_phone(phone) == False:
+        #     return post_error("Data not valid", "Phone number given is not valid", None)
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
             record = collections.find({'userName': username})
@@ -315,8 +313,8 @@ class UserUtils:
             return password_validity, 400
         if UserUtils.validate_email(email) == False:
             return post_error("Data not valid", "Email Id given is not valid", None)
-        if UserUtils.validate_phone(phone) == False:
-            return post_error("Data not valid", "Phone number given is not valid", None)
+        # if UserUtils.validate_phone(phone) == False:
+        #     return post_error("Data not valid", "Phone number given is not valid", None)
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
             record = collections.find({'userID': userId})
@@ -352,8 +350,7 @@ class UserUtils:
         if UserUtils.validate_user(username, password) == None:
             return post_error("Database connection exception", "An error occurred while connecting to the database", None)
 
-    # @staticmethod
-
+    @staticmethod
     def read_role_codes():
         try:
             file = requests.get(role_codes_filepath, allow_redirects=True)
@@ -377,3 +374,11 @@ class UserUtils:
                           str(exc), MODULE_CONTEXT, exc)
             post_error("CONFIG_READ_ERROR",
                        "Exception while reading configs: " + str(exc), MODULE_CONTEXT)
+
+    @staticmethod
+    def generate_email_user_creation():
+        msg = Message(subject="User Account Activation",
+                      sender="tempusermonday@gmail.com",
+                      recipients=["jainy.joy@tarento.com"], # replace with your email for testing
+                      body="This is a test email I sent with Gmail and Python!")
+        mail.send(msg)

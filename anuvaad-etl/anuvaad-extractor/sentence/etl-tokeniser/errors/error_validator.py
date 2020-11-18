@@ -13,11 +13,11 @@ class ValidationResponse(object):
         self.DOWNLOAD_FOLDER = DOWNLOAD_FOLDER
 
     # workflow related key value errors
-    def wf_keyerror(self, jobid, workflow_id, tool_name, step_order):
-        if "" in (jobid, workflow_id, tool_name, step_order):
-            raise WorkflowkeyError(400, "jobID/workflowCode/tool/stepOrder is missing in input json")
+    def wf_keyerror(self, jobid, workflow_id, tool_name, step_order,user_id):
+        if "" in (jobid, workflow_id, tool_name, step_order,user_id):
+            raise WorkflowkeyError(400, "jobID/workflowCode/tool/stepOrder/userId is missing in input json")
         elif None in (jobid, workflow_id, tool_name, step_order):
-            raise WorkflowkeyError(400, "jobID/workflowCode/tool/stepOrder somehow got None value")
+            raise WorkflowkeyError(400, "jobID/workflowCode/tool/stepOrder/userId somehow got None value")
 
     def inputfile_list_empty(self, input_key):
         if isinstance(input_key, list):
@@ -78,3 +78,5 @@ class ValidationResponse(object):
             return True 
         else:
             raise FormatError(400, "Wrong input format")
+
+    

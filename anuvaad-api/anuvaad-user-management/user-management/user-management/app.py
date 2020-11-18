@@ -9,6 +9,7 @@ from utilities import MODULE_CONTEXT
 import config
 import requests
 import json
+from flask_mail import Mail
 
 
 
@@ -16,10 +17,9 @@ import json
 server = Flask(__name__)
 
 
-
-
-# global ROLE_CODES
-
+server.config.update(config.MAIL_SETTINGS)
+#creating an instance of Mail class
+mail=Mail(server)
 
 
 
