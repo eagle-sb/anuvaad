@@ -12,6 +12,7 @@ import codecs
 import requests
 from flask_mail import Mail, Message
 from app import mail
+from flask import render_template
 
 role_codes_filepath = config.ROLE_CODES_URL
 json_file_dir = config.ROLE_CODES_DIR_PATH
@@ -47,7 +48,6 @@ class UserUtils:
     #     else:
     #         return False
 
-    
     @staticmethod
     def hash_password(password):
         password_in_byte = bytes(password, 'utf-8')  # converting str to byte
@@ -68,7 +68,6 @@ class UserUtils:
         pattern = re.compile(regex)
         if re.search(pattern, password) is None:
             return post_error("Invalid password", "password must contain atleast one uppercase,one lowercase, one numeric and one special character", None)
-
 
     @staticmethod
     def validate_userid(usrId):
@@ -94,7 +93,7 @@ class UserUtils:
     @staticmethod
     def validate_rolecodes(roles):
         global role_codes
-        print(role_codes)
+        # print(role_codes)
         if not role_codes:
             log_info("reading from remote location", MODULE_CONTEXT)
             role_codes = UserUtils.read_role_codes()
@@ -242,6 +241,19 @@ class UserUtils:
         if "roles" not in user.keys():
             return post_error("Key error", "roles not found", None)
 
+        # print(user,"###########")
+        # if not user["name"]:
+        #     print("no name############")
+        # username = user["userName"]
+        # password = user["password"]
+        # name = user["name"]
+        # print(name,"ooo")
+        # email = user["email"]
+        # phone = user["phoneNo"]
+        # roles = user["roles"]
+        # rolecodes = []
+
+        name = user["name"]
         username = user["userName"]
         password = user["password"]
         email = user["email"]
@@ -249,10 +261,14 @@ class UserUtils:
         roles = user["roles"]
         rolecodes = []
 
-        if not username or not password or not email or not phone or not roles:
-            return post_error("Data missing", "Username,password,email,phone numbers,roles are mandatory fields, they cannot be empty", None)
+        
+        if not username or not password or not email or not name or not roles:
+            return post_error("Data missing", "Username,password,name,email,roles are mandatory fields, they cannot be empty", None)
+        # if not username or not password or not name or not email or not roles:
+        #     return post_error("Data missing", "Username,password,name,email,roles are mandatory fields, they cannot be empty", None)
         password_validity = UserUtils.validate_password(password)
-        log_info("password validated:{}".format(password_validity),MODULE_CONTEXT)
+        log_info("password validated:{}".format(
+            password_validity), MODULE_CONTEXT)
         if password_validity is not None:
             return password_validity
         if UserUtils.validate_email(email) == False:
@@ -296,6 +312,7 @@ class UserUtils:
             return post_error("Key error", "roles not found", None)
 
         userId = user["userID"]
+        name = user["name"]
         username = user["userName"]
         password = user["password"]
         email = user["email"]
@@ -305,10 +322,11 @@ class UserUtils:
 
         if not userId:
             return post_error("Id missing", "UserID field cannot be empty", None)
-        if not username or not password or not email or not phone or not roles:
-            return post_error("Data missing", "Username,password,email,phone numbers,roles are mandatory fields, they cannot be empty", None)
+        if not username or not password or not email or not name or not roles:
+            return post_error("Data missing", "Username,password,name,email,roles are mandatory fields, they cannot be empty", None)
         password_validity = UserUtils.validate_password(password)
-        log_info("password validated:{}".format(password_validity),MODULE_CONTEXT)
+        log_info("password validated:{}".format(
+            password_validity), MODULE_CONTEXT)
         if password_validity is not None:
             return password_validity, 400
         if UserUtils.validate_email(email) == False:
@@ -376,9 +394,25 @@ class UserUtils:
                        "Exception while reading configs: " + str(exc), MODULE_CONTEXT)
 
     @staticmethod
-    def generate_email_user_creation():
-        msg = Message(subject="User Account Activation",
-                      sender="tempusermonday@gmail.com",
-                      recipients=["jainy.joy@tarento.com"], # replace with your email for testing
-                      body="This is a test email I sent with Gmail and Python!")
-        mail.send(msg)
+    def generate_email_user_creation(users):
+        try:
+
+            for user in users:
+                name = user["name"]
+                email = user["email"]
+                username = user["userName"]
+                password = user["password"]
+
+                msg = Message(subject="User Account Activation",
+                              sender="tempusermonday@gmail.com",
+                              recipients=[email])
+                msg.html = render_template('/home/jainy/Desktop/template.html')
+                mail.send(msg)
+                return("Mail send")
+        except Exception as e:
+            print(str(e))
+            return(str(e))
+
+            # body="Hii {0},\nYou've received this email because you have registered on users.anuvaad.org.".format(name)
+            # +"\nYour credentials are \nUserName : {0} \nPassword : {1} ".format(username,password)
+            # +"\n If it's not you, please click here to unsubscribe"

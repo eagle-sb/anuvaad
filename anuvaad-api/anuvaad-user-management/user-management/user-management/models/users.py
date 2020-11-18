@@ -44,9 +44,12 @@ class UserManagementModel(object):
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
             results = collections.insert(records)
+            # print(results,"####################")
             if len(records) != len(results):
                 return post_error("db error", "some of the records where not inserted into db", None)
             log_info("users created:{}".format(results), MODULE_CONTEXT)
+            # UserUtils.generate_email_user_creation(users)
+            print(UserUtils.generate_email_user_creation(users))
 
         except Exception as e:
             log_exception("db connection exception " +

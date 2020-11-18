@@ -32,7 +32,7 @@ class CreateUsers(Resource):
 
         try:
             result = UserManagementRepositories.create_users(users)
-            UserUtils.generate_email_user_creation()
+            
             log_info("User creation result:{}".format(result), MODULE_CONTEXT)
             if result:
                 res = CustomResponse(Status.SUCCESS.value, None)
