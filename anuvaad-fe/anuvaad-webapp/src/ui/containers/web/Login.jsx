@@ -20,7 +20,7 @@ import APITransport from "../../../flux/actions/apitransport/apitransport";
 import history from "../../../web.history";
 import { translate } from "../../../assets/localisation";
 import Typography from '@material-ui/core/Typography';
-
+import TextField from '@material-ui/core/TextField';
 
 const TELEMETRY = require('../../../utils/TelemetryManager')
 
@@ -88,11 +88,11 @@ class Login extends React.Component {
       if (!response.ok) {
         return Promise.reject('');
       } else {
-       console.log(rsp_data)
-       let resData = rsp_data && rsp_data.data
-       localStorage.setItem("token", resData.token)
-       
-       history.push(`${process.env.PUBLIC_URL}/view-document`);
+        console.log(rsp_data)
+        let resData = rsp_data && rsp_data.data
+        localStorage.setItem("token", resData.token)
+
+        history.push(`${process.env.PUBLIC_URL}/view-document`);
 
       }
     }).catch((error) => {
@@ -100,92 +100,60 @@ class Login extends React.Component {
     });
   };
 
-  //   render() {
-  //     const { user, classes, location } = this.props;
-  //     return (
-  //       <MuiThemeProvider theme={ThemeDefault}>
-  //         <div>
-  //           <div className={classes.loginContainer}>
-  //             <Paper className={classes.paper}>
-  //               <form method="post">
-  //                 <FormControl fullWidth>
-  //                   <InputLabel htmlFor="email">{translate('common.page.label.name')}</InputLabel>
-  //                   <Input id="email" floatingLabelText="E-mail" onChange={this.processInputReceived("email")} />
-  //                 </FormControl>
-  //                 <FormControl fullWidth>
-  //                   <InputLabel htmlFor="password">{translate('common.page.label.password')}</InputLabel>
-  //                   <Input id="password" floatingLabelText="Password" type="password" onChange={this.processInputReceived("password")} />
-  //                 </FormControl>
-  //                 <div>
-  //                   <FormControlLabel
-  //                     control={
-  //                       <Checkbox
-  //                         className={classes.checkRemember.className}
-  //                         labelclassName={classes.checkRemember.labelclassName}
-  //                         iconclassName={classes.checkRemember.iconclassName}
-  //                       />
-  //                     }
-  //                     label={translate('login.page.label.remeberMe')}
-  //                   />
-
-  //                   {/* <Link to="/"> */}
-  //                   <Button variant="contained" onClick={this.processLoginButtonPressed} color="secondary" aria-label="edit">
-  //                     {translate('common.page.button.login')}
-  //                   </Button>
-  //                   {/* </Link> */}
-  //                 </div>
-  //               </form>
-  //             </Paper>
-
-  //             <div className={classes.buttonsDiv} />
-  //           </div>
-  //         </div>
-  //       </MuiThemeProvider>
-  //     );
-  //   }
-  // }
-
   render() {
-    const { user, classes, location } = this.props;
     return (
+      <MuiThemeProvider theme={ThemeDefault}>
       <div style={{ width: "100%", height: window.innerHeight, display: "flex", flexDirection: "column", textAlign: "center" }}>
-        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center', paddingTop: "5%" }}>
-          <Typography variant="h4" style={{ fontWeight: '450', color: '#000000' }}>Sign In</Typography>
-          <Paper className={classes.paper}>
-            <form method="post">
-              <FormControl fullWidth>
-                <InputLabel htmlFor="email">{translate('common.page.label.name')}</InputLabel>
-                <Input id="email" floatingLabelText="E-mail" onChange={this.processInputReceived("email")} />
-              </FormControl>
-              <FormControl fullWidth>
-                <InputLabel htmlFor="password">{translate('common.page.label.password')}</InputLabel>
-                <Input id="password" floatingLabelText="Password" type="password" onChange={this.processInputReceived("password")} />
-              </FormControl>
-              <div>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      className={classes.checkRemember.className}
-                      labelclassName={classes.checkRemember.labelclassName}
-                      iconclassName={classes.checkRemember.iconclassName}
-                    />
-                  }
-                  label={translate('login.page.label.remeberMe')}
-                />
+        <div style={{ marginTop: "5%" }}>
+          <Typography style={{ fontWeight: '550', fontSize: "36px", color: "#233466" }}>
+            Sign In
+        </Typography>
+          <Paper style={{ width: "40%", marginLeft: '30%', marginTop: "3%", textAlign: "center", alignItems: "center", display: "flex", flexDirection: "column" }}>
+            <FormControl fullWidth style={{ alignItems: "center", display: "flex", flexDirection: "column" }}>
 
-                {/* <Link to="/"> */}
-                <Button variant="contained" onClick={this.processLoginButtonPressed} color="secondary" aria-label="edit">
-                  {translate('common.page.button.login')}
-                </Button>
-                {/* </Link> */}
-              </div>
-            </form>
+              <TextField
+                label="Email/UserName"
+                type="text"
+                name="email"
+                fullWidth
+                value={this.state.email}
+                onChange={this.processInputReceived('email')}
+                variant="outlined"
+                style={{ width: '50%', border: "grey", marginTop: "60px" }}
+
+              />
+
+
+              <TextField
+                label="Password"
+                type="password"
+                name="password"
+                fullWidth
+                value={this.state.password}
+                onChange={this.processInputReceived('password')}
+                variant="outlined"
+                style={{ width: '50%', border: "grey", marginTop: "40px" }}
+
+              />
+
+              <Button
+                disabled={!this.state.termsAndCondition}
+                variant="contained" aria-label="edit" style={{
+                  width: '50%', marginBottom: '60px', marginTop: '40px', borderRadius: '20px', height: '45px', textTransform: 'initial', fontWeight: '20px',
+                  color: "#FFFFFF",
+                  backgroundColor: "#1C9AB7",
+                }} onClick={this.processLoginButtonPressed.bind(this)}>
+                {translate('singUp.page.label.signUp')}
+              </Button>
+            </FormControl>
           </Paper>
         </div>
       </div>
-    );
+       </MuiThemeProvider>
+    )
   }
 }
+
 Login.propTypes = {
   user: PropTypes.object.isRequired,
   APITransporter: PropTypes.func.isRequired
