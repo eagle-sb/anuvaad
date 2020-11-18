@@ -53,10 +53,12 @@ const PrivateRoute = ({ headerAttribute: headerAttribute, component: Component, 
 class AppRoutes extends React.Component {
 
   authenticateUser = allowedRoles => {
+    console.log(localStorage.getItem("roles"))
     let count = 0;
     const token = localStorage.getItem("token");
     if (localStorage.getItem("roles")) {
-      const userRoles = JSON.parse(localStorage.getItem("roles"));
+      // const userRoles = JSON.parse(localStorage.getItem("roles"));
+      const userRoles = ["editor", "dev", "interactive-editor", "grader"]
       if (token) {
         if (allowedRoles && Array.isArray(allowedRoles)) {
           allowedRoles.map(allowedRole => {
@@ -90,11 +92,7 @@ class AppRoutes extends React.Component {
             {/* <Route exact path={`${process.env.PUBLIC_URL}/callback`} component={Callback} /> */}
             <Route exact path={`${process.env.PUBLIC_URL}/logout`} component={Logout} />
 
-            <PrivateRoute
-              path={`${process.env.PUBLIC_URL}/callback`}
-              component={Callback} 
-              authenticate={this.authenticateUser}
-              />
+            
             <PrivateRoute
               path={`${process.env.PUBLIC_URL}/profile`}
               title={translate('webroutes.page.title.profile')}

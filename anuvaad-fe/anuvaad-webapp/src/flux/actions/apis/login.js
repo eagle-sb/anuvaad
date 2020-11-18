@@ -16,7 +16,7 @@ export default class LoginAPI extends API {
     this.userid = null;
     this.name = null;
     this.type = C.LOGIN;
-    this.endpoint = `${super.apiEndPointAuto()}${ENDPOINTS.login}`;
+    this.endpoint = `${ENDPOINTS.login}`;
   }
 
   toString() {
@@ -41,11 +41,8 @@ export default class LoginAPI extends API {
 
   getBody() {
     return {
-      email: this.email,
-      password: this.password,
-      role: this.role,
-      userid: this.userid,
-      name: this.name
+      userName: this.email,
+      password: this.password
     };
   }
 
