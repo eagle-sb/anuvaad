@@ -30,6 +30,7 @@ const PrivateRoute = ({ headerAttribute: headerAttribute, component: Component, 
   <Route
     {...rest}
     render={props =>
+      
       authenticate(userRoles) ? (
         <Layout
           dontShowLoader={dontShowLoader}
@@ -53,17 +54,19 @@ const PrivateRoute = ({ headerAttribute: headerAttribute, component: Component, 
 class AppRoutes extends React.Component {
 
   authenticateUser = allowedRoles => {
-    console.log(localStorage.getItem("roles"))
+    console.log(allowedRoles)
+    
     let count = 0;
     const token = localStorage.getItem("token");
     if (localStorage.getItem("roles")) {
       // const userRoles = JSON.parse(localStorage.getItem("roles"));
-      const userRoles = ["editor", "dev", "interactive-editor", "grader"]
+      const userRoles = localStorage.getItem("roles").split(',')
+      debugger
       if (token) {
         if (allowedRoles && Array.isArray(allowedRoles)) {
           allowedRoles.map(allowedRole => {
             userRoles.map(userRole => {
-              if (userRole === allowedRole) {
+              if (userRole == allowedRole) {
                 count += 1;
               }
               return true;
@@ -91,8 +94,6 @@ class AppRoutes extends React.Component {
             <Route exact path={`${process.env.PUBLIC_URL}/`} component={Login} />
             {/* <Route exact path={`${process.env.PUBLIC_URL}/callback`} component={Callback} /> */}
             <Route exact path={`${process.env.PUBLIC_URL}/logout`} component={Logout} />
-
-            
             <PrivateRoute
               path={`${process.env.PUBLIC_URL}/profile`}
               title={translate('webroutes.page.title.profile')}
@@ -121,7 +122,7 @@ class AppRoutes extends React.Component {
 
             <PrivateRoute
               path={`${process.env.PUBLIC_URL}/interactive-document/:locale/:tgt_locale/:targetlang/:jobid/:inputfileid/:modelId/:filename`}
-              userRoles={["editor", "dev", "grader", "interactive-editor"]}
+              userRoles={["editor", "dev", "grader", "interactive-editor", "SUPERUSER"]}
               component={DocumentEditorV1}
               title="Translate file"
               authenticate={this.authenticateUser}
@@ -132,7 +133,7 @@ class AppRoutes extends React.Component {
 
             <PrivateRoute
               path={`${process.env.PUBLIC_URL}/document-upload`}
-              userRoles={["editor", "dev", "grader", "interactive-editor"]}
+              userRoles={["editor", "dev", "grader", "interactive-editor", "SUPERUSER"]}
               component={FileUpload}
               title="Start Translate"
               authenticate={this.authenticateUser}
@@ -171,7 +172,7 @@ class AppRoutes extends React.Component {
             <PrivateRoute
               path={`${process.env.PUBLIC_URL}/interactive-translate`}
               title={translate('webroutes.page.title.anuvaadEditor')}
-              userRoles={["editor", "dev", "interactive-editor", "grader"]}
+              userRoles={["editor", "dev", "interactive-editor", "grader", "SUPERUSER"]}
               component={IntractiveTranslate}
               authenticate={this.authenticateUser}
               currentMenu="interactive-translate"
@@ -181,7 +182,7 @@ class AppRoutes extends React.Component {
               path={`${process.env.PUBLIC_URL}/view-document`}
               dontShowLoader
               title={"Document Translate"}
-              userRoles={["editor", "dev", "grader", "interactive-editor"]}
+              userRoles={["editor", "dev", "grader", "interactive-editor", "SUPERUSER"]}
               component={ViewDocument}
               authenticate={this.authenticateUser}
               currentMenu="view-document"
@@ -191,7 +192,7 @@ class AppRoutes extends React.Component {
               path={`${process.env.PUBLIC_URL}/signin`}
               dontShowLoader
               title={"Document Translate"}
-              userRoles={["editor", "dev", "grader", "interactive-editor"]}
+              userRoles={["editor", "dev", "grader", "interactive-editor", "SUPERUSER"]}
               component={Login}
               authenticate={this.authenticateUser}
               currentMenu="view-document"

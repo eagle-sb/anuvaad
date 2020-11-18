@@ -16,11 +16,12 @@ import { withStyles } from "@material-ui/core";
 import ThemeDefault from "../../theme/web/theme-anuvaad";
 import LoginStyles from "../../styles/web/LoginStyles";
 import LoginAPI from "../../../flux/actions/apis/login";
-import APITransport from "../../../flux/actions/apitransport/apitransport";
+
 import history from "../../../web.history";
 import { translate } from "../../../assets/localisation";
 import Typography from '@material-ui/core/Typography';
-
+import TextField from '@material-ui/core/TextField';
+import profileDetails from '../../../flux/actions/apis/profile_details'
 
 const TELEMETRY = require('../../../utils/TelemetryManager')
 
@@ -29,7 +30,8 @@ class Login extends React.Component {
     super(props);
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      error: false
     };
   }
 
@@ -63,22 +65,8 @@ class Login extends React.Component {
    */
   processLoginButtonPressed = () => {
     const { email, password } = this.state;
-    const { APITransporter } = this.props;
-
-    // const apiObj = new LoginAPI(email, password);
-
-    const apiObj = new LoginAPI("vishal@123", "Vishal@123");
-
-    // if ((email == "aroop" || email == "ajitesh" || email == "kd" || email == "vivek") && password == "test") {
-    //   localStorage.setItem("token", "123");
-    //   setTimeout(() => {
-    //     history.push(`${process.env.PUBLIC_URL}/corpus`);
-    //   }, 1000);
-    // } else {
-    //   alert(translate('login.page.alert.wrongCredentials'));
-    // }
-    // APITransporter(apiObj);
-
+    this.setState({error:false})
+    const apiObj = new LoginAPI(email, password);
     const apiReq = fetch(apiObj.apiEndPoint(), {
       method: 'post',
       body: JSON.stringify(apiObj.getBody()),
@@ -90,106 +78,104 @@ class Login extends React.Component {
       } else {
        console.log(rsp_data)
        let resData = rsp_data && rsp_data.data
-       localStorage.setItem("token", "6d39df2f57f0418a9bfd0ba6dc48cd2b%7Cad7694537c48416cb579519f3419709e")
-       localStorage.setItem("roles", ["editor", "dev", "interactive-editor", "grader"])
-       debugger
-       history.push(`${process.env.PUBLIC_URL}/view-document`);
+       console.log(resData)
+       localStorage.setItem("token", resData.token)
+       this.fetchUserProfileDetails(resData.token)
+      }
+    }).catch((error) => {
+      this.setState({error: true})
+    });
+  };
+
+  handleRoles = (value) =>{
+    let result = []
+    value.roles.map(element =>{
+      result.push(element.roleCode)
+    })
+    return result;
+  }
+
+  fetchUserProfileDetails = (token) => {
+
+    const apiObj = new profileDetails(token);
+    const apiReq = fetch(apiObj.apiEndPoint(), {
+      method: 'post',
+      body: JSON.stringify(apiObj.getBody()),
+      headers: apiObj.getHeaders().headers
+    }).then(async response => {
+      const rsp_data = await response.json();
+      if (!response.ok) {
+        return Promise.reject('');
+      } else {
+       let resData = rsp_data && rsp_data.data
+       var roles = this.handleRoles(resData);
+       localStorage.setItem("roles", roles)
+      history.push(`${process.env.PUBLIC_URL}/view-document`);
 
       }
     }).catch((error) => {
       console.log('api failed because of server or network')
     });
-  };
+  
 
-  //   render() {
-  //     const { user, classes, location } = this.props;
-  //     return (
-  //       <MuiThemeProvider theme={ThemeDefault}>
-  //         <div>
-  //           <div className={classes.loginContainer}>
-  //             <Paper className={classes.paper}>
-  //               <form method="post">
-  //                 <FormControl fullWidth>
-  //                   <InputLabel htmlFor="email">{translate('common.page.label.name')}</InputLabel>
-  //                   <Input id="email" floatingLabelText="E-mail" onChange={this.processInputReceived("email")} />
-  //                 </FormControl>
-  //                 <FormControl fullWidth>
-  //                   <InputLabel htmlFor="password">{translate('common.page.label.password')}</InputLabel>
-  //                   <Input id="password" floatingLabelText="Password" type="password" onChange={this.processInputReceived("password")} />
-  //                 </FormControl>
-  //                 <div>
-  //                   <FormControlLabel
-  //                     control={
-  //                       <Checkbox
-  //                         className={classes.checkRemember.className}
-  //                         labelclassName={classes.checkRemember.labelclassName}
-  //                         iconclassName={classes.checkRemember.iconclassName}
-  //                       />
-  //                     }
-  //                     label={translate('login.page.label.remeberMe')}
-  //                   />
 
-  //                   {/* <Link to="/"> */}
-  //                   <Button variant="contained" onClick={this.processLoginButtonPressed} color="secondary" aria-label="edit">
-  //                     {translate('common.page.button.login')}
-  //                   </Button>
-  //                   {/* </Link> */}
-  //                 </div>
-  //               </form>
-  //             </Paper>
-
-  //             <div className={classes.buttonsDiv} />
-  //           </div>
-  //         </div>
-  //       </MuiThemeProvider>
-  //     );
-  //   }
-  // }
-
+  }
   render() {
-    const { user, classes, location } = this.props;
     return (
+      <MuiThemeProvider theme={ThemeDefault}>
       <div style={{ width: "100%", height: window.innerHeight, display: "flex", flexDirection: "column", textAlign: "center" }}>
-        <div style={{ display: 'flex', flexDirection: 'column', flex: 1, alignItems: 'center', paddingTop: "5%" }}>
-          <Typography variant="h4" style={{ fontWeight: '450', color: '#000000' }}>Sign In</Typography>
-          <Paper className={classes.paper}>
-            <form method="post">
-              <FormControl fullWidth>
-                <InputLabel htmlFor="email">{translate('common.page.label.name')}</InputLabel>
-                <Input id="email" floatingLabelText="E-mail" onChange={this.processInputReceived("email")} />
-              </FormControl>
-              <FormControl fullWidth>
-                <InputLabel htmlFor="password">{translate('common.page.label.password')}</InputLabel>
-                <Input id="password" floatingLabelText="Password" type="password" onChange={this.processInputReceived("password")} />
-              </FormControl>
-              <div>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      className={classes.checkRemember.className}
-                      labelclassName={classes.checkRemember.labelclassName}
-                      iconclassName={classes.checkRemember.iconclassName}
-                    />
-                  }
-                  label={translate('login.page.label.remeberMe')}
-                />
+        <div style={{ marginTop: "5%" }}>
+          <Typography style={{ fontWeight: '550', fontSize: "36px", color: "#233466" }}>
+            Sign In
+        </Typography>
+          <Paper style={{ width: "40%", marginLeft: '30%', marginTop: "3%", textAlign: "left", alignItems: "center", display: "flex", flexDirection: "column" }}>
+            <FormControl fullWidth style={{ alignItems: "center", display: "flex", flexDirection: "column" }}>
 
-                {/* <Link to="/"> */}
-                <Button variant="contained" onClick={this.processLoginButtonPressed} color="secondary" aria-label="edit">
-                  {translate('common.page.button.login')}
-                </Button>
-                {/* </Link> */}
-              </div>
-            </form>
+              <TextField
+                label="Email/UserName"
+                type="text"
+                name="email"
+                fullWidth
+                value={this.state.email}
+                onChange={this.processInputReceived('email')}
+                variant="outlined"
+                style={{ width: '50%', border: "grey", marginTop: "60px" }}
+
+              />
+              <TextField
+                label="Password"
+                type="password"
+                name="password"
+                fullWidth
+                value={this.state.password}
+                onChange={this.processInputReceived('password')}
+                variant="outlined"
+                style={{ width: '50%', border: "grey", marginTop: "40px" }}
+
+              />
+
+              {this.state.error && <Typography style={{color:"red", alignItems:"left"}}>Incorrect username or password. please try again..!</Typography>}
+
+              <Button
+               
+                variant="contained" aria-label="edit" style={{
+                  width: '50%', marginBottom: '60px', marginTop: '40px', borderRadius: '20px', height: '45px', textTransform: 'initial', fontWeight: '20px',
+                  color: "#FFFFFF",
+                  backgroundColor: "#1C9AB7",
+                }} onClick={this.processLoginButtonPressed.bind(this)}>
+                {translate('singUp.page.label.signUp')}
+              </Button>
+            </FormControl>
           </Paper>
         </div>
       </div>
-    );
+       </MuiThemeProvider>
+    )
   }
 }
+
 Login.propTypes = {
   user: PropTypes.object.isRequired,
-  APITransporter: PropTypes.func.isRequired
 };
 
 const mapStateToProps = state => ({
@@ -199,7 +185,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      APITransporter: APITransport
     },
     dispatch
   );

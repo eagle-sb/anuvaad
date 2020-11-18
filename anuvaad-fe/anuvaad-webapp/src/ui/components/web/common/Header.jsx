@@ -135,8 +135,10 @@ class Header extends React.Component {
 
     const { auth, anchorEl } = this.state;
     const openEl = Boolean(anchorEl);
-    // var role = JSON.parse(localStorage.getItem("roles"));
-    var role = ["dev"];
+    
+    var role = localStorage.getItem("roles").split(",");
+    
+    
     var useRole = [];
     role.map((item, value) => {
       useRole.push(item); value !== role.length - 1 && useRole.push(", ")
@@ -237,7 +239,7 @@ class Header extends React.Component {
                     </div>
                   )}
 
-                  {role && Array.isArray(role) && (role.includes("dev") || role.includes("grader") || role.includes("interactive-editor")) && (
+                  {role && Array.isArray(role) && (role.includes("dev") || role.includes("SUPERUSER") || role.includes("interactive-editor")) && (
                     <div>
                       <Divider className={classes.divider} />
                       <ListItem
