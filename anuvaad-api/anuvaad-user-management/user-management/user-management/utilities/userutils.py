@@ -18,6 +18,7 @@ role_codes_filepath = config.ROLE_CODES_URL
 json_file_dir = config.ROLE_CODES_DIR_PATH
 json_file_name = config.ROLE_CODES_FILE_NAME
 
+mail_href_link=config.HREF_LINK
 
 role_codes = []
 # sender_email=config.MAIL_SETTINGS
@@ -241,18 +242,6 @@ class UserUtils:
         if "roles" not in user.keys():
             return post_error("Key error", "roles not found", None)
 
-        # print(user,"###########")
-        # if not user["name"]:
-        #     print("no name############")
-        # username = user["userName"]
-        # password = user["password"]
-        # name = user["name"]
-        # print(name,"ooo")
-        # email = user["email"]
-        # phone = user["phoneNo"]
-        # roles = user["roles"]
-        # rolecodes = []
-
         name = user["name"]
         username = user["userName"]
         password = user["password"]
@@ -396,23 +385,17 @@ class UserUtils:
     @staticmethod
     def generate_email_user_creation(users):
         try:
-
             for user in users:
-                name = user["name"]
                 email = user["email"]
-                username = user["userName"]
-                password = user["password"]
-
                 msg = Message(subject="User Account Activation",
                               sender="tempusermonday@gmail.com",
                               recipients=[email])
-                msg.html = render_template('/home/jainy/Desktop/template.html')
+                # msg.body="Hii {0},\nYou've received this email because you have registered on users.anuvaad.org.".format(name)
+                #               +"\nYour credentials are \nUserName : {0} \nPassword : {1} ".format(username,password)
+                #               +"\n If it's not you, please click here to unsubscribe"
+                msg.html = render_template('mail_template.html',link=mail_href_link)
                 mail.send(msg)
-                return("Mail send")
         except Exception as e:
-            print(str(e))
-            return(str(e))
+            raise Exception("Exception while sending email for the registered user:{}".format(str(e)))
 
-            # body="Hii {0},\nYou've received this email because you have registered on users.anuvaad.org.".format(name)
-            # +"\nYour credentials are \nUserName : {0} \nPassword : {1} ".format(username,password)
-            # +"\n If it's not you, please click here to unsubscribe"
+            

@@ -34,3 +34,5 @@ MAIL_SETTINGS = {
     "MAIL_PASSWORD": os.environ.get('EMAIL_PASSWORD','monday@911')
 
 }
+
+HREF_LINK=os.environ.get('MAIL_HREF_LINK','https://users.anuvaad.org')

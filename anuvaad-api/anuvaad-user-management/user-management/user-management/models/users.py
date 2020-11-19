@@ -48,8 +48,10 @@ class UserManagementModel(object):
             if len(records) != len(results):
                 return post_error("db error", "some of the records where not inserted into db", None)
             log_info("users created:{}".format(results), MODULE_CONTEXT)
-            # UserUtils.generate_email_user_creation(users)
-            print(UserUtils.generate_email_user_creation(users))
+            # try:
+            #     UserUtils.generate_email_user_creation(users)
+            # except Exception as e:
+            #     raise Exception("Exception while sending email for the registered user:{}".format(str(e)))
 
         except Exception as e:
             log_exception("db connection exception " +
