@@ -163,7 +163,7 @@ class Login extends React.Component {
                   color: "#FFFFFF",
                   backgroundColor: "#1C9AB7",
                 }} onClick={this.processLoginButtonPressed.bind(this)}>
-                {translate('singUp.page.label.signUp')}
+                  Sign In
               </Button>
             </FormControl>
           </Paper>
