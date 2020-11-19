@@ -95,15 +95,20 @@ class PdfUpload extends Component {
       })
       e.preventDefault();
       this.setState({ model })
-      if (this.state.files.length > 0 && source_lang_name && target_lang_name) {
+      if (this.state.files.length > 0 ) {
+        // const { APITransport } = this.props;
+
+        // const apiObj = new DocumentUpload(
+        //   this.state.files, "docUplaod",
+        //   model,
+
+        // );
+        // APITransport(apiObj);
+
         const { APITransport } = this.props;
-
-        const apiObj = new DocumentUpload(
-          this.state.files, "docUplaod",
-          model,
-
-        );
-        APITransport(apiObj);
+      const apiObj = new WorkFlow(this.state.workflow, this.props.documentUplaod.data, this.state.fileName, this.state.source,
+        this.state.target, this.state.path, this.state.model);
+      APITransport(apiObj);
       } else {
         alert("Field should not be empty!");
       }
@@ -162,14 +167,14 @@ class PdfUpload extends Component {
     if (this.props.fetch_languages.languages.length < 1) {
       const { APITransport } = this.props;
       const apiObj = new FetchLanguage();
-      APITransport(apiObj);
+      // APITransport(apiObj);
       this.setState({ showLoader: true });
     }
 
     if (this.props.fetch_models.models.length < 1) {
       const { APITransport } = this.props;
       const apiModel = new FetchModel();
-      APITransport(apiModel);
+      // APITransport(apiModel);
       this.setState({ showLoader: true });
     }
   }

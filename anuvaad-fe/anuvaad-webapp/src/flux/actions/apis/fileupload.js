@@ -34,25 +34,27 @@ export default class RunExperiment extends API {
   }
 
   apiEndPoint() {
-    return this.endpoint;
+    return 'https://poczuul.anuvaad.org/anuvaad-etl/wf-manager/v1/workflow/async/initiate';
   }
 
   getBody() {
     if (this.workflow === "WF_A_FCBMTKTR") {
       return {
 
-        "workflowCode": this.workflow,
-        "jobName": this.fileName,
-        "files": [
-          {
-            "path": this.file,
-            "type": this.path,
-            "locale": this.source,
-            "model": this.model
-          }
-        ]
+        "workflowCode":"WF_A_FCBMTKTR","jobName":"31.01.2020.pdf","files":[{"path":"30c789c8-116d-44a1-b5e6-18812a437895.pdf","type":"pdf","locale":"en","model":{"_id":"5d7f7b184dc7f557106e8dce","source_language_code":"en","target_language_code":"bn","model_id":11,"model_name":"model no-1:","is_primary":true,"created_on":"2019-09-16T12:07:52.645Z","deployed_on":"2019-09-16","status":"ACTIVE","url_end_point":"translate-anuvaad","interactive_end_point":"interactive-translation"}}]
 
-      };
+      //   "workflowCode": this.workflow,
+      //   "jobName": this.fileName,
+      //   "files": [
+      //     {
+      //       "path": this.file,
+      //       "type": this.path,
+      //       "locale": this.source,
+      //       "model": this.model
+      //     }
+      //   ]
+
+       };
     }
     else if (this.workflow === "WF_S_TKTR" ||this.workflow === "WF_S_TR") {
       return {
