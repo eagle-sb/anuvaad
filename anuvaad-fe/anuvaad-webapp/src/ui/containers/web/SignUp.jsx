@@ -143,7 +143,7 @@ class SignUp extends React.Component {
                 </div>}
               />
               
-              <FormControl align='center' fullWidth>
+              <FormControl align='center' fullWidth className={classes.formControl}>
                 <Button
                   disabled={!this.state.termsAndCondition}
                   variant="contained" aria-label="edit" style={{
