@@ -26,7 +26,7 @@ export default class DocumentUpload extends API {
   }
 
   apiEndPoint() {
-    return 'https://poczuul.anuvaad.org/anuvaad-etl/wf-manager/v1/workflow/async/initiate';
+    return this.endpoint;
   }
 
   getFormData() {

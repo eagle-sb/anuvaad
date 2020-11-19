@@ -110,7 +110,7 @@ class Login extends React.Component {
        let resData = rsp_data && rsp_data.data
        var roles = this.handleRoles(resData);
        localStorage.setItem("roles", roles)
-      history.push(`${process.env.PUBLIC_URL}/view-document`);
+      history.push(`${process.env.PUBLIC_URL}/document-upload`);
 
       }
     }).catch((error) => {
