@@ -387,7 +387,7 @@ class UserUtils:
         try:
             for user in users:
                 email = user["email"]
-                msg = Message(subject="User Account Activation",
+                msg = Message(subject="Welcome to Anuvaad",
                               sender="tempusermonday@gmail.com",
                               recipients=[email])
                 # msg.body="Hii {0},\nYou've received this email because you have registered on users.anuvaad.org.".format(name)

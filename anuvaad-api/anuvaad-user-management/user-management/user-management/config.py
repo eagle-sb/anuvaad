@@ -30,8 +30,8 @@ MAIL_SETTINGS = {
     "MAIL_PORT": 465,
     "MAIL_USE_TLS": False,
     "MAIL_USE_SSL": True,
-    "MAIL_USERNAME": os.environ.get('EMAIL_USER','tempusermonday@gmail.com'),
-    "MAIL_PASSWORD": os.environ.get('EMAIL_PASSWORD','monday@911')
+    "MAIL_USERNAME": os.environ.get('EMAIL_USER','xxxxx@xxxxx.com'),
+    "MAIL_PASSWORD": os.environ.get('EMAIL_PASSWORD','aaxxx')
 
 }
 
