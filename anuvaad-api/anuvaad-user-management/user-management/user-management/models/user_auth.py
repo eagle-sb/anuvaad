@@ -22,7 +22,7 @@ class UserAuthenticationModel(object):
             collections = get_db()[config.USR_TOKEN_MONGO_COLLECTION]
             if (UserUtils.get_token(userName)["status"] != True):
                 timeLimit = datetime.datetime.utcnow(
-                ) + datetime.timedelta(seconds=1800)  # set limit for user
+                ) + datetime.timedelta(hours=3)  # set limit for user
                 payload = {"userName": userName, "password": str(
                     UserUtils.hash_password(password)), "exp": timeLimit}
                 token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
