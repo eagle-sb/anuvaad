@@ -22,6 +22,7 @@ import { translate } from "../../../assets/localisation";
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import profileDetails from '../../../flux/actions/apis/profile_details'
+import Link from '@material-ui/core/Link';
 
 const TELEMETRY = require('../../../utils/TelemetryManager')
 
@@ -65,7 +66,7 @@ class Login extends React.Component {
    */
   processLoginButtonPressed = () => {
     const { email, password } = this.state;
-    this.setState({error:false})
+    this.setState({ error: false })
     const apiObj = new LoginAPI(email, password);
     const apiReq = fetch(apiObj.apiEndPoint(), {
       method: 'post',
@@ -76,20 +77,18 @@ class Login extends React.Component {
       if (!response.ok) {
         return Promise.reject('');
       } else {
-       console.log(rsp_data)
-       let resData = rsp_data && rsp_data.data
-       console.log(resData)
-       localStorage.setItem("token", resData.token)
-       this.fetchUserProfileDetails(resData.token)
+        let resData = rsp_data && rsp_data.data
+        localStorage.setItem("token", resData.token)
+        this.fetchUserProfileDetails(resData.token)
       }
     }).catch((error) => {
-      this.setState({error: true})
+      this.setState({ error: true })
     });
   };
 
-  handleRoles = (value) =>{
+  handleRoles = (value) => {
     let result = []
-    value.roles.map(element =>{
+    value.roles.map(element => {
       result.push(element.roleCode)
     })
     return result;
@@ -107,69 +106,76 @@ class Login extends React.Component {
       if (!response.ok) {
         return Promise.reject('');
       } else {
-       let resData = rsp_data && rsp_data.data
-       var roles = this.handleRoles(resData);
-       localStorage.setItem("roles", roles)
-      history.push(`${process.env.PUBLIC_URL}/document-upload`);
+        let resData = rsp_data && rsp_data.data
+        var roles = this.handleRoles(resData);
+        localStorage.setItem("roles", roles)
+        history.push(`${process.env.PUBLIC_URL}/document-upload`);
 
       }
     }).catch((error) => {
       console.log('api failed because of server or network')
     });
-  
+
 
 
   }
   render() {
     return (
       <MuiThemeProvider theme={ThemeDefault}>
-      <div style={{ width: "100%", height: window.innerHeight, display: "flex", flexDirection: "column", textAlign: "center" }}>
-        <div style={{ marginTop: "5%" }}>
-          <Typography style={{ fontWeight: '550', fontSize: "36px", color: "#233466" }}>
-            Sign In
+        <div style={{ width: "100%", height: window.innerHeight, display: "flex", flexDirection: "column", textAlign: "center" }}>
+          <Paper style={{ width: "100%", height: "80px", textAlign: "left" }}>
+           <Typography style={{color: "#233466", paddingLeft: "40px", marginTop: "20px"}} variant="h5">Anuvaad Translator</Typography>
+          </Paper>
+          <div style={{ marginTop: "7%" }}>
+            <Typography style={{ fontWeight: '550', fontSize: "36px", color: "#233466" }}>
+              Sign In
         </Typography>
-          <Paper style={{ width: "40%", marginLeft: '30%', marginTop: "3%", textAlign: "left", alignItems: "center", display: "flex", flexDirection: "column" }}>
-            <FormControl fullWidth style={{ alignItems: "center", display: "flex", flexDirection: "column" }}>
+            <Paper style={{ width: "40%", marginLeft: '30%', marginTop: "3%", textAlign: "left", alignItems: "center", display: "flex", flexDirection: "column" }}>
+              <FormControl fullWidth style={{ alignItems: "center", display: "flex", flexDirection: "column" }}>
 
-              <TextField
-                label="Email/UserName"
-                type="text"
-                name="email"
-                fullWidth
-                value={this.state.email}
-                onChange={this.processInputReceived('email')}
-                variant="outlined"
-                style={{ width: '50%', border: "grey", marginTop: "60px" }}
+                <TextField
+                  label="Email/UserName"
+                  type="text"
+                  name="email"
+                  fullWidth
+                  value={this.state.email}
+                  onChange={this.processInputReceived('email')}
+                  variant="outlined"
+                  style={{ width: '50%', border: "grey", marginTop: "60px" }}
 
-              />
-              <TextField
-                label="Password"
-                type="password"
-                name="password"
-                fullWidth
-                value={this.state.password}
-                onChange={this.processInputReceived('password')}
-                variant="outlined"
-                style={{ width: '50%', border: "grey", marginTop: "40px" }}
+                />
+                <TextField
+                  label="Password"
+                  type="password"
+                  name="password"
+                  fullWidth
+                  value={this.state.password}
+                  onChange={this.processInputReceived('password')}
+                  variant="outlined"
+                  style={{ width: '50%', border: "grey", marginTop: "40px" }}
 
-              />
+                />
 
-              {this.state.error && <Typography style={{color:"red", alignItems:"left"}}>Incorrect username or password. please try again..!</Typography>}
+                {this.state.error && <Typography style={{ color: "red", alignItems: "left" }}>Incorrect username or password. please try again..!</Typography>}
 
-              <Button
-               
-                variant="contained" aria-label="edit" style={{
-                  width: '50%', marginBottom: '60px', marginTop: '40px', borderRadius: '20px', height: '45px', textTransform: 'initial', fontWeight: '20px',
-                  color: "#FFFFFF",
-                  backgroundColor: "#1C9AB7",
-                }} onClick={this.processLoginButtonPressed.bind(this)}>
+                <Button
+                  variant="contained" aria-label="edit" style={{
+                    width: '50%', marginTop: '40px', borderRadius: '20px', height: '45px', textTransform: 'initial', fontWeight: '20px',
+                    color: "#FFFFFF",
+                    backgroundColor: "#1C9AB7",
+                  }} onClick={this.processLoginButtonPressed.bind(this)}>
                   Sign In
               </Button>
-            </FormControl>
-          </Paper>
+
+                <div style={{ marginBottom: '60px', marginTop: "10px", textAlign: "left", width: '50%' }}>
+                  <Link style={{ cursor: 'pointer', color: '#0C8AA9' }} href="#" onClick={() => { history.push("/forgot-password") }}> {translate('updatePassword.page.label.forgotPassword')}</Link>
+                </div>
+
+              </FormControl>
+            </Paper>
+          </div>
         </div>
-      </div>
-       </MuiThemeProvider>
+      </MuiThemeProvider>
     )
   }
 }
