@@ -95,8 +95,8 @@ class SearchUsers(Resource):
         userIDs = body['userIDs']
         userNames = body['userNames']
         roleCodes = body['roleCodes']
-        log_info("data recieved for user search is;user Ids:{}"+'\n'+'user names:{}' +
-                 '\n'+"role codes:{}".format(userIDs, userNames, roleCodes), MODULE_CONTEXT)
+        log_info("data recieved for user search is;user Ids:{}".format(userIDs)+'\n'+"user names:{}".format(userNames) +
+                 '\n'+"role codes:{}".format(roleCodes), MODULE_CONTEXT)
         if not userIDs and not userNames and not roleCodes:
             return post_error("Data Null", "data received for user search is empty", None), 400
 

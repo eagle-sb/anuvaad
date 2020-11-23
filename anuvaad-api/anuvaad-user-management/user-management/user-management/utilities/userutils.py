@@ -1,4 +1,5 @@
 import uuid
+import time
 import re
 import bcrypt
 from db import get_db
@@ -28,11 +29,11 @@ class UserUtils:
 
     def __init__(self):
         pass
-
+#useId generation
     @staticmethod
     def generate_user_id():
-        return(uuid.uuid4().hex)
-
+        return(uuid.uuid4().hex +str(time.time()).replace('.', '')[:13])
+#email validation
     @staticmethod
     def validate_email(email):
         regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
@@ -41,6 +42,7 @@ class UserUtils:
         else:
             return False
 
+#phone no validation
     # @staticmethod
     # def validate_phone(phone):
     #     Pattern = re.compile("(0/91)?[6-9][0-9]{9}")
@@ -49,17 +51,13 @@ class UserUtils:
     #     else:
     #         return False
 
+#password hashing
     @staticmethod
     def hash_password(password):
         password_in_byte = bytes(password, 'utf-8')  # converting str to byte
         salt = bcrypt.gensalt()
         return(bcrypt.hashpw(password_in_byte, salt))
-
-    @staticmethod
-    def encrypt_password(password):
-        encrypted_password = sha256_crypt.encrypt(password)
-        return(encrypted_password)
-
+#password validation (must 6 char range with upper,lower,special and number characters )
     @staticmethod
     def validate_password(password):
         if len(password) < config.MIN_LENGTH:
@@ -69,17 +67,17 @@ class UserUtils:
         pattern = re.compile(regex)
         if re.search(pattern, password) is None:
             return post_error("Invalid password", "password must contain atleast one uppercase,one lowercase, one numeric and one special character", None)
-
+#userId validation (uniqueness)
     @staticmethod
     def validate_userid(usrId):
         collections = get_db()[config.USR_MONGO_COLLECTION]
         valid = collections.find({'userID': {'$in': [usrId]}})
         if valid.count() != 0:
             userID = UserUtils.generate_user_id()
-            validate_userid(userID)
+            UserUtils.validate_userid(userID)
         else:
             return(usrId)
-
+#user name validation (uniqueness)
     @staticmethod
     def validate_username(usrName):
         collections = get_db()[config.USR_MONGO_COLLECTION]
@@ -90,20 +88,21 @@ class UserUtils:
             return(False)
         else:
             return(True)
-
+#validating rolecodes (rolecodes should match with the rolecodes read from json)
     @staticmethod
     def validate_rolecodes(roles):
         global role_codes
-        # print(role_codes)
         if not role_codes:
             log_info("reading from remote location", MODULE_CONTEXT)
             role_codes = UserUtils.read_role_codes()
         log_info("ROLE_CODES:{}".format(role_codes), MODULE_CONTEXT)
         log_info("roles : {}".format(roles), MODULE_CONTEXT)
+        if role_codes==None:
+            post_error("Data Null","Rolecodes read from json is none",None)
         for role in roles:
             if role not in role_codes:
                 return False
-
+#checking username and password validity of an existing user
     @staticmethod
     def validate_user(usrName, password):
         try:
@@ -125,10 +124,9 @@ class UserUtils:
             log_exception(
                 "exception while validating username and password"+str(e),  MODULE_CONTEXT, e)
             return None
-
+#validating auth token of the user
     @staticmethod
     def token_validation(token):
-
         token_received = token
         if not token_received:
             return post_error("Invalid token", "Token recieved is empty", None)
@@ -149,7 +147,6 @@ class UserUtils:
 
                         try:
                             jwt.decode(token, secret_key, algorithm='HS256')
-                            # return ({"status": True, "data": user})
                         except jwt.exceptions.ExpiredSignatureError as e:
                             log_exception("token expired",  MODULE_CONTEXT, e)
                             collections.update({"token": token}, {
@@ -162,7 +159,7 @@ class UserUtils:
 
                 log_exception("db connection exception ",  MODULE_CONTEXT, e)
                 return post_error("Database connection exception", "An error occurred while connecting to the database", None)
-
+#searching for the user based on auth token
     @staticmethod
     def get_user_from_token(token):
         token_received = token
@@ -174,13 +171,10 @@ class UserUtils:
                 result), MODULE_CONTEXT)
             for record in result:
                 username = record["user"]
-
         except Exception as e:
-
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return post_error("Database connection exception", "An error occurred while connecting to the database", None)
         try:
-            # print(username)
             collections_usr = get_db()[config.USR_MONGO_COLLECTION]
             result_usr = collections_usr.find(
                 {"userName": username}, {"_id": 0, "password": 0})
@@ -192,7 +186,7 @@ class UserUtils:
 
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return post_error("Database connection exception", "An error occurred while connecting to the database", None)
-
+#generating auth token using pyjwt
     @staticmethod
     def get_token(userName):
         try:
@@ -206,11 +200,10 @@ class UserUtils:
                 return {"status": "No token vailable for the user", "data": None}
             else:
                 for value in record:
-
                     secret_key = value["secret_key"]
                     token = value["token"]
                     try:
-                        result = jwt.decode(
+                        jwt.decode(
                             token, secret_key, algorithm='HS256')
                         return({"status": True, "data": token})
                     except jwt.exceptions.ExpiredSignatureError as e:
@@ -246,15 +239,12 @@ class UserUtils:
         username = user["userName"]
         password = user["password"]
         email = user["email"]
-        phone = user["phoneNo"]
         roles = user["roles"]
         rolecodes = []
 
         
         if not username or not password or not email or not name or not roles:
             return post_error("Data missing", "Username,password,name,email,roles are mandatory fields, they cannot be empty", None)
-        # if not username or not password or not name or not email or not roles:
-        #     return post_error("Data missing", "Username,password,name,email,roles are mandatory fields, they cannot be empty", None)
         password_validity = UserUtils.validate_password(password)
         log_info("password validated:{}".format(
             password_validity), MODULE_CONTEXT)
@@ -262,8 +252,6 @@ class UserUtils:
             return password_validity
         if UserUtils.validate_email(email) == False:
             return post_error("Data not valid", "Email Id given is not valid", None)
-        # if UserUtils.validate_phone(phone) == False:
-        #     return post_error("Data not valid", "Phone number given is not valid", None)
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
             record = collections.find({'userName': username})
@@ -305,7 +293,6 @@ class UserUtils:
         username = user["userName"]
         password = user["password"]
         email = user["email"]
-        phone = user["phoneNo"]
         roles = user["roles"]
         rolecodes = []
 
@@ -356,7 +343,7 @@ class UserUtils:
             return post_error("Invalid credentials", "username and password doesn't match", None)
         if UserUtils.validate_user(username, password) == None:
             return post_error("Database connection exception", "An error occurred while connecting to the database", None)
-
+#reading rolecodes from external json
     @staticmethod
     def read_role_codes():
         try:
@@ -381,7 +368,7 @@ class UserUtils:
                           str(exc), MODULE_CONTEXT, exc)
             post_error("CONFIG_READ_ERROR",
                        "Exception while reading configs: " + str(exc), MODULE_CONTEXT)
-
+#generating email notification for registered users
     @staticmethod
     def generate_email_user_creation(users):
         try:
