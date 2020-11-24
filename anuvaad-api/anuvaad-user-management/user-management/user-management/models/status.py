@@ -38,6 +38,17 @@ class Status(enum.Enum):
     FAILURE_USR_TOKEN = {'ok': True, 'http': {'status': 400},
                          'why': "On input errors causing failure in user search"}
 
+    SUCCESS_FORGOT_PWD = {'ok': True, 'http': {'status': 200},
+                            'why': "User is notified successfully"}
+    FAILURE_FORGOT_PWD  = {'ok': True, 'http': {'status': 400},
+                         'why': "On input errors causing failure in user notification"}
+
+    SUCCESS_RESET_PWD = {'ok': True, 'http': {'status': 200},
+                            'why': "Password has resetted successfully"}
+    FAILURE_RESET_PWD  = {'ok': True, 'http': {'status': 400},
+                         'why': "On input errors causing failure in password resetting"}
+
+
     ERR_GLOBAL_SYSTEM = {'ok': False, 'http': {
         'status': 500}, 'why': "Internal Server Error"}
     ERR_GLOBAL_MISSING_PARAMETERS = {

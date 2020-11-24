@@ -25,7 +25,7 @@ class UserAuthenticationModel(object):
                 ) + datetime.timedelta(hours=3)  # set limit for user
                 payload = {"userName": userName, "password": str(
                     UserUtils.hash_password(password)), "exp": timeLimit}
-                token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+                token = jwt.encode(payload, SECRET_KEY, algorithm='HS256') #generating auth token using pyjwt
                 collections.insert({"user": userName, "token": token.decode("utf-8"), "secret_key": SECRET_KEY,
                                     "active": True, "start_time": eval(str(time.time()).replace('.', '')[0:13]), "end_time": 0})
                 log_info("user login details are stored on db:", MODULE_CONTEXT)
@@ -78,3 +78,35 @@ class UserAuthenticationModel(object):
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return post_error("Database connection exception", "An error occurred while connecting to the database", None)
+
+    @staticmethod
+    def forgot_password(userName):
+        result = UserUtils.generate_email_user_updation(userName)
+        if result is None:
+            return True
+        return result
+    
+    @staticmethod
+    def reset_password(userName,password):
+
+        hashed = UserUtils.hash_password(password).decode("utf-8")
+        try:
+            collections = get_db()[config.USR_MONGO_COLLECTION]
+            record = collections.find({"userName": userName})
+            log_info("search on db for password updation :{}".format(
+                record), MODULE_CONTEXT)
+            
+            if record.count() != 0:
+                for user in record:
+                    results = collections.update(user, {"$set": {"password": hashed}})
+                    if 'writeError' in list(results.keys()):
+                        return post_error("db error", "writeError whie updating record", None)
+                    log_info(
+                        "re-setting password value for the user:{}".format(results), MODULE_CONTEXT)
+                return True
+            return post_error("Data Not valid","Invalid Credential",None)
+                
+        except Exception as e:
+            log_exception("db  exception ",  MODULE_CONTEXT, e)
+            return post_error("Database exception", "Exception:{}".format(str(e)), None)
+           

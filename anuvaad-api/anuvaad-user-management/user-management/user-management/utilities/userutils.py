@@ -95,35 +95,14 @@ class UserUtils:
         if not role_codes:
             log_info("reading from remote location", MODULE_CONTEXT)
             role_codes = UserUtils.read_role_codes()
+            # if role_codes is None:
+            #     post_error("Data Null","Rolecodes read from json is none",None)
         log_info("ROLE_CODES:{}".format(role_codes), MODULE_CONTEXT)
         log_info("roles : {}".format(roles), MODULE_CONTEXT)
-        if role_codes==None:
-            post_error("Data Null","Rolecodes read from json is none",None)
+        
         for role in roles:
             if role not in role_codes:
                 return False
-#checking username and password validity of an existing user
-    @staticmethod
-    def validate_user(usrName, password):
-        try:
-            collections = get_db()[config.USR_MONGO_COLLECTION]
-            result = collections.find({'userName': {'$eq': usrName}}, {
-                'password': 1, '_id': 0})
-            log_info("searching for password of the requested user:{}".format(
-                result), MODULE_CONTEXT)
-            if result.count() == 0:
-                return False
-            for value in result:
-                password_in_db = value["password"].encode("utf-8")
-                log_info("password stored on db is retrieved", MODULE_CONTEXT)
-                if bcrypt.checkpw(password.encode("utf-8"), password_in_db):
-                    return True
-                else:
-                    return False
-        except Exception as e:
-            log_exception(
-                "exception while validating username and password"+str(e),  MODULE_CONTEXT, e)
-            return None
 #validating auth token of the user
     @staticmethod
     def token_validation(token):
@@ -186,7 +165,7 @@ class UserUtils:
 
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return post_error("Database connection exception", "An error occurred while connecting to the database", None)
-#generating auth token using pyjwt
+#retrieving token for the logged in user in case the token has already issued and valid
     @staticmethod
     def get_token(userName):
         try:
@@ -339,10 +318,35 @@ class UserUtils:
             return post_error("Username missing", "Username field cannot be empty", None)
         if not password:
             return post_error("Password missing", "Password field cannot be empty", None)
-        if UserUtils.validate_user(username, password) == False:
-            return post_error("Invalid credentials", "username and password doesn't match", None)
-        if UserUtils.validate_user(username, password) == None:
-            return post_error("Database connection exception", "An error occurred while connecting to the database", None)
+
+        try:
+            collections = get_db()[config.USR_MONGO_COLLECTION]
+            result = collections.find({'userName': {'$eq': username}}, {
+                'password': 1, '_id': 0})
+            log_info("searching for password of the requested user:{}".format(
+                result), MODULE_CONTEXT)
+            if result.count() == 0:
+                return post_error("Invalid credentials", "Incorrect username or password", None)
+            for value in result:
+                password_in_db = value["password"].encode("utf-8")
+                log_info("password stored on db is retrieved", MODULE_CONTEXT)
+                try:
+                    if bcrypt.checkpw(password.encode("utf-8"), password_in_db)== False:
+                        return post_error("Invalid Credentials", "Incorrect username or password", None)
+
+                except Exception as e:
+                    log_exception("exception while decoding password",  MODULE_CONTEXT, e)
+                    return post_error("exception while decoding password", "exception:{}".format(str), None)
+                    
+        except Exception as e:
+            log_exception(
+                "exception while validating username and password"+str(e),  MODULE_CONTEXT, e)
+            return post_error("Database exception","Exception occurred:{}".format(str(e)),None)
+
+        # if UserUtils.validate_user(username, password) == False:
+        #     return post_error("Invalid credentials", "Incorrect username or password", None)
+        # if UserUtils.validate_user(username, password) == None:
+        #     return post_error("Database connection exception", "An error occurred while connecting to the database", None)
 #reading rolecodes from external json
     @staticmethod
     def read_role_codes():
@@ -380,9 +384,22 @@ class UserUtils:
                 # msg.body="Hii {0},\nYou've received this email because you have registered on users.anuvaad.org.".format(name)
                 #               +"\nYour credentials are \nUserName : {0} \nPassword : {1} ".format(username,password)
                 #               +"\n If it's not you, please click here to unsubscribe"
-                msg.html = render_template('mail_template.html',link=mail_href_link)
+                msg.html = render_template('register_mail_template.html',link=mail_href_link)
                 mail.send(msg)
         except Exception as e:
             raise Exception("Exception while sending email for the registered user:{}".format(str(e)))
+#generating email notification for forgot password
+    @staticmethod
+    def generate_email_user_updation(userName):
+        try:
+            email = userName
+            msg = Message(subject="[Anuvaad]Please reset your Password ",
+                              sender="tempusermonday@gmail.com",
+                              recipients=[email])
+            msg.html = render_template('reset_mail_template.html',link=mail_href_link)
+            mail.send(msg)
+        except Exception as e:
+            return post_error("Exception while generating reset password notification","Exception occurred:{}".format(str(e)),None)
+            
 
             

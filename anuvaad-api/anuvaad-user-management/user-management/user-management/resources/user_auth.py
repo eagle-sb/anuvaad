@@ -101,3 +101,62 @@ class AuthTokenSearch(Resource):
                       str(e), MODULE_CONTEXT, e)
             return post_error("Exception occurred", "Exception while performing user creation", None), 400
             
+
+class ForgotPassword(Resource):
+        
+    def post(self):
+        body = request.get_json()
+        if "userName" not in body.keys():
+            return post_error("Key error","userName not found",None)
+        userName = body["userName"]
+        if not userName:
+            return post_error("Data null","userName received is empty",None)
+        try:
+            result = UserAuthenticationRepositories.forgot_password(userName)
+            log_info("Forgot password api call result:{}".format(result),MODULE_CONTEXT)
+            if result == True:
+                res = CustomResponse(
+                        Status.SUCCESS_FORGOT_PWD.value, None)
+                return res.getresjson(), 200
+            else:
+                res = CustomResponse(Status.FAILURE_FORGOT_PWD.value, result)
+                return res.getres(), 400
+        except Exception as e:
+            log_exception("Exception while forgot password api call: " +
+                        str(e), MODULE_CONTEXT, e)
+            return post_error("Exception occurred", "Exception while forgot password api call:{}".format(str(e)), None), 400
+            
+        
+
+
+
+
+class ResetPassword(Resource):
+
+    def post(self):
+        body = request.get_json()
+        if "userName" not in body.keys():
+            return post_error("Key error","userName not found",None)
+        if "password" not in body.keys():
+            return post_error("Key error","Password not found",None)
+        userName = body["userName"]
+        password = body["password"]
+
+        if not userName:
+            return post_error("Username missing", "Username field cannot be empty", None)
+        if not password:
+            return post_error("Password missing", "Password field cannot be empty", None)
+        try:
+            result = UserAuthenticationRepositories.reset_password(userName,password)
+            log_info("Reset password api call result:{}".format(result),MODULE_CONTEXT)
+            if result == True:
+                res = CustomResponse(
+                        Status.SUCCESS_RESET_PWD.value, None)
+                return res.getresjson(), 200
+            else:
+                res = CustomResponse(Status.FAILURE_RESET_PWD.value,None)
+                return res.getresjson(), 400
+        except Exception as e:
+            log_exception("Exception while forgot password api call: " +
+                        str(e), MODULE_CONTEXT, e)
+            return post_error("Exception occurred", "Exception while reset password api call:{}".format(str(e)), None), 400
