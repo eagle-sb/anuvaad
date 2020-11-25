@@ -66,7 +66,7 @@ class UserLogout(Resource):
                 return res.getresjson(), 400
             else:
                 res = CustomResponse(Status.SUCCESS_USR_LOGOUT.value, None)
-            return res.getres(), 200
+            return res.getres()
         except Exception as e:
             log_exception("Exception while logout: " +
                       str(e), MODULE_CONTEXT, e)
@@ -95,7 +95,7 @@ class AuthTokenSearch(Resource):
                 return res.getresjson(), 400
             else:
                 res = CustomResponse(Status.SUCCESS_USR_TOKEN.value, result)
-            return res.getres(), 200
+            return res.getres()
         except Exception as e:
             log_exception("Exception while user auth search: " +
                       str(e), MODULE_CONTEXT, e)
