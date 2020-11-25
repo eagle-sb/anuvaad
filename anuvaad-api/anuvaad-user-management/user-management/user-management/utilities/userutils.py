@@ -405,3 +405,5 @@ class UserUtils:
         except Exception as e:
             log_exception("exception while validating username/email"+str(e),  MODULE_CONTEXT, e)
             return post_error("Database exception","Exception occurred:{}".format(str(e)),None)
+
+      
