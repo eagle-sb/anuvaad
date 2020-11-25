@@ -77,17 +77,7 @@ class UserUtils:
             UserUtils.validate_userid(userID)
         else:
             return(usrId)
-#user name validation (uniqueness)
-    @staticmethod
-    def validate_username(usrName):
-        collections = get_db()[config.USR_MONGO_COLLECTION]
-        valid = collections.find({'userName': {'$in': [usrName]}})
-        log_info("search result on db for username validation:{}".format(
-            valid), MODULE_CONTEXT)
-        if valid.count() != 0:
-            return(False)
-        else:
-            return(True)
+
 #validating rolecodes (rolecodes should match with the rolecodes read from json)
     @staticmethod
     def validate_rolecodes(roles):
@@ -343,10 +333,6 @@ class UserUtils:
                 "exception while validating username and password"+str(e),  MODULE_CONTEXT, e)
             return post_error("Database exception","Exception occurred:{}".format(str(e)),None)
 
-        # if UserUtils.validate_user(username, password) == False:
-        #     return post_error("Invalid credentials", "Incorrect username or password", None)
-        # if UserUtils.validate_user(username, password) == None:
-        #     return post_error("Database connection exception", "An error occurred while connecting to the database", None)
 #reading rolecodes from external json
     @staticmethod
     def read_role_codes():
@@ -386,7 +372,10 @@ class UserUtils:
                 #               +"\n If it's not you, please click here to unsubscribe"
                 msg.html = render_template('register_mail_template.html',link=mail_href_link)
                 mail.send(msg)
+                log_info("generated email notification for user registration:{} ", MODULE_CONTEXT)
         except Exception as e:
+            log_exception("Exception while generating email notification for user registration: " +
+                          str(e), MODULE_CONTEXT, e)
             raise Exception("Exception while sending email for the registered user:{}".format(str(e)))
 #generating email notification for forgot password
     @staticmethod
@@ -398,8 +387,21 @@ class UserUtils:
                               recipients=[email])
             msg.html = render_template('reset_mail_template.html',link=mail_href_link)
             mail.send(msg)
+            log_info("generated email notification for reset password", MODULE_CONTEXT)
         except Exception as e:
+            log_exception("Exception while generating reset password notification: " +
+                          str(e), MODULE_CONTEXT, e)
             return post_error("Exception while generating reset password notification","Exception occurred:{}".format(str(e)),None)
             
-
-            
+    @staticmethod
+    def validate_username(usrName):
+        try:
+            collections = get_db()[config.USR_MONGO_COLLECTION]
+            valid = collections.find({'userName': {'$in': [usrName]}})
+            log_info("search result on db for username/email validation, count of availability:{}".format(valid.count()), MODULE_CONTEXT)
+            if valid.count() == 0:
+                log_info("No valid email/username",MODULE_CONTEXT)
+                return post_error("Not Valid","Given email/username is not associated with any of the Anuvaad accounts",None)
+        except Exception as e:
+            log_exception("exception while validating username/email"+str(e),  MODULE_CONTEXT, e)
+            return post_error("Database exception","Exception occurred:{}".format(str(e)),None)

@@ -82,9 +82,9 @@ class UserAuthenticationModel(object):
     @staticmethod
     def forgot_password(userName):
         result = UserUtils.generate_email_user_updation(userName)
-        if result is None:
-            return True
-        return result
+        if result is not None:
+            return result
+        return True
     
     @staticmethod
     def reset_password(userName,password):

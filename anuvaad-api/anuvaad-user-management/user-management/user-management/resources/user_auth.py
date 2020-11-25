@@ -29,7 +29,7 @@ class UserLogin(Resource):
         try:
             result = UserAuthenticationRepositories.user_login(
                 userName, password)
-            log_info("User logout result:{}".format(result),MODULE_CONTEXT)
+            log_info("User login result:{}".format(result),MODULE_CONTEXT)
             if result == False:
                 res = CustomResponse(
                     Status.FAILURE_USR_LOGIN.value, None)
@@ -66,11 +66,11 @@ class UserLogout(Resource):
                 return res.getresjson(), 400
             else:
                 res = CustomResponse(Status.SUCCESS_USR_LOGOUT.value, None)
-            return res.getres()
+            return res.getres(), 200
         except Exception as e:
             log_exception("Exception while logout: " +
                       str(e), MODULE_CONTEXT, e)
-            return post_error("Exception occurred", "Exception while performing user creation", None), 400
+            return post_error("Exception occurred", "Exception while performing user logout", None), 400
             
 
 
@@ -95,7 +95,7 @@ class AuthTokenSearch(Resource):
                 return res.getresjson(), 400
             else:
                 res = CustomResponse(Status.SUCCESS_USR_TOKEN.value, result)
-            return res.getres()
+            return res.getres(), 200
         except Exception as e:
             log_exception("Exception while user auth search: " +
                       str(e), MODULE_CONTEXT, e)
@@ -111,6 +111,10 @@ class ForgotPassword(Resource):
         userName = body["userName"]
         if not userName:
             return post_error("Data null","userName received is empty",None)
+        validity = UserUtils.validate_username(userName)
+        log_info("Username/email is validated for generating reset password notification:{}".format(validity), MODULE_CONTEXT)
+        if validity is not None:
+            return validity, 400
         try:
             result = UserAuthenticationRepositories.forgot_password(userName)
             log_info("Forgot password api call result:{}".format(result),MODULE_CONTEXT)
@@ -119,8 +123,7 @@ class ForgotPassword(Resource):
                         Status.SUCCESS_FORGOT_PWD.value, None)
                 return res.getresjson(), 200
             else:
-                res = CustomResponse(Status.FAILURE_FORGOT_PWD.value, result)
-                return res.getres(), 400
+                return result, 400
         except Exception as e:
             log_exception("Exception while forgot password api call: " +
                         str(e), MODULE_CONTEXT, e)
@@ -146,6 +149,11 @@ class ResetPassword(Resource):
             return post_error("Username missing", "Username field cannot be empty", None)
         if not password:
             return post_error("Password missing", "Password field cannot be empty", None)
+        validity = UserUtils.validate_username(userName)
+        log_info("Username/email is validated for resetting password:{}".format(validity), MODULE_CONTEXT)
+        if validity is not None:
+            return validity, 400
+            
         try:
             result = UserAuthenticationRepositories.reset_password(userName,password)
             log_info("Reset password api call result:{}".format(result),MODULE_CONTEXT)
