@@ -20,7 +20,6 @@ json_file_dir = config.ROLE_CODES_DIR_PATH
 json_file_name = config.ROLE_CODES_FILE_NAME
 
 mail_href_link=config.HREF_LINK
-
 role_codes = []
 # sender_email=config.MAIL_SETTINGS
 
@@ -365,7 +364,7 @@ class UserUtils:
             for user in users:
                 email = user["email"]
                 msg = Message(subject="Welcome to Anuvaad",
-                              sender="tempusermonday@gmail.com",
+                              sender="anuvaad.support@tarento.com",
                               recipients=[email])
                 # msg.body="Hii {0},\nYou've received this email because you have registered on users.anuvaad.org.".format(name)
                 #               +"\nYour credentials are \nUserName : {0} \nPassword : {1} ".format(username,password)
@@ -383,7 +382,7 @@ class UserUtils:
         try:
             email = userName
             msg = Message(subject="[Anuvaad]Please reset your Password ",
-                              sender="tempusermonday@gmail.com",
+                              sender="anuvaad.support@tarento.com",
                               recipients=[email])
             msg.html = render_template('reset_mail_template.html',link=mail_href_link)
             mail.send(msg)
