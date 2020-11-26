@@ -32,13 +32,16 @@ class CreateUsers(Resource):
 
         try:
             result = UserManagementRepositories.create_users(users)
+            print(result,"HLOOOOOOOO")
             
             log_info("User creation result:{}".format(result), MODULE_CONTEXT)
-            if result:
+            if result is not None:
+                return result, 400
+                
+            else:
                 res = CustomResponse(Status.SUCCESS.value, None)
                 return res.getresjson(), 200
-            else:
-                return result, 400
+                
 
         except Exception as e:
             log_exception("Exception while creating user records: " +

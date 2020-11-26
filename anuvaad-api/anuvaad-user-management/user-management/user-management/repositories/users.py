@@ -10,8 +10,7 @@ class UserManagementRepositories:
         result = UserManagementModel.create_users(users)
         if result is not None:
             return result
-        else:
-            return True
+        
 
     @staticmethod
     def update_users(users):

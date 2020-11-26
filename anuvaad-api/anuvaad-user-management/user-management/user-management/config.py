@@ -35,7 +35,7 @@ MAIL_SETTINGS = {
     "MAIL_PORT": 465,
     "MAIL_USE_TLS": False,
     "MAIL_USE_SSL": True,
-    "MAIL_USERNAME": os.environ.get('SUPPORT_EMAIL','anuvaad.support@tarento.com'),
-    "MAIL_PASSWORD": os.environ.get('SUPPORT_EMAIL_PASSWORD','xxxx')}
+    "MAIL_USERNAME": os.environ.get('SUPPORT_EMAIL','xxxxxxx@xxx.com'),
+    "MAIL_PASSWORD": os.environ.get('SUPPORT_EMAIL_PASSWORD','xxxxx')}
 
 HREF_LINK=os.environ.get('MAIL_HREF_LINK','https://users.anuvaad.org')

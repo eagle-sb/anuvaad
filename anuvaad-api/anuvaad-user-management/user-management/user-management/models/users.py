@@ -35,6 +35,7 @@ class UserManagementModel(object):
             users_data['email'] = user["email"]
             users_data['phoneNo'] = user["phoneNo"]
             users_data['roles'] = user_roles
+            users_data['is_verified'] =False
 
             records.append(users_data)
         log_info("User records:{}".format(records), MODULE_CONTEXT)
@@ -47,15 +48,18 @@ class UserManagementModel(object):
             if len(records) != len(results):
                 return post_error("db error", "some of the records were not inserted into db", None)
             log_info("users created:{}".format(results), MODULE_CONTEXT)
-            try:
-                UserUtils.generate_email_user_creation(users)
-            except Exception as e:
-                raise Exception("Exception while sending email for the registered user:{}".format(str(e)))
+            # try:
+            user_notified=UserUtils.generate_email_user_creation(users)
+            if user_notified is not None:
+                print(user_notified,"################")
+                return user_notified
+            # except Exception as e:
+            #     raise Exception("Exception while sending email for the registered user")
 
         except Exception as e:
             log_exception("db connection exception " +
                           str(e),  MODULE_CONTEXT, e)
-            return post_error("Database connection exception", "An error occurred while connecting to the database", None)
+            return post_error("Database  exception", "An error occurred while processing on the db :{}".format(str(e)), None)
 
     @staticmethod
     def update_users_by_uid(users):

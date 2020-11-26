@@ -153,6 +153,9 @@ class ResetPassword(Resource):
         log_info("Username/email is validated for resetting password:{}".format(validity), MODULE_CONTEXT)
         if validity is not None:
             return validity, 400
+        pwd_validity=UserUtils.validate_password(password)
+        if pwd_validity is not None:
+            return validity, 400
             
         try:
             result = UserAuthenticationRepositories.reset_password(userName,password)

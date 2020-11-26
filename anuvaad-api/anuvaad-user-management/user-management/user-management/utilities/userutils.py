@@ -220,10 +220,12 @@ class UserUtils:
             return password_validity
         if UserUtils.validate_email(email) == False:
             return post_error("Data not valid", "Email Id given is not valid", None)
+        if UserUtils.validate_email(username) == False:
+            return post_error("Data not valid", "Username/Email Id given is not valid", None)
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
-            record = collections.find({'userName': username})
-            if record.count() != 0:
+            user_record = collections.find({'userName': username,"is_verified":True})
+            if user_record.count() != 0:
                 return post_error("Data not valid", "Username given is already taken,try with another username", None)
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
@@ -362,20 +364,17 @@ class UserUtils:
     def generate_email_user_creation(users):
         try:
             for user in users:
-                email = user["email"]
+                email = user["userName"]
                 msg = Message(subject="Welcome to Anuvaad",
                               sender="anuvaad.support@tarento.com",
                               recipients=[email])
-                # msg.body="Hii {0},\nYou've received this email because you have registered on users.anuvaad.org.".format(name)
-                #               +"\nYour credentials are \nUserName : {0} \nPassword : {1} ".format(username,password)
-                #               +"\n If it's not you, please click here to unsubscribe"
                 msg.html = render_template('register_mail_template.html',link=mail_href_link)
                 mail.send(msg)
-                log_info("generated email notification for user registration:{} ", MODULE_CONTEXT)
+                log_info("generated email notification for user registration ", MODULE_CONTEXT)
         except Exception as e:
             log_exception("Exception while generating email notification for user registration: " +
                           str(e), MODULE_CONTEXT, e)
-            raise Exception("Exception while sending email for the registered user:{}".format(str(e)))
+            return post_error("Exception while generating email notification for user registration","Exception occurred:{}".format(str(e)),None)
 #generating email notification for forgot password
     @staticmethod
     def generate_email_user_updation(userName):
