@@ -32,7 +32,6 @@ class CreateUsers(Resource):
 
         try:
             result = UserManagementRepositories.create_users(users)
-            print(result,"HLOOOOOOOO")
             
             log_info("User creation result:{}".format(result), MODULE_CONTEXT)
             if result is not None:

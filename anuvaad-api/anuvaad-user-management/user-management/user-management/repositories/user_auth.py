@@ -34,3 +34,9 @@ class UserAuthenticationRepositories:
 
         result = UserAuthenticationModel.reset_password(userName,password)
         return result
+
+    @staticmethod
+    def activate_user(user_email,user_id):
+        
+        result = UserAuthenticationModel.activate_user(user_email,user_id)
+        return result

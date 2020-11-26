@@ -47,6 +47,11 @@ class Status(enum.Enum):
                             'why': "Password has resetted successfully"}
     FAILURE_RESET_PWD  = {'ok': True, 'http': {'status': 400},
                          'why': "On input errors causing failure in password resetting"}
+    
+    SUCCESS_ACTIVATE_USR = {'ok': True, 'http': {'status': 200},
+                            'why': "User has activated successfully"}
+    FAILURE_ACTIVATE_USR  = {'ok':False, 'http': {'status': 400},
+                         'why': "On input errors causing failure in user activation"}
 
 
     ERR_GLOBAL_SYSTEM = {'ok': False, 'http': {

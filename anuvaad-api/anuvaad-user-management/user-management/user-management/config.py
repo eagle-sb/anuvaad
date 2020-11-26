@@ -35,7 +35,9 @@ MAIL_SETTINGS = {
     "MAIL_PORT": 465,
     "MAIL_USE_TLS": False,
     "MAIL_USE_SSL": True,
-    "MAIL_USERNAME": os.environ.get('SUPPORT_EMAIL','xxxxxxx@xxx.com'),
-    "MAIL_PASSWORD": os.environ.get('SUPPORT_EMAIL_PASSWORD','xxxxx')}
+    "MAIL_USERNAME": os.environ.get('SUPPORT_EMAIL','xxxxxx@xxxx.com'),
+    "MAIL_PASSWORD": os.environ.get('SUPPORT_EMAIL_PASSWORD','xxxxxx')}
 
-HREF_LINK=os.environ.get('MAIL_HREF_LINK','https://users.anuvaad.org')
+# HREF_LINK=os.environ.get('MAIL_HREF_LINK','https://users.anuvaad.org')
+
+BASE_URL=os.environ.get('REACT_APP_BASE_URL','https://developers.anuvaad.org/')

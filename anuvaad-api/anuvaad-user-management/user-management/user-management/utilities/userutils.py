@@ -19,7 +19,7 @@ role_codes_filepath = config.ROLE_CODES_URL
 json_file_dir = config.ROLE_CODES_DIR_PATH
 json_file_name = config.ROLE_CODES_FILE_NAME
 
-mail_href_link=config.HREF_LINK
+mail_ui_link=config.BASE_URL
 role_codes = []
 # sender_email=config.MAIL_SETTINGS
 
@@ -364,11 +364,13 @@ class UserUtils:
     def generate_email_user_creation(users):
         try:
             for user in users:
-                email = user["userName"]
+                email = user["userName"]   
+                userId = user["userID"]
+                print(mail_ui_link+"activate/{}/{}/{}".format(email,userId,eval(str(time.time()).replace('.', '')[0:13])))
                 msg = Message(subject="Welcome to Anuvaad",
                               sender="anuvaad.support@tarento.com",
                               recipients=[email])
-                msg.html = render_template('register_mail_template.html',link=mail_href_link)
+                msg.html = render_template('register_mail_template.html',ui_link=mail_ui_link,activation_link=mail_ui_link+"activate/{}/{}/{}".format(email,userId,eval(str(time.time()).replace('.', '')[0:13])))
                 mail.send(msg)
                 log_info("generated email notification for user registration ", MODULE_CONTEXT)
         except Exception as e:
@@ -383,7 +385,7 @@ class UserUtils:
             msg = Message(subject="[Anuvaad]Please reset your Password ",
                               sender="anuvaad.support@tarento.com",
                               recipients=[email])
-            msg.html = render_template('reset_mail_template.html',link=mail_href_link)
+            msg.html = render_template('reset_mail_template.html',link=mail_ui_link)
             mail.send(msg)
             log_info("generated email notification for reset password", MODULE_CONTEXT)
         except Exception as e:

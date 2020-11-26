@@ -171,3 +171,37 @@ class ResetPassword(Resource):
             log_exception("Exception while forgot password api call: " +
                         str(e), MODULE_CONTEXT, e)
             return post_error("Exception occurred", "Exception while reset password api call:{}".format(str(e)), None), 400
+
+
+class ActivateUser(Resource):
+
+    def post(self):
+        body = request.get_json()
+        if "uid" not in body.keys():
+            return post_error("Key error","uid not found",None)
+        if "rid" not in body.keys():
+            return post_error("Key error","rid not found",None)
+        user_email = body["uid"]
+        user_id = body["rid"]
+
+        if not user_email:
+            return post_error("uid missing", "uid field cannot be empty", None)
+        if not user_id:
+            return post_error("rid missing", "rid field cannot be empty", None)
+       
+        try:
+            result = UserAuthenticationRepositories.activate_user(user_email,user_id)
+            log_info("Activate user api call result:{}".format(result),MODULE_CONTEXT)
+            if result is not None:
+                return result, 400
+            else:
+                res = CustomResponse(
+                        Status.SUCCESS_ACTIVATE_USR.value, None)
+                return res.getresjson(), 200
+            
+        except Exception as e:
+            log_exception("Exception while Activate user api call: " +
+                        str(e), MODULE_CONTEXT, e)
+            return post_error("Exception occurred", "Exception while Activate user api call:{}".format(str(e)), None), 400
+
+
