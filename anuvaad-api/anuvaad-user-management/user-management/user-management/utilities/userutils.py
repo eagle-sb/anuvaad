@@ -312,12 +312,12 @@ class UserUtils:
 
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
-            result = collections.find({'userName': {'$eq': username}}, {
+            result = collections.find({'userName': username,"is_verified":True}, {
                 'password': 1, '_id': 0})
             log_info("searching for password of the requested user:{}".format(
                 result), MODULE_CONTEXT)
             if result.count() == 0:
-                return post_error("Invalid credentials", "Incorrect username or password", None)
+                return post_error("Invalid credentials", "Incorrect credentials or not an activated account ", None)
             for value in result:
                 password_in_db = value["password"].encode("utf-8")
                 log_info("password stored on db is retrieved", MODULE_CONTEXT)
