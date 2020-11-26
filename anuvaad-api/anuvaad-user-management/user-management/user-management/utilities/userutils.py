@@ -281,7 +281,7 @@ class UserUtils:
         #     return post_error("Data not valid", "Phone number given is not valid", None)
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
-            record = collections.find({'userID': userId})
+            record = collections.find({'userID': userId,"is_verified":True})
             if record.count() == 0:
                 return post_error("Data not valid", "User Id given is not valid", None)
             for value in record:
@@ -317,7 +317,7 @@ class UserUtils:
             log_info("searching for password of the requested user:{}".format(
                 result), MODULE_CONTEXT)
             if result.count() == 0:
-                return post_error("Invalid credentials", "Incorrect credentials or not an activated account ", None)
+                return post_error("Invalid credentials", "Incorrect credentials or not an activated account", None)
             for value in result:
                 password_in_db = value["password"].encode("utf-8")
                 log_info("password stored on db is retrieved", MODULE_CONTEXT)
@@ -379,13 +379,14 @@ class UserUtils:
             return post_error("Exception while generating email notification for user registration","Exception occurred:{}".format(str(e)),None)
 #generating email notification for forgot password
     @staticmethod
-    def generate_email_user_updation(userName):
+    def generate_email_reset_password(userName):
         try:
             email = userName
-            msg = Message(subject="[Anuvaad]Please reset your Password ",
+            rand_id=UserUtils.generate_user_id()
+            msg = Message(subject="[Anuvaad] Please reset your Password ",
                               sender="anuvaad.support@tarento.com",
                               recipients=[email])
-            msg.html = render_template('reset_mail_template.html',link=mail_ui_link)
+            msg.html = render_template('reset_mail_template.html',link=mail_ui_link,reset_link=mail_ui_link+"reset-password/{}/{}/{}".format(email,rand_id,eval(str(time.time()).replace('.', '')[0:13])))
             mail.send(msg)
             log_info("generated email notification for reset password", MODULE_CONTEXT)
         except Exception as e:
@@ -397,10 +398,10 @@ class UserUtils:
     def validate_username(usrName):
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
-            valid = collections.find({'userName': {'$in': [usrName]}})
+            valid = collections.find({'userName':usrName,"is_verified":True})
             log_info("search result on db for username/email validation, count of availability:{}".format(valid.count()), MODULE_CONTEXT)
             if valid.count() == 0:
-                log_info("No valid email/username",MODULE_CONTEXT)
+                log_info("Not a valid email/username",MODULE_CONTEXT)
                 return post_error("Not Valid","Given email/username is not associated with any of the Anuvaad accounts",None)
         except Exception as e:
             log_exception("exception while validating username/email"+str(e),  MODULE_CONTEXT, e)
