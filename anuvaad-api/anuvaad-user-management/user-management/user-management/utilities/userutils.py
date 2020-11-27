@@ -145,7 +145,7 @@ class UserUtils:
         try:
             collections_usr = get_db()[config.USR_MONGO_COLLECTION]
             result_usr = collections_usr.find(
-                {"userName": username}, {"_id": 0, "password": 0})
+                {"userName": username,"is_verified":True}, {"_id": 0, "password": 0})
             log_info("record in users db matching the recieved token:{}".format(
                 result), MODULE_CONTEXT)
             for record in result_usr:
