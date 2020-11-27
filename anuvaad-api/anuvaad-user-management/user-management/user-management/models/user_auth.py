@@ -44,7 +44,7 @@ class UserAuthenticationModel(object):
                 return return_data
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
-            return post_error("Database connection exception", "An error occurred while connecting to the database", None)
+            return post_error("Database  exception", "An error occurred while processing on the database:{}".format(str(e)), None)
 
     @staticmethod
     def user_logout(userName):

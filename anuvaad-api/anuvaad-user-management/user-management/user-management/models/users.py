@@ -101,7 +101,7 @@ class UserManagementModel(object):
 
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
-            out = collections.find(
+            out = collections.find({"is_verified":True},
                 {'$or': [
                     {'userID': {'$in': userIDs}},
                     {'userName': {'$in': userNames}},
