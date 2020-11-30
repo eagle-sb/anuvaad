@@ -103,9 +103,9 @@ class UserManagementModel(object):
             collections = get_db()[config.USR_MONGO_COLLECTION]
             out = collections.find(
                 {'$or': [
-                    {'userID': {'$in': userIDs}},
-                    {'userName': {'$in': userNames}},
-                    {'roles.roleCode': {'$in': roleCodes}}
+                    {'userID': {'$in': userIDs},'is_verified': True},
+                    {'userName': {'$in': userNames},'is_verified': True},
+                    {'roles.roleCode': {'$in': roleCodes},'is_verified': True}
                 ]}, exclude)
             log_info("user search is executed:{}".format(out), MODULE_CONTEXT)
             result = []
