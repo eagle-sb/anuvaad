@@ -226,10 +226,10 @@ class UserUtils:
             collections = get_db()[config.USR_MONGO_COLLECTION]
             user_record = collections.find({'userName': username,"is_verified":True})
             if user_record.count() != 0:
-                return post_error("Data not valid", "Username given is already taken,try with another username", None)
+                return post_error("Data not valid", "The username already exists. Please use a different username", None)
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
-            return post_error("Database connection exception", "An error occurred while connecting to the database", None)
+            return post_error("Database exception", "An error occurred while working on the database:{}".format(str(e)), None)
         for rol in roles:
             if "roleCode" not in rol.keys():
                 return post_error("Key error", "roleCode not found", None)
@@ -289,7 +289,7 @@ class UserUtils:
                     return post_error("Data not valid", "Username is not valid for the given User Id", None)
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
-            return post_error("Database connection exception", "An error occurred while connecting to the database", None)
+            return post_error("Database connection exception", "An error occurred while connecting to the database:{}".format(str(e)), None)
         for rol in roles:
             if "roleCode" not in rol.keys():
                 return post_error("Key error", "roleCode not found", None)

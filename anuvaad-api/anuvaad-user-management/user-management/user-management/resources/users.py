@@ -22,7 +22,7 @@ class CreateUsers(Resource):
         log_info("data recieved for user creation is:{}".format(
             users), MODULE_CONTEXT)
         if not users:
-            return post_error("Data Null", "data received for user updation is empty", None), 400
+            return post_error("Data Null", "data received for user creation is empty", None), 400
 
         for user in users:
             validity = UserUtils.validate_user_input_creation(user)
@@ -38,14 +38,14 @@ class CreateUsers(Resource):
                 return result, 400
                 
             else:
-                res = CustomResponse(Status.SUCCESS.value, None)
+                res = CustomResponse(Status.SUCCESS_USR_CREATION.value, None)
                 return res.getresjson(), 200
                 
 
         except Exception as e:
             log_exception("Exception while creating user records: " +
                           str(e), MODULE_CONTEXT, e)
-            return post_error("Exception occurred", "Exception while performing user creation", None), 400
+            return post_error("Exception occurred", "Exception while performing user creation:{}".format(str(e)), None), 400
 
 
 class UpdateUsers(Resource):
@@ -56,10 +56,10 @@ class UpdateUsers(Resource):
             return post_error("Key error", "users not found", None), 400
 
         users = body['users']
-        log_info("data recieved for user updation is:{}".format(
+        log_info("Data recieved for user updation is:{}".format(
             users), MODULE_CONTEXT)
         if not users:
-            return post_error("Data Null", "data received for user updation is empty", None), 400
+            return post_error("Data Null", "Data received for user updation is empty", None), 400
 
         for user in users:
             validity = UserUtils.validate_user_input_updation(user)
@@ -71,7 +71,7 @@ class UpdateUsers(Resource):
             result = UserManagementRepositories.update_users(users)
             log_info("User updation result:{}".format(result), MODULE_CONTEXT)
             if result:
-                res = CustomResponse(Status.SUCCESS.value, None)
+                res = CustomResponse(Status.SUCCESS_USR_UPDATION.value, None)
                 return res.getresjson(), 200
             else:
                 return result, 400
@@ -79,7 +79,7 @@ class UpdateUsers(Resource):
         except Exception as e:
             log_exception("Exception while updating user records: " +
                           str(e), MODULE_CONTEXT, e)
-            return post_error("Exception occurred", "Exception while performing user updation", None), 400
+            return post_error("Exception occurred", "Exception while performing user updation:{}".format(str(e)), None), 400
 
 
 class SearchUsers(Resource):
@@ -100,7 +100,7 @@ class SearchUsers(Resource):
         log_info("data recieved for user search is;user Ids:{}".format(userIDs)+'\n'+"user names:{}".format(userNames) +
                  '\n'+"role codes:{}".format(roleCodes), MODULE_CONTEXT)
         if not userIDs and not userNames and not roleCodes:
-            return post_error("Data Null", "data received for user search is empty", None), 400
+            return post_error("Data Null", "Data received for user search is empty", None), 400
 
         try:
             result = UserManagementRepositories.search_users(
@@ -115,7 +115,47 @@ class SearchUsers(Resource):
         except Exception as e:
             log_exception("Exception while searching user records: " +
                           str(e), MODULE_CONTEXT, e)
-            return post_error("Exception occurred", "Exception while performing user updation", None), 400
+            return post_error("Exception occurred", "Exception while performing user updation::{}".format(str(e)), None), 400
+
+
+class OnboardUsers(Resource):
+
+    def post(self):
+        body = request.get_json()
+        print(body.keys())
+        if 'users' not in body.keys():
+            return post_error("Key error", "users not found", None), 400
+
+        if 'users' in body:
+            users = body['users']
+        log_info("data recieved for users on-boarding is:{}".format(
+            users), MODULE_CONTEXT)
+        if not users:
+            return post_error("Data Null", "data received for users on-boarding is empty", None), 400
+
+        for user in users:
+            validity = UserUtils.validate_user_input_creation(user)
+            log_info("User is validated:{}".format(validity), MODULE_CONTEXT)
+            if validity is not None:
+                return validity, 400
+
+        try:
+            result = UserManagementRepositories.onboard_users(users)
+            
+            log_info("User on-boarding result:{}".format(result), MODULE_CONTEXT)
+            if result is not None:
+                return result, 400
+                
+            else:
+                res = CustomResponse(Status.SUCCESS_USR_ONBOARD.value, None)
+                return res.getresjson(), 200
+                
+
+        except Exception as e:
+            log_exception("Exception while creating user records for users on-boarding: " +
+                          str(e), MODULE_CONTEXT, e)
+            return post_error("Exception occurred", "Exception while performing users on-boarding::{}".format(str(e)), None), 400
+
 
 
 class Health(Resource):

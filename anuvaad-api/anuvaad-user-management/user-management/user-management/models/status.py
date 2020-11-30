@@ -52,6 +52,9 @@ class Status(enum.Enum):
                             'why': "User has activated successfully"}
     FAILURE_ACTIVATE_USR  = {'ok':False, 'http': {'status': 400},
                          'why': "On input errors causing failure in user activation"}
+    
+    SUCCESS_USR_ONBOARD = {'ok': True, 'http': {'status': 200},
+                            'why': "New users were onboarded successfully"}
 
 
     ERR_GLOBAL_SYSTEM = {'ok': False, 'http': {

@@ -28,3 +28,9 @@ class UserManagementRepositories:
             return result
         else:
             return ("No such users")
+
+    @staticmethod
+    def onboard_users(users):
+        result = UserManagementModel.onboard_users(users)
+        if result is not None:
+            return result
