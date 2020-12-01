@@ -386,7 +386,7 @@ class UserUtils:
             msg = Message(subject="[Anuvaad] Please reset your Password ",
                               sender="anuvaad.support@tarento.com",
                               recipients=[email])
-            msg.html = render_template('reset_mail_template.html',link=mail_ui_link,reset_link=mail_ui_link+"set-password/{}/{}/{}".format(email,rand_id,eval(str(time.time()).replace('.', '')[0:13])))
+            msg.html = render_template('reset_mail_template.html',ui_link=mail_ui_link,reset_link=mail_ui_link+"set-password/{}/{}/{}".format(email,rand_id,eval(str(time.time()).replace('.', '')[0:13])))
             mail.send(msg)
             log_info("generated email notification for reset password", MODULE_CONTEXT)
         except Exception as e:

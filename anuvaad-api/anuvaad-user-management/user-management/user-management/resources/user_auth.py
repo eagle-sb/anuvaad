@@ -205,3 +205,41 @@ class ActivateUser(Resource):
             return post_error("Exception occurred", "Exception while Activate user api call:{}".format(str(e)), None), 400
 
 
+# class AdminResetPassword(Resource):
+
+#     def post(self):
+#         body = request.get_json()
+#         if "userName" not in body.keys():
+#             return post_error("Key error","userName not found",None)
+#         if "password" not in body.keys():
+#             return post_error("Key error","Password not found",None)
+#         userName = body["userName"]
+#         password = body["password"]
+
+#         if not userName:
+#             return post_error("Username missing", "Username field cannot be empty", None)
+#         if not password:
+#             return post_error("Password missing", "Password field cannot be empty", None)
+#         validity = UserUtils.validate_username(userName)
+#         log_info("Username/email is validated for resetting password:{}".format(validity), MODULE_CONTEXT)
+#         if validity is not None:
+#             return validity, 400
+#         pwd_validity=UserUtils.validate_password(password)
+#         if pwd_validity is not None:
+#             return validity, 400
+            
+#         try:
+#             result = UserAuthenticationRepositories.reset_password_for_user(userName,password)
+#             log_info("Reset password api call result:{}".format(result),MODULE_CONTEXT)
+#             if result == True:
+#                 res = CustomResponse(
+#                         Status.SUCCESS_RESET_PWD.value, None)
+#                 return res.getresjson(), 200
+#             else:
+#                 res = CustomResponse(Status.FAILURE_RESET_PWD.value,None)
+#                 return res.getresjson(), 400
+#         except Exception as e:
+#             log_exception("Exception while forgot password api call: " +
+#                         str(e), MODULE_CONTEXT, e)
+#             return post_error("Exception occurred", "Exception while reset password api call:{}".format(str(e)), None), 400
+
