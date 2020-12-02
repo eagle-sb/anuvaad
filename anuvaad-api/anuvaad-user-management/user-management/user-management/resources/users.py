@@ -70,7 +70,7 @@ class UpdateUsers(Resource):
         try:
             result = UserManagementRepositories.update_users(users)
             log_info("User updation result:{}".format(result), MODULE_CONTEXT)
-            if result:
+            if result== True:
                 res = CustomResponse(Status.SUCCESS_USR_UPDATION.value, None)
                 return res.getresjson(), 200
             else:
@@ -155,6 +155,24 @@ class OnboardUsers(Resource):
             log_exception("Exception while creating user records for users on-boarding: " +
                           str(e), MODULE_CONTEXT, e)
             return post_error("Exception occurred", "Exception while performing users on-boarding::{}".format(str(e)), None), 400
+
+class RegisteredUsersRecords(Resource):
+
+    def get(self):
+        try:
+            result = UserManagementRepositories.search_users_records()
+            log_info("User search result:{}".format(result), MODULE_CONTEXT)
+            if result is not None:
+                res = CustomResponse(Status.SUCCESS_USR_SEARCH.value, result)
+                return res.getresjson(), 200
+            res = CustomResponse(Status.EMPTY_USR_SEARCH.value, None)
+            return res.getresjson(), 400
+            
+        except Exception as e:
+            log_exception("Exception while searching user records: " +
+                          str(e), MODULE_CONTEXT, e)
+            return post_error("Exception occurred", "Exception while performing user updation::{}".format(str(e)), None), 400
+
 
 
 

@@ -66,7 +66,7 @@ class UserAuthenticationModel(object):
                 return True
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
-            return post_error("Database connection exception", "An error occurred while connecting to the database", None)
+            return post_error("Database connection exception", "An error occurred while connecting to the database:{}".format(str(e)), None)
 
     @staticmethod
     def token_search(token):
@@ -77,7 +77,7 @@ class UserAuthenticationModel(object):
 
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
-            return post_error("Database connection exception", "An error occurred while connecting to the database", None)
+            return post_error("Database connection exception", "An error occurred while connecting to the database:{}".format(str(e)), None)
 
     @staticmethod
     def forgot_password(userName):
@@ -119,14 +119,18 @@ class UserAuthenticationModel(object):
             log_info("search on db for user activation :{},record count:{}".format(
                 record,record.count()), MODULE_CONTEXT)
             
+            
             if record.count()==0:
                 return post_error("Data Not valid","No records matching the given parameters ",None)
             if record.count() ==1:
                 for user in record:
-                    results = collections.update(user, {"$set": {"is_verified": True}})
-                    if 'writeError' in list(results.keys()):
-                        return post_error("db error", "writeError whie updating record", None)
-                    log_info(
+                    if user["is_verified"]== True:
+                        return post_error("Activated", "User is already activated", None)
+                    else:
+                        results = collections.update(user, {"$set": {"is_verified": True,'activated_time':eval(str(time.time()))}})
+                        if 'writeError' in list(results.keys()):
+                            return post_error("db error", "writeError whie updating record", None)
+                        log_info(
                         "Activating user account:{}".format(results), MODULE_CONTEXT)
             else:
                 return post_error("Data Not valid","Somehow there exist more than one record matching the given parameters ",None)
@@ -134,4 +138,32 @@ class UserAuthenticationModel(object):
         except Exception as e:
             log_exception("db  exception ",  MODULE_CONTEXT, e)
             return post_error("Database exception", "Exception:{}".format(str(e)), None)
+
+    @staticmethod
+    def deactivate_user(user_email,user_id):
+        try:
+            collections = get_db()[config.USR_MONGO_COLLECTION]
+            record = collections.find({"userName": user_email,"userID":user_id})
+            log_info("search on db for user deactivation :{},record count:{}".format(
+                record,record.count()), MODULE_CONTEXT)
+            
+            if record.count()==0:
+                return post_error("Data Not valid","No records matching the given parameters ",None)
+            if record.count() ==1:
+                for user in record:
+                    if user["is_verified"]== False:
+                        return post_error("Deactivated", "User is already dectivated", None)
+                    else:
+                        results = collections.update(user, {"$set": {"is_verified": False,'deactivated_time':eval(str(time.time()))}})
+                        if 'writeError' in list(results.keys()):
+                            return post_error("db error", "writeError whie updating record", None)
+                        log_info(
+                        "Deactivating user account:{}".format(results), MODULE_CONTEXT)
+            else:
+                return post_error("Data Not valid","Somehow there exist more than one record matching the given parameters ",None)
+                
+        except Exception as e:
+            log_exception("db  exception ",  MODULE_CONTEXT, e)
+            return post_error("Database exception", "Exception:{}".format(str(e)), None)
+           
            

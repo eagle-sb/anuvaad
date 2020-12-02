@@ -5,6 +5,7 @@ from anuvaad_auditor.loghandler import log_info, log_exception
 import bcrypt
 from anuvaad_auditor.errorhandler import post_error
 import config
+import time
 
 
 class UserManagementModel(object):
@@ -36,6 +37,8 @@ class UserManagementModel(object):
             users_data['phoneNo'] = user["phoneNo"]
             users_data['roles'] = user_roles
             users_data['is_verified'] =False
+            users_data['registered_time'] =eval(str(time.time()))
+            users_data['activated_time'] =0
 
             records.append(users_data)
         log_info("User records:{}".format(records), MODULE_CONTEXT)
@@ -90,12 +93,12 @@ class UserManagementModel(object):
 
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
-            return post_error("Database connection exception", "An error occurred while connecting to the database", None)
+            return post_error("Database connection exception", "An error occurred while connecting to the database:{}".format(str(e)), None)
 
     @staticmethod
     def get_user_by_keys(userIDs, userNames, roleCodes):
 
-        exclude = {"_id": False, "password": False}
+        exclude = {"_id": False, "password": False,"registered_time":False,"activated_time":False}
 
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
@@ -115,7 +118,7 @@ class UserManagementModel(object):
 
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
-            return post_error("Database connection exception", "An error occurred while connecting to the database", None)
+            return post_error("Database connection exception", "An error occurred while connecting to the database:{}".format(str(e)), None)
 
     @staticmethod
     def onboard_users(users):
@@ -144,6 +147,8 @@ class UserManagementModel(object):
             users_data['phoneNo'] = user["phoneNo"]
             users_data['roles'] = user_roles
             users_data['is_verified'] =True
+            users_data['registered_time'] =eval(str(time.time()))
+            users_data['activated_time'] =eval(str(time.time()))
 
             records.append(users_data)
         log_info("User records:{}".format(records), MODULE_CONTEXT)
@@ -161,3 +166,22 @@ class UserManagementModel(object):
             log_exception("db connection exception " +
                           str(e),  MODULE_CONTEXT, e)
             return post_error("Database  exception", "An error occurred while processing on the db :{}".format(str(e)), None)
+
+    @staticmethod
+    def search_users_records():
+        exclude = {"_id": False, "password": False}
+        try:
+            collections = get_db()[config.USR_MONGO_COLLECTION]
+            out = collections.find({},exclude)
+            log_info("user search is executed:{}".format(out), MODULE_CONTEXT)
+            result = []
+            for record in out:
+                result.append(record)
+            if not result:
+                return None
+            return result
+
+        except Exception as e:
+            log_exception("db connection exception ",  MODULE_CONTEXT, e)
+            return post_error("Database connection exception", "An error occurred while connecting to the database:{}".format(str(e)), None)
+

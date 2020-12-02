@@ -204,7 +204,36 @@ class ActivateUser(Resource):
                         str(e), MODULE_CONTEXT, e)
             return post_error("Exception occurred", "Exception while Activate user api call:{}".format(str(e)), None), 400
 
+class DeactivateUser(Resource):
 
+    def post(self):
+        body = request.get_json()
+        if "uid" not in body.keys():
+            return post_error("Key error","uid not found",None)
+        if "rid" not in body.keys():
+            return post_error("Key error","rid not found",None)
+        user_email = body["uid"]
+        user_id = body["rid"]
+
+        if not user_email:
+            return post_error("uid missing", "uid field cannot be empty", None)
+        if not user_id:
+            return post_error("rid missing", "rid field cannot be empty", None)
+       
+        try:
+            result = UserAuthenticationRepositories.deactivate_user(user_email,user_id)
+            log_info("Deactivate user api call result:{}".format(result),MODULE_CONTEXT)
+            if result is not None:
+                return result, 400
+            else:
+                res = CustomResponse(
+                        Status.SUCCESS_DEACTIVATE_USR.value, None)
+                return res.getresjson(), 200
+            
+        except Exception as e:
+            log_exception("Exception while deactivate user api call: " +
+                        str(e), MODULE_CONTEXT, e)
+            return post_error("Exception occurred", "Exception while deactivate user api call:{}".format(str(e)), None), 400
 # class AdminResetPassword(Resource):
 
 #     def post(self):

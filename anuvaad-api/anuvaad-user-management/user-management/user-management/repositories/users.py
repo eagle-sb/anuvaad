@@ -34,3 +34,11 @@ class UserManagementRepositories:
         result = UserManagementModel.onboard_users(users)
         if result is not None:
             return result
+
+    @staticmethod
+    def search_users_records():
+        result = UserManagementModel.search_users_records()
+        if result is not None:
+            return result
+        else:
+            return ("No  records")
