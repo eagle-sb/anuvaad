@@ -177,17 +177,17 @@ class ActivateUser(Resource):
 
     def post(self):
         body = request.get_json()
-        if "userName" not in body.keys():
-            return post_error("Key error","userName not found",None)
-        if "userID" not in body.keys():
-            return post_error("Key error","userID not found",None)
-        user_email = body["userName"]
-        user_id = body["userID"]
+        if "uid" not in body.keys():
+            return post_error("Key error","uid not found",None)
+        if "rid" not in body.keys():
+            return post_error("Key error","rid not found",None)
+        user_email = body["uid"]
+        user_id = body["rid"]
 
         if not user_email:
-            return post_error("userName missing", "userName field cannot be empty", None)
+            return post_error("uid missing", "uid field cannot be empty", None)
         if not user_id:
-            return post_error("userID missing", "userID field cannot be empty", None)
+            return post_error("rid missing", "rid field cannot be empty", None)
        
         try:
             result = UserAuthenticationRepositories.activate_user(user_email,user_id)
@@ -209,19 +209,14 @@ class DeactivateUser(Resource):
     def post(self):
         body = request.get_json()
         if "userName" not in body.keys():
-            return post_error("Key error","userName not found",None)
-        if "userID" not in body.keys():
-            return post_error("Key error","userID not found",None)
+            return post_error("Key error","uid not found",None)
         user_email = body["userName"]
-        user_id = body["userID"]
 
         if not user_email:
             return post_error("userName missing", "userName field cannot be empty", None)
-        if not user_id:
-            return post_error("userID missing", "userID field cannot be empty", None)
        
         try:
-            result = UserAuthenticationRepositories.deactivate_user(user_email,user_id)
+            result = UserAuthenticationRepositories.deactivate_user(user_email)
             log_info("Deactivate user api call result:{}".format(result),MODULE_CONTEXT)
             if result is not None:
                 return result, 400
@@ -234,41 +229,3 @@ class DeactivateUser(Resource):
             log_exception("Exception while deactivate user api call: " +
                         str(e), MODULE_CONTEXT, e)
             return post_error("Exception occurred", "Exception while deactivate user api call:{}".format(str(e)), None), 400
-# class AdminResetPassword(Resource):
-
-#     def post(self):
-#         body = request.get_json()
-#         if "userName" not in body.keys():
-#             return post_error("Key error","userName not found",None)
-#         if "password" not in body.keys():
-#             return post_error("Key error","Password not found",None)
-#         userName = body["userName"]
-#         password = body["password"]
-
-#         if not userName:
-#             return post_error("Username missing", "Username field cannot be empty", None)
-#         if not password:
-#             return post_error("Password missing", "Password field cannot be empty", None)
-#         validity = UserUtils.validate_username(userName)
-#         log_info("Username/email is validated for resetting password:{}".format(validity), MODULE_CONTEXT)
-#         if validity is not None:
-#             return validity, 400
-#         pwd_validity=UserUtils.validate_password(password)
-#         if pwd_validity is not None:
-#             return validity, 400
-            
-#         try:
-#             result = UserAuthenticationRepositories.reset_password_for_user(userName,password)
-#             log_info("Reset password api call result:{}".format(result),MODULE_CONTEXT)
-#             if result == True:
-#                 res = CustomResponse(
-#                         Status.SUCCESS_RESET_PWD.value, None)
-#                 return res.getresjson(), 200
-#             else:
-#                 res = CustomResponse(Status.FAILURE_RESET_PWD.value,None)
-#                 return res.getresjson(), 400
-#         except Exception as e:
-#             log_exception("Exception while forgot password api call: " +
-#                         str(e), MODULE_CONTEXT, e)
-#             return post_error("Exception occurred", "Exception while reset password api call:{}".format(str(e)), None), 400
-

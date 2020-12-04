@@ -37,6 +37,7 @@ class UserManagementModel(object):
             users_data['phoneNo'] = user["phoneNo"]
             users_data['roles'] = user_roles
             users_data['is_verified'] =False
+            users_data['is_active'] =False
             users_data['registered_time'] =eval(str(time.time()))
             users_data['activated_time'] =0
 
@@ -147,6 +148,7 @@ class UserManagementModel(object):
             users_data['phoneNo'] = user["phoneNo"]
             users_data['roles'] = user_roles
             users_data['is_verified'] =True
+            users_data['is_active'] =True
             users_data['registered_time'] =eval(str(time.time()))
             users_data['activated_time'] =eval(str(time.time()))
 
@@ -172,7 +174,7 @@ class UserManagementModel(object):
         exclude = {"_id": False, "password": False}
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
-            out = collections.find({},exclude)
+            out = collections.find({"is_verified":True},exclude)
             log_info("user search is executed:{}".format(out), MODULE_CONTEXT)
             result = []
             for record in out:

@@ -48,7 +48,7 @@ class UserAuthenticationRepositories:
         return result
 
     @staticmethod
-    def deactivate_user(user_email,user_id):
+    def deactivate_user(user_email):
         
-        result = UserAuthenticationModel.deactivate_user(user_email,user_id)
+        result = UserAuthenticationModel.deactivate_user(user_email)
         return result

@@ -220,8 +220,6 @@ class UserUtils:
             return password_validity
         if UserUtils.validate_email(email) == False:
             return post_error("Data not valid", "Email Id given is not valid", None)
-        if UserUtils.validate_email(username) == False:
-            return post_error("Data not valid", "Username/Email Id given is not valid", None)
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
             user_record = collections.find({'userName': username,"is_verified":True})
@@ -277,14 +275,14 @@ class UserUtils:
             return password_validity, 400
         if UserUtils.validate_email(email) == False:
             return post_error("Data not valid", "Email Id given is not valid", None)
-        # if UserUtils.validate_phone(phone) == False:
-        #     return post_error("Data not valid", "Phone number given is not valid", None)
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
             record = collections.find({'userID': userId,"is_verified":True})
             if record.count() == 0:
-                return post_error("Data not valid", "User Id given is not valid", None)
+                return post_error("Data not valid", "No such verified user with the given Id", None)
             for value in record:
+                if value["is_active"] == False:
+                    return post_error("Not active", "This operation is not allowed for an inactive user", None)
                 if value["userName"] != username:
                     return post_error("Data not valid", "Username is not valid for the given User Id", None)
         except Exception as e:
@@ -313,12 +311,14 @@ class UserUtils:
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
             result = collections.find({'userName': username,"is_verified":True}, {
-                'password': 1, '_id': 0})
+                'password': 1, '_id': 0,'is_active':1})
             log_info("searching for password of the requested user:{}".format(
                 result), MODULE_CONTEXT)
             if result.count() == 0:
-                return post_error("Invalid credentials", "Incorrect credentials or not an activated account", None)
+                return post_error("Not verified", "User account is not verified", None)
             for value in result:
+                if value["is_active"] == False:
+                    return post_error("Not active", "This operation is not allowed for an inactive user", None)
                 password_in_db = value["password"].encode("utf-8")
                 log_info("password stored on db is retrieved", MODULE_CONTEXT)
                 try:
@@ -398,11 +398,11 @@ class UserUtils:
     def validate_username(usrName):
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
-            valid = collections.find({'userName':usrName,"is_verified":True})
+            valid = collections.find({'userName':usrName,"is_verified":True,"is_active":True})
             log_info("search result on db for username/email validation, count of availability:{}".format(valid.count()), MODULE_CONTEXT)
             if valid.count() == 0:
                 log_info("Not a valid email/username",MODULE_CONTEXT)
-                return post_error("Not Valid","Given email/username is not associated with any of the Anuvaad accounts",None)
+                return post_error("Not Valid","Given email/username is not associated with any of the active Anuvaad accounts",None)
         except Exception as e:
             log_exception("exception while validating username/email"+str(e),  MODULE_CONTEXT, e)
             return post_error("Database exception","Exception occurred:{}".format(str(e)),None)

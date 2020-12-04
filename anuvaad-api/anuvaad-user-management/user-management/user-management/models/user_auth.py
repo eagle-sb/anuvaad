@@ -115,19 +115,22 @@ class UserAuthenticationModel(object):
     def activate_user(user_email,user_id):
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
+            primary_record= collections.find({"userName": user_email,"is_verified": True})
+            if primary_record.count()!=0:
+                return post_error("Not allowed","This user already have a verified account",None)
+         
             record = collections.find({"userName": user_email,"userID":user_id})
             log_info("search on db for user activation :{},record count:{}".format(
-                record,record.count()), MODULE_CONTEXT)
-            
+                record,record.count()), MODULE_CONTEXT)         
             
             if record.count()==0:
                 return post_error("Data Not valid","No records matching the given parameters ",None)
             if record.count() ==1:
                 for user in record:
                     if user["is_verified"]== True:
-                        return post_error("Activated", "User is already activated", None)
+                        return post_error("Not allowed", "This user already have a verified account", None)
                     else:
-                        results = collections.update(user, {"$set": {"is_verified": True,'activated_time':eval(str(time.time()))}})
+                        results = collections.update(user, {"$set": {"is_verified": True,"is_active":True,"activated_time":eval(str(time.time()))}})
                         if 'writeError' in list(results.keys()):
                             return post_error("db error", "writeError whie updating record", None)
                         log_info(
@@ -140,21 +143,21 @@ class UserAuthenticationModel(object):
             return post_error("Database exception", "Exception:{}".format(str(e)), None)
 
     @staticmethod
-    def deactivate_user(user_email,user_id):
+    def deactivate_user(user_email):
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
-            record = collections.find({"userName": user_email,"userID":user_id})
+            record = collections.find({"userName": user_email,"is_verified":True})
             log_info("search on db for user deactivation :{},record count:{}".format(
                 record,record.count()), MODULE_CONTEXT)
             
             if record.count()==0:
-                return post_error("Data Not valid","No records matching the given parameters ",None)
+                return post_error("Data Not valid","No records matching the given username/email ",None)
             if record.count() ==1:
                 for user in record:
-                    if user["is_verified"]== False:
+                    if user["is_active"]== False:
                         return post_error("Deactivated", "User is already dectivated", None)
                     else:
-                        results = collections.update(user, {"$set": {"is_verified": False,'deactivated_time':eval(str(time.time()))}})
+                        results = collections.update(user, {"$set": {"is_active": False}})
                         if 'writeError' in list(results.keys()):
                             return post_error("db error", "writeError whie updating record", None)
                         log_info(
