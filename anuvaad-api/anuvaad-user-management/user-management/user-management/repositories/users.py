@@ -26,8 +26,8 @@ class UserManagementRepositories:
             userIDs, userNames, roleCodes)
         if result is not None:
             return result
-        else:
-            return ("No such users")
+        # else:
+        #     return ("No such users")
 
     @staticmethod
     def onboard_users(users):
@@ -40,5 +40,4 @@ class UserManagementRepositories:
         result = UserManagementModel.search_users_records()
         if result is not None:
             return result
-        else:
-            return ("No  records")
+        

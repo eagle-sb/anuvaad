@@ -209,7 +209,7 @@ class DeactivateUser(Resource):
     def post(self):
         body = request.get_json()
         if "userName" not in body.keys():
-            return post_error("Key error","uid not found",None)
+            return post_error("Key error","userName not found",None)
         user_email = body["userName"]
 
         if not user_email:
