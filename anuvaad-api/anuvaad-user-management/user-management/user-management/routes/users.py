@@ -43,7 +43,7 @@ Api(USER_MANAGEMENT_BLUEPRINT).add_resource(
 )
 
 Api(USER_MANAGEMENT_BLUEPRINT).add_resource(
-    ActivateDeactivateUser,"/v1/users/activate-deactivate-user"
+    ActivateDeactivateUser,"/v1/users/activate-user"
 )
 
 Api(USER_MANAGEMENT_BLUEPRINT).add_resource(
