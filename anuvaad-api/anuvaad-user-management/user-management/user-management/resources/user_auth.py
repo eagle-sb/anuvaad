@@ -173,24 +173,24 @@ class ResetPassword(Resource):
             return post_error("Exception occurred", "Exception while reset password api call:{}".format(str(e)), None), 400
 
 
-class ActivateUser(Resource):
+class VerifyUser(Resource):
 
     def post(self):
         body = request.get_json()
-        if "uid" not in body.keys():
-            return post_error("Key error","uid not found",None)
-        if "rid" not in body.keys():
-            return post_error("Key error","rid not found",None)
-        user_email = body["uid"]
-        user_id = body["rid"]
+        if "userName" not in body.keys():
+            return post_error("Key error","userName not found",None)
+        if "userID" not in body.keys():
+            return post_error("Key error","userID not found",None)
+        user_email = body["userName"]
+        user_id = body["userID"]
 
         if not user_email:
-            return post_error("uid missing", "uid field cannot be empty", None)
+            return post_error("userName missing", "userName field cannot be empty", None)
         if not user_id:
-            return post_error("rid missing", "rid field cannot be empty", None)
+            return post_error("userID missing", "userID field cannot be empty", None)
        
         try:
-            result = UserAuthenticationRepositories.activate_user(user_email,user_id)
+            result = UserAuthenticationRepositories.verify_user(user_email,user_id)
             log_info("Activate user api call result:{}".format(result),MODULE_CONTEXT)
             if result is not None:
                 return result, 400
@@ -204,25 +204,30 @@ class ActivateUser(Resource):
                         str(e), MODULE_CONTEXT, e)
             return post_error("Exception occurred", "Exception while Activate user api call:{}".format(str(e)), None), 400
 
-class DeactivateUser(Resource):
+class ActivateDeactivateUser(Resource):
 
     def post(self):
         body = request.get_json()
         if "userName" not in body.keys():
             return post_error("Key error","userName not found",None)
+        if "is_active" not in body.keys():
+            return post_error("Key error","is_active not found",None)
         user_email = body["userName"]
+        status= body["is_active"]
 
         if not user_email:
             return post_error("userName missing", "userName field cannot be empty", None)
+        if not status:
+            return post_error("is_active missing", "is_active field cannot be empty", None)
        
         try:
-            result = UserAuthenticationRepositories.deactivate_user(user_email)
+            result = UserAuthenticationRepositories.activate_deactivate_user(user_email,status)
             log_info("Deactivate user api call result:{}".format(result),MODULE_CONTEXT)
             if result is not None:
                 return result, 400
             else:
                 res = CustomResponse(
-                        Status.SUCCESS_DEACTIVATE_USR.value, None)
+                        Status.SUCCESS.value, None)
                 return res.getresjson(), 200
             
         except Exception as e:

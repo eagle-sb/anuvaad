@@ -34,21 +34,14 @@ class UserAuthenticationRepositories:
 
         result = UserAuthenticationModel.reset_password(userName,password)
         return result
-    
-    # @staticmethod
-    # def reset_password_for_user(userName,password):
-
-    #     result = UserAuthenticationModel.reset_password_for_user(userName,password)
-    #     return result
-
     @staticmethod
-    def activate_user(user_email,user_id):
+    def verify_user(user_email,user_id):
         
-        result = UserAuthenticationModel.activate_user(user_email,user_id)
+        result = UserAuthenticationModel.verify_user(user_email,user_id)
         return result
 
     @staticmethod
-    def deactivate_user(user_email):
+    def activate_deactivate_user(user_email,status):
         
-        result = UserAuthenticationModel.deactivate_user(user_email)
+        result = UserAuthenticationModel.activate_deactivate_user(user_email,status)
         return result

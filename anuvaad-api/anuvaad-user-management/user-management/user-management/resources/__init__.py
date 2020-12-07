@@ -1,2 +1,2 @@
 from .users import CreateUsers, UpdateUsers, SearchUsers, OnboardUsers, RegisteredUsersRecords, Health
-from .user_auth import UserLogin, UserLogout, AuthTokenSearch, ForgotPassword, ResetPassword, ActivateUser, DeactivateUser
+from .user_auth import UserLogin, UserLogout, AuthTokenSearch, ForgotPassword, ResetPassword, VerifyUser, ActivateDeactivateUser

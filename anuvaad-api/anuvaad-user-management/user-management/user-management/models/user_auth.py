@@ -112,7 +112,7 @@ class UserAuthenticationModel(object):
            
 
     @staticmethod
-    def activate_user(user_email,user_id):
+    def verify_user(user_email,user_id):
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
             primary_record= collections.find({"userName": user_email,"is_verified": True})
@@ -143,22 +143,22 @@ class UserAuthenticationModel(object):
             return post_error("Database exception", "Exception:{}".format(str(e)), None)
 
     @staticmethod
-    def deactivate_user(user_email):
+    def activate_deactivate_user(user_email,status):
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
-            record = collections.find({"userName": user_email,"is_verified":True,"is_active":True})
-            log_info("search on db for user deactivation :{},record count:{}".format(
+            record = collections.find({"userName": user_email,"is_verified":True})
+            log_info("search on db for user activation/deactivation :{},record count:{}".format(
                 record,record.count()), MODULE_CONTEXT)
             
             if record.count()==0:
-                return post_error("Data Not valid","Not a verified/active user",None)
+                return post_error("Data Not valid","Not a verified user",None)
             if record.count() ==1:
                 for user in record:
-                    results = collections.update(user, {"$set": {"is_active": False}})
+                    results = collections.update(user, {"$set": {"is_active": status}})
                     if 'writeError' in list(results.keys()):
                         return post_error("db error", "writeError whie updating record", None)
                     log_info(
-                        "Deactivating user account:{}".format(results), MODULE_CONTEXT)
+                        "Activating/Deactivating user account:{}".format(results), MODULE_CONTEXT)
             else:
                 return post_error("Data Not valid","Somehow there exist more than one record matching the given parameters ",None)
                 

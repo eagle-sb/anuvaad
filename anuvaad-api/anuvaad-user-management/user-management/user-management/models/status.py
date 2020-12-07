@@ -49,7 +49,7 @@ class Status(enum.Enum):
                          'why': "On input errors causing failure in password resetting"}
     
     SUCCESS_ACTIVATE_USR = {'ok': True, 'http': {'status': 200},
-                            'why': "User has activated successfully"}
+                            'why': "User has verified/activated successfully"}
     FAILURE_ACTIVATE_USR  = {'ok':False, 'http': {'status': 400},
                          'why': "On input errors causing failure in user activation"}
     

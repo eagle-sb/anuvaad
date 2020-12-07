@@ -245,34 +245,19 @@ class UserUtils:
             return post_error("Key error", "userID not found", None)
         if "name" not in user.keys():
             return post_error("Key error", "name not found", None)
-        if "userName" not in user.keys():
-            return post_error("Key error", "userName not found", None)
-        if "password" not in user.keys():
-            return post_error("Key error", "password not found", None)
         if "email" not in user.keys():
             return post_error("Key error", "email not found", None)
         if "phoneNo" not in user.keys():
             return post_error("Key error", "phoneNo not found", None)
-        if "roles" not in user.keys():
-            return post_error("Key error", "roles not found", None)
 
         userId = user["userID"]
         name = user["name"]
-        username = user["userName"]
-        password = user["password"]
         email = user["email"]
-        roles = user["roles"]
-        rolecodes = []
 
         if not userId:
             return post_error("Id missing", "UserID field cannot be empty", None)
-        if not username or not password or not email or not name or not roles:
-            return post_error("Data missing", "Username,password,name,email,roles are mandatory fields, they cannot be empty", None)
-        password_validity = UserUtils.validate_password(password)
-        log_info("password validated:{}".format(
-            password_validity), MODULE_CONTEXT)
-        if password_validity is not None:
-            return password_validity, 400
+        if not email or not name:
+            return post_error("Data missing", "name,email are mandatory fields, they cannot be empty", None)
         if UserUtils.validate_email(email) == False:
             return post_error("Data not valid", "Email Id given is not valid", None)
         try:
@@ -283,21 +268,10 @@ class UserUtils:
             for value in record:
                 if value["is_active"] == False:
                     return post_error("Not active", "This operation is not allowed for an inactive user", None)
-                if value["userName"] != username:
-                    return post_error("Data not valid", "Username is not valid for the given User Id", None)
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return post_error("Database connection exception", "An error occurred while connecting to the database:{}".format(str(e)), None)
-        for rol in roles:
-            if "roleCode" not in rol.keys():
-                return post_error("Key error", "roleCode not found", None)
-            if "roleDesc" not in rol.keys():
-                return post_error("Key error", "roleDesc not found", None)
-            rolecodes.append(rol["roleCode"])
-        if not rolecodes:
-            return post_error("Data Missing", "No rolecodes are given", None)
-        if UserUtils.validate_rolecodes(rolecodes) == False:
-            return post_error("Data not valid", "Rolecode given is not valid", None)
+        
 
     @staticmethod
     def validate_user_login_input(userName, Password):

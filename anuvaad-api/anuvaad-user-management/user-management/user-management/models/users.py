@@ -68,23 +68,9 @@ class UserManagementModel(object):
                 collections = get_db()[config.USR_MONGO_COLLECTION]
                 user_id = user["userID"]
                 users_data = {}
-                userName = user['userName']
-                hashed = UserUtils.hash_password(user["password"])
-                log_info("hash created:{}".format(hashed), MODULE_CONTEXT)
-
-                user_roles = []
-                for role in user["roles"]:
-                    role_info = {}
-                    role_info["roleCode"] = role["roleCode"].upper()
-                    role_info["roleDesc"] = role["roleDesc"]
-                    user_roles.append(role_info)
-
                 users_data['name'] = user["name"]
-                users_data['userName'] = userName
-                users_data['password'] = hashed.decode("utf-8")
                 users_data['email'] = user["email"]
                 users_data['phoneNo'] = user["phoneNo"]
-                users_data['roles'] = user_roles
 
                 results = collections.update(
                     {"userID": user_id}, {'$set': users_data})
