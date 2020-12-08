@@ -149,6 +149,8 @@ class UserUtils:
             log_info("record in users db matching the recieved token:{}".format(
                 result), MODULE_CONTEXT)
             for record in result_usr:
+                if record["is_active"]== False:
+                    return post_error("Not active", "This operation is not allowed for an inactive user", None)
                 return record
         except Exception as e:
 
@@ -266,7 +268,7 @@ class UserUtils:
             if record.count() == 0:
                 return post_error("Data not valid", "No such verified user with the given Id", None)
             for value in record:
-                if value["is_active"] == False:
+                if value["is_active"]== False:
                     return post_error("Not active", "This operation is not allowed for an inactive user", None)
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
@@ -291,7 +293,7 @@ class UserUtils:
             if result.count() == 0:
                 return post_error("Not verified", "User account is not verified", None)
             for value in result:
-                if value["is_active"] == False:
+                if value["is_active"]== False:
                     return post_error("Not active", "This operation is not allowed for an inactive user", None)
                 password_in_db = value["password"].encode("utf-8")
                 log_info("password stored on db is retrieved", MODULE_CONTEXT)
@@ -340,7 +342,6 @@ class UserUtils:
             for user in users:
                 email = user["userName"]   
                 userId = user["userID"]
-                print(mail_ui_link+"activate/{}/{}/{}".format(email,userId,eval(str(time.time()).replace('.', '')[0:13])))
                 msg = Message(subject="Welcome to Anuvaad",
                               sender="anuvaad.support@tarento.com",
                               recipients=[email])
@@ -372,7 +373,10 @@ class UserUtils:
     def validate_username(usrName):
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
-            valid = collections.find({'userName':usrName,"is_verified":True,"is_active":True})
+            valid = collections.find({'userName':usrName,"is_verified":True})
+            for value in valid:
+                if value["is_active"]== False:
+                    return post_error("Not active", "This operation is not allowed for an inactive user", None)
             log_info("search result on db for username/email validation, count of availability:{}".format(valid.count()), MODULE_CONTEXT)
             if valid.count() == 0:
                 log_info("Not a valid email/username",MODULE_CONTEXT)

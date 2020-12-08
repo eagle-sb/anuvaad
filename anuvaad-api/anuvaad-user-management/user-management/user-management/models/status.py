@@ -56,8 +56,7 @@ class Status(enum.Enum):
     SUCCESS_USR_ONBOARD = {'ok': True, 'http': {'status': 200},
                             'why': "New users were onboarded successfully"}
 
-    SUCCESS_DEACTIVATE_USR = {'ok': True, 'http': {'status': 200},
-                            'why': "User has deactivated successfully"}
+    
 
     ERR_GLOBAL_SYSTEM = {'ok': False, 'http': {
         'status': 500}, 'why': "Internal Server Error"}

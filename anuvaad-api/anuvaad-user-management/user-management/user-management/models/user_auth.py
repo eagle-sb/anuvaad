@@ -127,13 +127,10 @@ class UserAuthenticationModel(object):
                 return post_error("Data Not valid","No records matching the given parameters ",None)
             if record.count() ==1:
                 for user in record:
-                    if user["is_verified"]== True:
-                        return post_error("Not allowed", "This user already have a verified account", None)
-                    else:
-                        results = collections.update(user, {"$set": {"is_verified": True,"is_active":True,"activated_time":eval(str(time.time()))}})
-                        if 'writeError' in list(results.keys()):
+                    results = collections.update(user, {"$set": {"is_verified": True,"is_active":True,"activated_time":eval(str(time.time()))}})
+                    if 'writeError' in list(results.keys()):
                             return post_error("db error", "writeError whie updating record", None)
-                        log_info(
+                    log_info(
                         "Activating user account:{}".format(results), MODULE_CONTEXT)
             else:
                 return post_error("Data Not valid","Somehow there exist more than one record matching the given parameters ",None)
@@ -145,16 +142,21 @@ class UserAuthenticationModel(object):
     @staticmethod
     def activate_deactivate_user(user_email,status):
         try:
+            if status.lower() =="true":
+                status_in=True
+            elif status.lower() =="false":
+                status_in=False
+            else:
+                return post_error("Not valid","is_active status received is not applicable",None)
             collections = get_db()[config.USR_MONGO_COLLECTION]
             record = collections.find({"userName": user_email,"is_verified":True})
             log_info("search on db for user activation/deactivation :{},record count:{}".format(
                 record,record.count()), MODULE_CONTEXT)
-            
             if record.count()==0:
                 return post_error("Data Not valid","Not a verified user",None)
             if record.count() ==1:
                 for user in record:
-                    results = collections.update(user, {"$set": {"is_active": status}})
+                    results = collections.update(user, {"$set": {"is_active": status_in}})
                     if 'writeError' in list(results.keys()):
                         return post_error("db error", "writeError whie updating record", None)
                     log_info(
