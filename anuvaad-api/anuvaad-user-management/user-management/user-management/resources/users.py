@@ -7,6 +7,7 @@ from anuvaad_auditor.loghandler import log_info, log_exception
 from flask import request
 from flask import jsonify
 from anuvaad_auditor.errorhandler import post_error
+import config
 
 
 class CreateUsers(Resource):
@@ -93,18 +94,24 @@ class SearchUsers(Resource):
             return post_error("Key error", "userNames not found", None), 400
         if "roleCodes" not in body.keys():
             return post_error("Key error", "roleCodes not found", None), 400
+        if "offset" not in body.keys():
+            return post_error("Key error", "offset not found", None), 400
+        if "limit" not in body.keys():
+            return post_error("Key error", "limit not found", None), 400
 
         userIDs = body['userIDs']
         userNames = body['userNames']
         roleCodes = body['roleCodes']
+        offset = body['offset']
+        limit_value = body['limit']
         log_info("data recieved for user search is;user Ids:{}".format(userIDs)+'\n'+"user names:{}".format(userNames) +
                  '\n'+"role codes:{}".format(roleCodes), MODULE_CONTEXT)
-        if not userIDs and not userNames and not roleCodes:
-            return post_error("Data Null", "Data received for user search is empty", None), 400
+        if not userIDs and not userNames and not roleCodes and not offset and not limit_value:
+            offset=config.OFFSET_VALUE
+            limit_value=config.LIMIT_VALUE
 
         try:
-            result = UserManagementRepositories.search_users(
-                userIDs, userNames, roleCodes)
+            result = UserManagementRepositories.search_users(userIDs, userNames, roleCodes,offset,limit_value)
             log_info("User search result:{}".format(result), MODULE_CONTEXT)
             if result == None:
                 res = CustomResponse(
@@ -158,9 +165,22 @@ class OnboardUsers(Resource):
 
 class RegisteredUsersRecords(Resource):
 
-    def get(self):
+    def post(self):
+        
+        body = request.get_json()
+        if "userIDs" not in body.keys():
+            return post_error("Key error", "userIDs not found", None), 400
+        if "offset" not in body.keys():
+            return post_error("Key error", "offset not found", None), 400
+        if "limit" not in body.keys():
+            return post_error("Key error", "limit not found", None), 400
+
+        userIDs = body['userIDs']
+        offset = body['offset']
+        limit_value = body['limit']
+        print(userIDs,offset,limit_value)
         try:
-            result = UserManagementRepositories.search_users_records()
+            result = UserManagementRepositories.search_users_records(userIDs,offset,limit_value)
             log_info("User search result:{}".format(result), MODULE_CONTEXT)
             if result is not None:
                 res = CustomResponse(Status.SUCCESS_USR_SEARCH.value, result)

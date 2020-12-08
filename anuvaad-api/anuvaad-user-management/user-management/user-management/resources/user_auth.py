@@ -217,8 +217,8 @@ class ActivateDeactivateUser(Resource):
 
         if not user_email:
             return post_error("userName missing", "userName field cannot be empty", None)
-        if not status:
-            return post_error("is_active missing", "is_active field cannot be empty", None)
+        # if not status:
+        #     return post_error("is_active missing", "is_active field cannot be empty", None)
        
         try:
             result = UserAuthenticationRepositories.activate_deactivate_user(user_email,status)

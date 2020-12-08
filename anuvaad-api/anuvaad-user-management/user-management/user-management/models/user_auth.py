@@ -142,12 +142,6 @@ class UserAuthenticationModel(object):
     @staticmethod
     def activate_deactivate_user(user_email,status):
         try:
-            if str(status).lower() =="true":
-                status_in=True
-            elif str(status).lower() =="false":
-                status_in=False
-            else:
-                return post_error("Not valid","is_active status received is not applicable",None)
             collections = get_db()[config.USR_MONGO_COLLECTION]
             record = collections.find({"userName": user_email,"is_verified":True})
             log_info("search on db for user activation/deactivation :{},record count:{}".format(
@@ -156,7 +150,7 @@ class UserAuthenticationModel(object):
                 return post_error("Data Not valid","Not a verified user",None)
             if record.count() ==1:
                 for user in record:
-                    results = collections.update(user, {"$set": {"is_active": status_in}})
+                    results = collections.update(user, {"$set": {"is_active": status}})
                     if 'writeError' in list(results.keys()):
                         return post_error("db error", "writeError whie updating record", None)
                     log_info(

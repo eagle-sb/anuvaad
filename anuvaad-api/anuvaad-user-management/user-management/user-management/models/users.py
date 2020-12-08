@@ -83,19 +83,22 @@ class UserManagementModel(object):
             return post_error("Database connection exception", "An error occurred while connecting to the database:{}".format(str(e)), None)
 
     @staticmethod
-    def get_user_by_keys(userIDs, userNames, roleCodes):
+    def get_user_by_keys(userIDs, userNames, roleCodes,offset,limit_value):
 
-        exclude = {"_id": False, "password": False,"registered_time":False,"activated_time":False}
+        exclude = {"password": False,"_id":False}
 
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
-            out = collections.find(
+            if not userIDs and not userNames and not roleCodes :
+                out = collections.find({"is_verified":True},exclude).sort([("_id",-1)]).skip(offset).limit(limit_value)
+            else:
+                out = collections.find(
                 {'$or': [
                     {'userID': {'$in': userIDs},'is_verified': True},
                     {'userName': {'$in': userNames},'is_verified': True},
                     {'roles.roleCode': {'$in': roleCodes},'is_verified': True}
                 ]}, exclude)
-            log_info("user search is executed:{}".format(out), MODULE_CONTEXT)
+                log_info("user search is executed:{}".format(out), MODULE_CONTEXT)
             result = []
             for record in out:
                 result.append(record)
@@ -156,11 +159,17 @@ class UserManagementModel(object):
             return post_error("Database  exception", "An error occurred while processing on the db :{}".format(str(e)), None)
 
     @staticmethod
-    def search_users_records():
+    def search_users_records(userIDs,offset,limit_value):
         exclude = {"_id": False, "password": False}
+        
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
-            out = collections.find({"is_verified":True},exclude)
+            if offset == None and limit_value == False:
+                out = collections.find({'userID': {'$in': userIDs},'is_verified': True}, exclude)
+            if not userIDs:
+                out = collections.find({"is_verified":True},exclude).sort({"_id": 1}).skip(offset).limit(limit_value)
+            
+            
             log_info("user search is executed:{}".format(out), MODULE_CONTEXT)
             result = []
             for record in out:

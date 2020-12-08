@@ -23,6 +23,8 @@ USR_TOKEN_MONGO_COLLECTION = os.environ.get( 'UMS_USR_TOKEN_COLLECTION', 'userto
 
 #common-variables
 MIN_LENGTH = os.environ.get('UMS_PASSWORD_MIN_LENGTH', 6)
+OFFSET_VALUE=os.environ.get('UMS_OFFSET_VALUE', 0)
+LIMIT_VALUE=os.environ.get('UMS_LIMIT_VALUE', 20)
 
 #external file read configs
 ROLE_CODES_URL = os.environ.get('UMS_ROLE_CODES_URL','https://raw.githubusercontent.com/project-anuvaad/anuvaad/zuul_gateway/anuvaad-api/anuvaad-zuul-api-gw/dev-configs/roles.json')

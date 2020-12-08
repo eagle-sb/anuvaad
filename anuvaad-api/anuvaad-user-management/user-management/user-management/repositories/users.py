@@ -21,9 +21,9 @@ class UserManagementRepositories:
             return True
 
     @staticmethod
-    def search_users(userIDs, userNames, roleCodes):
+    def search_users(userIDs, userNames, roleCodes,offset,limit_value):
         result = UserManagementModel.get_user_by_keys(
-            userIDs, userNames, roleCodes)
+            userIDs, userNames, roleCodes,offset,limit_value)
         if result is not None:
             return result
         # else:
@@ -36,8 +36,8 @@ class UserManagementRepositories:
             return result
 
     @staticmethod
-    def search_users_records():
-        result = UserManagementModel.search_users_records()
+    def search_users_records(userIDs,offset,limit_value):
+        result = UserManagementModel.search_users_records(userIDs,offset,limit_value)
         if result is not None:
             return result
         
