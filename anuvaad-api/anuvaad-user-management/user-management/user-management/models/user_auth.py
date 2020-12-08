@@ -142,9 +142,9 @@ class UserAuthenticationModel(object):
     @staticmethod
     def activate_deactivate_user(user_email,status):
         try:
-            if status.lower() =="true":
+            if str(status).lower() =="true":
                 status_in=True
-            elif status.lower() =="false":
+            elif str(status).lower() =="false":
                 status_in=False
             else:
                 return post_error("Not valid","is_active status received is not applicable",None)

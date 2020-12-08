@@ -173,8 +173,8 @@ class RegisteredUsersRecords(Resource):
                           str(e), MODULE_CONTEXT, e)
             return post_error("Exception occurred", "Exception while performing user updation::{}".format(str(e)), None), 400
 
-
-
+            
+   
 
 class Health(Resource):
     def get(self):
