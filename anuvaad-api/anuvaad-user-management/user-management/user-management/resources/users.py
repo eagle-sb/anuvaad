@@ -117,7 +117,7 @@ class SearchUsers(Resource):
                 res = CustomResponse(
                     Status.EMPTY_USR_SEARCH.value, None)
                 return res.getresjson(), 400
-            res = CustomResponse(Status.SUCCESS_USR_SEARCH.value, result)
+            res = CustomResponse(Status.SUCCESS_USR_SEARCH.value, result[0],result[1])
             return res.getresjson(), 200
         except Exception as e:
             log_exception("Exception while searching user records: " +

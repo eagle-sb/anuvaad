@@ -91,6 +91,7 @@ class UserManagementModel(object):
             collections = get_db()[config.USR_MONGO_COLLECTION]
             if not userIDs and not userNames and not roleCodes :
                 out = collections.find({"is_verified":True},exclude).sort([("_id",-1)]).skip(offset).limit(limit_value)
+                record_count=collections.find({"is_verified":True}).count()
             else:
                 out = collections.find(
                 {'$or': [
@@ -99,12 +100,14 @@ class UserManagementModel(object):
                     {'roles.roleCode': {'$in': roleCodes},'is_verified': True}
                 ]}, exclude)
                 log_info("user search is executed:{}".format(out), MODULE_CONTEXT)
+                record_count=out.count()
+
             result = []
             for record in out:
                 result.append(record)
             if not result:
                 return None
-            return result
+            return result,record_count
 
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
