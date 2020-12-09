@@ -2,7 +2,7 @@ FROM amritha219942/user-management:1.0
 COPY / /app
 WORKDIR /app
 # RUN apt update
-RUN apt-get install -y python3-dev gcc
+#RUN apt-get install -y python3-dev gcc
 #--fix-missing \
 #     build-essential \
 #     cmake \
