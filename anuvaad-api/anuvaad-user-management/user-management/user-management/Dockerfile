@@ -1,8 +1,9 @@
 FROM python:3.7-slim
 COPY / /app
 WORKDIR /app
-#RUN apt update
-# RUN apt-get install -y --fix-missing \
+RUN apt update
+RUN apt-get install -y python3-dev gcc
+#--fix-missing \
 #     build-essential \
 #     cmake \
 #     gfortran \
