@@ -1,7 +1,7 @@
-FROM python:3.7-slim
+FROM amritha219942/user-management:1.0
 COPY / /app
 WORKDIR /app
-RUN apt update
+# RUN apt update
 RUN apt-get install -y python3-dev gcc
 #--fix-missing \
 #     build-essential \
