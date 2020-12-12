@@ -102,31 +102,45 @@ class PageCard extends React.Component {
                             {this.renderTextSpan(text, true)}
                         </Textfit>
 
+                    }  if (remainingWords !== '' && text.text.replace(/\s/g, '').includes(remainingWords.replace(/\s/g, '')) && text.text.replace(/\s/g, '').indexOf(remainingWords.replace(/\s/g, '') === 0)) {
+                        let coloredText = JSON.parse(JSON.stringify(text));
+                        let nonColoredText = JSON.parse(JSON.stringify(text));
+                        coloredText.text = remainingWords;
+                        nonColoredText.text = text.text.substr(remainingWords.length - 1);
+                        remainingWords = '';
+                        return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
+                            {this.renderTextSpan(coloredText, true)}
+                            {this.renderTextSpan(nonColoredText)}
+                        </Textfit>
                     }
-                    else {
-                        if (sentence.replace(/\s/g, '').includes(text.text.split('.').pop().replace(/\s/g, '')) && sentence.replace(/\s/g, '').indexOf(text.text.split('.').pop().replace(/\s/g, '')) === 0) {
-                            let coloredText = JSON.parse(JSON.stringify(text));
+                    else if (sentence.replace(/\s/g, '').includes(text.text.split('.').pop().replace(/\s/g, '')) && sentence.replace(/\s/g, '').indexOf(text.text.split('.').pop().replace(/\s/g, '')) === 0 && text.text.split('.').pop().replace(/\s/g, '') !== '') {
+                        let coloredText = JSON.parse(JSON.stringify(text));
+                        let nonColoredText = JSON.parse(JSON.stringify(text));
+                        poppedText = text.text.split('.').pop()
+                        coloredText.text = poppedText;
+                        nonColoredText.text = text.text.substr(0, text.text.indexOf(poppedText));
+                        return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
+                            {this.renderTextSpan(nonColoredText)}
+                            {this.renderTextSpan(coloredText, true)}
+                        </Textfit>
+                    }
+                    else if (poppedText !== '') {
+                        let coloredText = JSON.parse(JSON.stringify(text));
+                        coloredText.text = sentence.substr(poppedText.length - 1);
+                        if (text.text.replace(/\s/g, '').includes(coloredText.text.replace(/\s/g, ''))) {
                             let nonColoredText = JSON.parse(JSON.stringify(text));
-                            poppedText = text.text.split('.').pop()
-                            coloredText.text = poppedText;
-                            nonColoredText.text = text.text.substr(0, text.text.indexOf(poppedText));
+                            nonColoredText.text = text.text.replace(coloredText.text, '');
                             return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
-                                {this.renderTextSpan(nonColoredText)}
                                 {this.renderTextSpan(coloredText, true)}
+                                {this.renderTextSpan(nonColoredText)}
                             </Textfit>
                         }
-                        else if (poppedText !== '') {
-                            let coloredText = JSON.parse(JSON.stringify(text));
-                            coloredText.text = sentence.substr(poppedText.length - 1);
-                            if (text.text.replace(/\s/g, '').includes(coloredText.text.replace(/\s/g, ''))) {
-                                let nonColoredText = JSON.parse(JSON.stringify(text));
-                                nonColoredText.text = text.text.replace(coloredText.text, '');
-                                return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
-                                    {this.renderTextSpan(coloredText, true)}
-                                    {this.renderTextSpan(nonColoredText)}
-                                </Textfit>
-                            }
-                        }
+                    } else {
+                        return (
+                            <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16} >
+                                { this.renderTextSpan(text)}
+                            </Textfit >
+                        )
                     }
                 }
                 /**
@@ -138,7 +152,6 @@ class PageCard extends React.Component {
                         let nonColoredText = JSON.parse(JSON.stringify(text));
                         coloredText.text = sentence;
                         nonColoredText.text = text.text.substr(sentence.length - 1);
-                        // remainingWords = '';
                         return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
                             {this.renderTextSpan(coloredText, true)}
                             {this.renderTextSpan(nonColoredText, false)}
