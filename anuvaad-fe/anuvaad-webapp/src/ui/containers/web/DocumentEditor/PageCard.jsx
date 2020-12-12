@@ -124,18 +124,7 @@ class PageCard extends React.Component {
                             {this.renderTextSpan(coloredText, true)}
                         </Textfit>
                     }
-                    else if (poppedText !== '') {
-                        let coloredText = JSON.parse(JSON.stringify(text));
-                        coloredText.text = sentence.substr(poppedText.length - 1);
-                        if (text.text.replace(/\s/g, '').includes(coloredText.text.replace(/\s/g, ''))) {
-                            let nonColoredText = JSON.parse(JSON.stringify(text));
-                            nonColoredText.text = text.text.replace(coloredText.text, '');
-                            return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
-                                {this.renderTextSpan(coloredText, true)}
-                                {this.renderTextSpan(nonColoredText)}
-                            </Textfit>
-                        }
-                    } else {
+                    else {
                         return (
                             <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16} >
                                 { this.renderTextSpan(text)}
