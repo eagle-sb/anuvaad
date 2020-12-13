@@ -87,7 +87,6 @@ class PageCard extends React.Component {
         if (this.props.block_highlight) {
             let sentence = this.props.block_highlight.src;
             if (this.props.block_highlight.block_identifier === text.block_identifier) {
-                console.log(sentence, sentence.length, text.text, text.text.length);
                 /*Left and right has the same length */
                 if (sentence.replace(/\s/g, '').length === text.text.replace(/\s/g, '').length && sentence.replace(/\s/g, '').includes(text.text.replace(/\s/g, ''))) {
                     return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
@@ -96,22 +95,12 @@ class PageCard extends React.Component {
 
                     /*Right is greater than left*/
                 } else if (sentence.replace(/\s/g, '').length > text.text.replace(/\s/g, '').length) {
+                    remainingWords = text.text
                     if (sentence.replace(/\s/g, '').includes(text.text.replace(/\s/g, ''))) {
-                        remainingWords = sentence.substr(text.text.indexOf(sentence) + text.text.length);
                         return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
                             {this.renderTextSpan(text, true)}
                         </Textfit>
 
-                    } if (remainingWords !== '' && text.text.replace(/\s/g, '').includes(remainingWords.replace(/\s/g, '')) && text.text.replace(/\s/g, '').indexOf(remainingWords.replace(/\s/g, '') === 0)) {
-                        let coloredText = JSON.parse(JSON.stringify(text));
-                        let nonColoredText = JSON.parse(JSON.stringify(text));
-                        coloredText.text = remainingWords;
-                        nonColoredText.text = text.text.substr(remainingWords.length - 1);
-                        remainingWords = '';
-                        return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
-                            {this.renderTextSpan(coloredText, true)}
-                            {this.renderTextSpan(nonColoredText)}
-                        </Textfit>
                     }
                     else if (sentence.replace(/\s/g, '').includes(text.text.split('.').pop().replace(/\s/g, '')) && sentence.replace(/\s/g, '').indexOf(text.text.split('.').pop().replace(/\s/g, '')) === 0 && text.text.split('.').pop().replace(/\s/g, '') !== '') {
                         let coloredText = JSON.parse(JSON.stringify(text));
@@ -129,12 +118,29 @@ class PageCard extends React.Component {
                         if (text.text.replace(/\s/g, '').includes(coloredText.text.replace(/\s/g, ''))) {
                             let nonColoredText = JSON.parse(JSON.stringify(text));
                             nonColoredText.text = text.text.replace(coloredText.text, '');
+                            poppedText = ''
                             return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
                                 {this.renderTextSpan(coloredText, true)}
                                 {this.renderTextSpan(nonColoredText)}
                             </Textfit>
                         }
                     }
+                    else if (remainingWords.length !== 0) {
+                        if (sentence.replace(/\s/g, '').includes(remainingWords.split('.')[0].replace(/\s/g, '')) && text.text.replace(/\s/g, '').indexOf(remainingWords.split('.')[0].replace(/\s/g, '')) === 0) {
+                            console.log('inside eif')
+                            let coloredText = JSON.parse(JSON.stringify(text));
+                            let nonColoredText = JSON.parse(JSON.stringify(text));
+                            coloredText.text = remainingWords.split('.')[0];
+                            nonColoredText.text = text.text.substr(coloredText.text.length);
+                            remainingWords = '';
+                            return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
+                                {this.renderTextSpan(coloredText, true)}
+                                {this.renderTextSpan(nonColoredText)}
+                            </Textfit>
+                        }
+
+                    }
+
                     else {
                         return (
                             <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16} >
