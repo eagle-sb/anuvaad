@@ -105,7 +105,7 @@ class PageCard extends React.Component {
                     else if (remainingWords.length !== 0 && sentence.replace(/\s/g, '').includes(remainingWords.split('.')[0].replace(/\s/g, '')) && text.text.replace(/\s/g, '').indexOf(remainingWords.split('.')[0].replace(/\s/g, '')) === 0) {
                         let coloredText = JSON.parse(JSON.stringify(text));
                         let nonColoredText = JSON.parse(JSON.stringify(text));
-                        coloredText.text = remainingWords.split('.')[0];
+                        coloredText.text = remainingWords.split('.')[0]+'.';
                         nonColoredText.text = text.text.substr(coloredText.text.length);
                         // remainingWords = ''
                         return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
