@@ -88,106 +88,113 @@ class PageCard extends React.Component {
             let sentence = this.props.block_highlight.src;
             if (this.props.block_highlight.block_identifier === text.block_identifier) {
                 /*Left and right has the same length */
-                if (sentence.replace(/\s/g, '').length === text.text.replace(/\s/g, '').length && sentence.replace(/\s/g, '').includes(text.text.replace(/\s/g, ''))) {
+                if (sentence !== undefined) {
+                    if (sentence.replace(/\s/g, '').includes(text.text.replace(/\s/g, '')) && text.text.replace(/\s/g, '').length === sentence.replace(/\s/g, '').length) {
+                        return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
+                            {this.renderTextSpan(text, true)}
+                        </Textfit>
+                    }
+                    /**
+                     * Left is greater than right
+                     */
+                    else if (text.text.replace(/\s/g, '').length > sentence.replace(/\s/g, '').length && text.text.replace(/\s/g, '').includes(sentence.replace(/\s/g, ''))) {
+                        if (text.text.replace(/\s/g, '').indexOf(sentence.replace(/\s/g, '')) === 0) {
+                            let coloredText = JSON.parse(JSON.stringify(text));
+                            let nonColoredText = JSON.parse(JSON.stringify(text));
+                            coloredText.text = sentence;
+                            nonColoredText.text = text.text.substr(sentence.length - 1);
+                            return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
+                                {this.renderTextSpan(coloredText, true)}
+                                {this.renderTextSpan(nonColoredText, false)}
+                            </Textfit>
+
+                        } else if (text.text.replace(/\s/g, '').indexOf(sentence.replace(/\s/g, '')) > 0) {
+                            let firstHalfText = JSON.parse(JSON.stringify(text));
+                            let secondHalfText = JSON.parse(JSON.stringify(text));
+                            let coloredText = JSON.parse(JSON.stringify(text));
+                            coloredText.text = sentence;
+                            firstHalfText.text = text.text.substr(0, text.text.indexOf(sentence));
+                            secondHalfText.text = text.text.substr(text.text.indexOf(sentence) + sentence.length);
+                            return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
+                                {this.renderTextSpan(firstHalfText, false)}
+                                {this.renderTextSpan(coloredText, true)}
+                                {this.renderTextSpan(secondHalfText, false)}
+                            </Textfit>
+
+                        }
+                    }
+                }
+                /**
+                 * When a portion of sentence is present in the text
+                 */
+
+                if (text.text.includes(sentence.split(' ')[0])) {
+                    let tempText = text.text.substr(text.text.indexOf(sentence.trim().split(' ')[0]));
+                    if (sentence.replace(/\s/g, '').includes(tempText.replace(/\s/g, ''))) {
+                        let coloredText = JSON.parse(JSON.stringify(text));
+                        let nonColoredText = JSON.parse(JSON.stringify(text));
+                        coloredText.text = tempText;
+                        if (text.text.replace(/\s/g, '').indexOf(sentence.split(' ')[0].replace(/\s/g, '')) === 0) {
+                            nonColoredText.text = text.text.substr(tempText.length);
+                            return (
+                                <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
+                                    {this.renderTextSpan(coloredText, true)}
+                                    {this.renderTextSpan(nonColoredText)}
+                                </Textfit>
+                            )
+                        } else {
+                            nonColoredText.text = text.text.substr(0, text.text.indexOf(tempText));
+                            return (
+                                <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
+                                    {this.renderTextSpan(nonColoredText)}
+                                    {this.renderTextSpan(coloredText, true)}
+                                </Textfit>
+                            )
+                        }
+                    }
+                }
+                /**
+                 * When right is greater than left
+                 */
+
+                if (sentence.replace(/\s/g, '').includes(text.text.replace(/\s/g, '')) && text.text.replace(/\s/g, '').length < sentence.replace(/\s/g, '').length) {
                     return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
                         {this.renderTextSpan(text, true)}
                     </Textfit>
 
-                    /*Right is greater than left*/
-                } else if (sentence.replace(/\s/g, '').length > text.text.replace(/\s/g, '').length) {
-                    remainingWords = text.text
-                    if (sentence.replace(/\s/g, '').includes(text.text.replace(/\s/g, ''))) {
-                        return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
-                            {this.renderTextSpan(text, true)}
-                        </Textfit>
+                }
 
-                    }
-                    else if (remainingWords.length !== 0 && sentence.replace(/\s/g, '').includes(remainingWords.split('.')[0].replace(/\s/g, '')) && text.text.replace(/\s/g, '').indexOf(remainingWords.split('.')[0].replace(/\s/g, '')) === 0) {
+                /**
+                 * When a portion of text is present in sentence
+                 */
+                if (sentence.replace(/\s/g, '').includes(text.text.split(' ')[0].replace(/\s/g, ''))) {
+                    let tempText = sentence.substr(sentence.indexOf(text.text.split(' ')[0]));
+                    if (text.text.replace(/\s/g, '').includes(tempText.replace(/\s/g, ''))) {
                         let coloredText = JSON.parse(JSON.stringify(text));
                         let nonColoredText = JSON.parse(JSON.stringify(text));
-                        coloredText.text = remainingWords.split('.')[0]+'.';
-                        nonColoredText.text = text.text.substr(coloredText.text.length);
-                        // remainingWords = ''
-                        return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
-                            {this.renderTextSpan(coloredText, true)}
-                            {this.renderTextSpan(nonColoredText)}
-                        </Textfit>
-                    }
-                    else if (sentence.replace(/\s/g, '').includes(text.text.split('.').pop().replace(/\s/g, '')) && sentence.replace(/\s/g, '').indexOf(text.text.split('.').pop().replace(/\s/g, '')) === 0 && text.text.split('.').pop().replace(/\s/g, '') !== '') {
-                        let coloredText = JSON.parse(JSON.stringify(text));
-                        let nonColoredText = JSON.parse(JSON.stringify(text));
-                        poppedText = text.text.split('.').pop()
-                        coloredText.text = poppedText;
-                        nonColoredText.text = text.text.substr(0, text.text.indexOf(poppedText));
-                        return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
-                            {this.renderTextSpan(nonColoredText)}
-                            {this.renderTextSpan(coloredText, true)}
-                        </Textfit>
-                    } else if (poppedText !== '') {
-                        let coloredText = JSON.parse(JSON.stringify(text));
-                        coloredText.text = sentence.substr(poppedText.length - 1);
-                        if (text.text.replace(/\s/g, '').includes(coloredText.text.replace(/\s/g, ''))) {
-                            let nonColoredText = JSON.parse(JSON.stringify(text));
-                            nonColoredText.text = text.text.replace(coloredText.text, '');
-                            // poppedText = ''
-                            return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
-                                {this.renderTextSpan(coloredText, true)}
-                                {this.renderTextSpan(nonColoredText)}
-                            </Textfit>
+                        coloredText.text = tempText;
+                        if (text.text.replace(/\s/g, '').indexOf(tempText.replace(/\s/g, '')) === 0) {
+                            nonColoredText.text = text.text.substr(tempText.length);
+                            return (
+                                <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
+                                    {this.renderTextSpan(coloredText, true)}
+                                    {this.renderTextSpan(nonColoredText)}
+                                </Textfit>
+                            )
                         }
                     }
-
-
-                    // else {
-                    //     return (
-                    //         <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16} >
-                    //             { this.renderTextSpan(text)}
-                    //         </Textfit >
-                    //     )
-                    // }
                 }
-                /**
-                 * Left is greater than Right
-                 */
-                else if (text.text.replace(/\s/g, '').length > sentence.replace(/\s/g, '').length && text.text.replace(/\s/g, '').includes(sentence.replace(/\s/g, ''))) {
-                    if (text.text.replace(/\s/g, '').indexOf(sentence.replace(/\s/g, '')) === 0) {
-                        let coloredText = JSON.parse(JSON.stringify(text));
-                        let nonColoredText = JSON.parse(JSON.stringify(text));
-                        coloredText.text = sentence;
-                        nonColoredText.text = text.text.substr(sentence.length - 1);
-                        return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
-                            {this.renderTextSpan(coloredText, true)}
-                            {this.renderTextSpan(nonColoredText, false)}
-                        </Textfit>
-
-                    } else if (text.text.replace(/\s/g, '').indexOf(sentence.replace(/\s/g, '')) > 0) {
-                        let firstHalfText = JSON.parse(JSON.stringify(text));
-                        let secondHalfText = JSON.parse(JSON.stringify(text));
-                        let coloredText = JSON.parse(JSON.stringify(text));
-                        coloredText.text = sentence;
-                        firstHalfText.text = text.text.substr(0, text.text.indexOf(sentence));
-                        secondHalfText.text = text.text.substr(text.text.indexOf(sentence) + sentence.length);
-                        return <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16}>
-                            {this.renderTextSpan(firstHalfText, false)}
-                            {this.renderTextSpan(coloredText, true)}
-                            {this.renderTextSpan(secondHalfText, false)}
-                        </Textfit>
-
-                    }
-                }
-
-
             }
         }
-
+        /**
+         * Initial rendering or when block_identifier is not matching
+         */
         return (
             <Textfit mode="single" style={{ width: parseInt(text.text_width), color: text.font_color }} min={1} max={text.font_size ? parseInt(text.font_size) : 16} >
                 { this.renderTextSpan(text)}
             </Textfit >
         )
     }
-
-
     /**
      * render Sentences span
      */
