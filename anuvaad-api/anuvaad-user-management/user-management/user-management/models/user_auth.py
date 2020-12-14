@@ -87,24 +87,34 @@ class UserAuthenticationModel(object):
         return True
     
     @staticmethod
-    def reset_password(userName,password):
+    def reset_password(userId,userName,password):
 
         hashed = UserUtils.hash_password(password).decode("utf-8")
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
-            record = collections.find({"userName": userName})
-            log_info("search on db for password updation :{}".format(
+            record = collections.find({"userID": userId})
+            log_info("search on db for authentication of the userId passed:{}".format(
                 record), MODULE_CONTEXT)
             
             if record.count() != 0:
                 for user in record:
-                    results = collections.update(user, {"$set": {"password": hashed}})
-                    if 'writeError' in list(results.keys()):
-                        return post_error("db error", "writeError whie updating record", None)
-                    log_info(
-                        "re-setting password value for the user:{}".format(results), MODULE_CONTEXT)
-                return True
-            return post_error("Data Not valid","Invalid Credential",None)
+                    roles=[ rol['roleCode'] for rol in user["roles"] ] 
+                    log_info("role of the user matching the userId passed is:{}".format(str(roles)), MODULE_CONTEXT)
+                    role_keys=[x.upper() for x in roles]
+                    username=user["userName"]
+            if ("ADMIN" in role_keys) or (username == userName):
+                    log_info("reset rquest is checked against role permission and username", MODULE_CONTEXT)
+                    reset_record = collections.find({"userName": userName})
+                    log_info("search on db for user record to reset the password:{}".format(
+                    record), MODULE_CONTEXT)
+
+                    for user in reset_record:
+                        results = collections.update(user, {"$set": {"password": hashed}})
+                        if 'writeError' in list(results.keys()):
+                            return post_error("db error", "writeError whie updating record", None)
+                    return True
+            else:
+                return post_error("Data Not valid","Invalid Credential",None)
                 
         except Exception as e:
             log_exception("db  exception ",  MODULE_CONTEXT, e)

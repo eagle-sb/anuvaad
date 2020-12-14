@@ -137,14 +137,21 @@ class ForgotPassword(Resource):
 class ResetPassword(Resource):
 
     def post(self):
+        
         body = request.get_json()
+        print(request.headers.keys(),"&&&&&&&&&&&&&")
         if "userName" not in body.keys():
             return post_error("Key error","userName not found",None)
         if "password" not in body.keys():
             return post_error("Key error","Password not found",None)
+
+        userId=request.headers["x-user-id"]
         userName = body["userName"]
         password = body["password"]
+        
 
+        if not userId:
+            return post_error("userId missing","userId is mandatory",None)
         if not userName:
             return post_error("Username missing", "Username field cannot be empty", None)
         if not password:
@@ -158,7 +165,7 @@ class ResetPassword(Resource):
             return validity, 400
             
         try:
-            result = UserAuthenticationRepositories.reset_password(userName,password)
+            result = UserAuthenticationRepositories.reset_password(userId,userName,password)
             log_info("Reset password api call result:{}".format(result),MODULE_CONTEXT)
             if result == True:
                 res = CustomResponse(

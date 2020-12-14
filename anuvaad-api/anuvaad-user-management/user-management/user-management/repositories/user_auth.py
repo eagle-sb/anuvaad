@@ -30,9 +30,9 @@ class UserAuthenticationRepositories:
         return result
 
     @staticmethod
-    def reset_password(userName,password):
+    def reset_password(userId,userName,password):
 
-        result = UserAuthenticationModel.reset_password(userName,password)
+        result = UserAuthenticationModel.reset_password(userId,userName,password)
         return result
     @staticmethod
     def verify_user(user_email,user_id):
