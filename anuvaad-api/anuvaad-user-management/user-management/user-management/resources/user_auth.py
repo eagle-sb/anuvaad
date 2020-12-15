@@ -139,7 +139,6 @@ class ResetPassword(Resource):
     def post(self):
         
         body = request.get_json()
-        print(request.headers.keys(),"&&&&&&&&&&&&&")
         if "userName" not in body.keys():
             return post_error("Key error","userName not found",None)
         if "password" not in body.keys():
@@ -162,7 +161,7 @@ class ResetPassword(Resource):
             return validity, 400
         pwd_validity=UserUtils.validate_password(password)
         if pwd_validity is not None:
-            return validity, 400
+            return pwd_validity, 400
             
         try:
             result = UserAuthenticationRepositories.reset_password(userId,userName,password)
@@ -224,8 +223,6 @@ class ActivateDeactivateUser(Resource):
 
         if not user_email:
             return post_error("userName missing", "userName field cannot be empty", None)
-        # if not status:
-        #     return post_error("is_active missing", "is_active field cannot be empty", None)
        
         try:
             result = UserAuthenticationRepositories.activate_deactivate_user(user_email,status)
