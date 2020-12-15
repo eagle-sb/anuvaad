@@ -342,7 +342,7 @@ definitions:
       roleDesc:
         type: string
         description: Description of the role.
-  Auth_data:
+  AuthData:
     type: object
     properties:
       userName:
@@ -507,7 +507,7 @@ definitions:
         type: array
         items:
           type: object
-          $ref: '#/definitions/Auth_data'
+          $ref: '#/definitions/AuthData'
       count:
         type: integer
         description: count of data items
