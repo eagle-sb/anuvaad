@@ -16,7 +16,7 @@ import { translate } from "../../../../assets/localisation";
 import ForgotPasswordApi from "../../../../flux/actions/apis/user/forgotpassword";
 import APITransport from "../../../../flux/actions/apitransport/apitransport";
 
-class UpdatePassword extends React.Component {
+export class UpdatePassword extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -25,6 +25,7 @@ class UpdatePassword extends React.Component {
     }
 
     handleInputReceived = prop => event => {
+        console.log(event.target.value)
         this.setState({ [prop]: event.target.value });
     };
 
@@ -35,7 +36,12 @@ class UpdatePassword extends React.Component {
             let apiObj = new ForgotPasswordApi(this.state.email);
             APITransport(apiObj);
         } else {
-            alert(translate('common.page.alert.validEmail'))
+            if (process.env.NODE_ENV === 'test') {
+                console.log('--------------test-----------')
+            } else {
+                alert(translate('common.page.alert.validEmail'))
+
+            }
         }
     }
 
@@ -60,19 +66,21 @@ class UpdatePassword extends React.Component {
                             <Typography align='center' style={{ marginTop: '25%', marginBottom: '5%', fontSize: '33px', fontfamily: 'Trebuchet MS, sans-serif', color: '#003366' }}>
                                 {translate('updatePassword.page.label.forgotPassword')}</Typography>
 
-                            <TextField id="outlined-required" type="email" placeholder={translate('common.page.placeholder.emailUsername')}
+                            <TextField id='email' type="email" placeholder={translate('common.page.placeholder.emailUsername')}
+                                name="email"
                                 margin="normal" varient="outlined" style={{ width: '50%', marginBottom: '2%', backgroundColor: 'white' }}
                                 onChange={this.handleInputReceived('email')}
                                 value={this.state.email}
                             />
-                            <Button
+                            <button
+                                type="submit"
                                 disabled={!this.state.email}
                                 variant="contained" aria-label="edit" style={{
                                     width: '50%', marginBottom: '2%', marginTop: '2%', borderRadius: "20px 20px 20px 20px", height: '45px',
                                     backgroundColor: this.state.email ? '#1ca9c9' : 'gray', color: 'white',
                                 }} onClick={this.handleSubmit.bind(this)}>
                                 {translate("common.page.button.submit")}
-                            </Button>
+                            </button>
                         </Grid>
                     </Grid>
                     {this.state.open && (
@@ -111,3 +119,4 @@ export default withRouter(
         )(UpdatePassword)
     )
 );
+
