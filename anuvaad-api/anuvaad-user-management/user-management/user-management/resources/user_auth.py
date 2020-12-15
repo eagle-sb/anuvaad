@@ -49,7 +49,7 @@ class UserLogout(Resource):
     def post(self):
         body = request.get_json()
         if "userName" not in body.keys():
-            return post_error("Key error","userName not found",None)
+            return post_error("Key error","userName not found",None), 400
         userName = body["userName"]
 
         if not userName:
@@ -79,7 +79,7 @@ class AuthTokenSearch(Resource):
     def post(self):
         body = request.get_json()
         if "token" not in body.keys():
-            return post_error("Key error","token not found",None)
+            return post_error("Key error","token not found",None), 400
         token = body["token"]
         validity=UserUtils.token_validation(token)
         log_info("Token validation result:{}".format(validity),MODULE_CONTEXT)
@@ -107,10 +107,10 @@ class ForgotPassword(Resource):
     def post(self):
         body = request.get_json()
         if "userName" not in body.keys():
-            return post_error("Key error","userName not found",None)
+            return post_error("Key error","userName not found",None), 400
         userName = body["userName"]
         if not userName:
-            return post_error("Data null","userName received is empty",None)
+            return post_error("Data null","userName received is empty",None), 400
         validity = UserUtils.validate_username(userName)
         log_info("Username/email is validated for generating reset password notification:{}".format(validity), MODULE_CONTEXT)
         if validity is not None:
@@ -140,9 +140,9 @@ class ResetPassword(Resource):
         
         body = request.get_json()
         if "userName" not in body.keys():
-            return post_error("Key error","userName not found",None)
+            return post_error("Key error","userName not found",None), 400
         if "password" not in body.keys():
-            return post_error("Key error","Password not found",None)
+            return post_error("Key error","Password not found",None), 400
 
         userId=request.headers["x-user-id"]
         userName = body["userName"]
@@ -150,16 +150,19 @@ class ResetPassword(Resource):
         
 
         if not userId:
-            return post_error("userId missing","userId is mandatory",None)
+            return post_error("userId missing","userId is mandatory",None), 400
         if not userName:
-            return post_error("Username missing", "Username field cannot be empty", None)
+            return post_error("Username missing", "Username field cannot be empty", None), 400
         if not password:
-            return post_error("Password missing", "Password field cannot be empty", None)
+            return post_error("Password missing", "Password field cannot be empty", None), 400
         validity = UserUtils.validate_username(userName)
         log_info("Username/email is validated for resetting password:{}".format(validity), MODULE_CONTEXT)
+        pwd_validity=UserUtils.validate_password(password)
+        log_info("password is validated for resetting password:{}".format(pwd_validity), MODULE_CONTEXT)
+        
         if validity is not None:
             return validity, 400
-        pwd_validity=UserUtils.validate_password(password)
+        
         if pwd_validity is not None:
             return pwd_validity, 400
             
@@ -184,16 +187,16 @@ class VerifyUser(Resource):
     def post(self):
         body = request.get_json()
         if "userName" not in body.keys():
-            return post_error("Key error","userName not found",None)
+            return post_error("Key error","userName not found",None), 400
         if "userID" not in body.keys():
-            return post_error("Key error","userID not found",None)
+            return post_error("Key error","userID not found",None), 400
         user_email = body["userName"]
         user_id = body["userID"]
 
         if not user_email:
-            return post_error("userName missing", "userName field cannot be empty", None)
+            return post_error("userName missing", "userName field cannot be empty", None), 400
         if not user_id:
-            return post_error("userID missing", "userID field cannot be empty", None)
+            return post_error("userID missing", "userID field cannot be empty", None), 400
        
         try:
             result = UserAuthenticationRepositories.verify_user(user_email,user_id)
@@ -215,14 +218,14 @@ class ActivateDeactivateUser(Resource):
     def post(self):
         body = request.get_json()
         if "userName" not in body.keys():
-            return post_error("Key error","userName not found",None)
+            return post_error("Key error","userName not found",None), 400
         if "is_active" not in body.keys():
-            return post_error("Key error","is_active not found",None)
+            return post_error("Key error","is_active not found",None), 400
         user_email = body["userName"]
         status= body["is_active"]
 
         if not user_email:
-            return post_error("userName missing", "userName field cannot be empty", None)
+            return post_error("userName missing", "userName field cannot be empty", None), 400
        
         try:
             result = UserAuthenticationRepositories.activate_deactivate_user(user_email,status)
