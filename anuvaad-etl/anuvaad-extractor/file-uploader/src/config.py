@@ -3,7 +3,7 @@ import os
 import time
 
 DEBUG = False
-API_URL_PREFIX = "/api/v0"
+API_URL_PREFIX = "/anuvaad-api/file-uploader"
 HOST = '0.0.0.0'
 PORT = 5001
 
@@ -16,18 +16,12 @@ ALLOWED_FILE_TYPES = ['application/vnd.openxmlformats-officedocument.presentatio
 ALLOWED_FILE_EXTENSIONS = ['json','xlm', 'xla', 'xls' ,'xlsx' ,'excel','xlsm','xlt','xltx','xlsb','odt','pdf','txt','ods','pptx','ppt','doc','docx','docm','png','jpg','jpeg','bmp']
 
 #mongo
-MONGO_IP = 'MONGO_IP'
+MONGO_IP = 'MONGO_CLUSTER_URL'
 DEFAULT_VALUE = 'localhost'
-MONGO_DB_IDENTIFIER = 'MONGO_DB'
+MONGO_DB_IDENTIFIER = 'MONGO_FU_DB'
 DEFAULT_MONGO_DB_IDENTIFIER = 'preprocessing'
 MONGO_SERVER_URL = os.environ.get(MONGO_IP, DEFAULT_VALUE)
 MONGO_DB = os.environ.get(MONGO_DB_IDENTIFIER, DEFAULT_MONGO_DB_IDENTIFIER)
 
-
-logging.basicConfig(
-    filename=os.getenv("SERVICE_LOG", "server.log"),
-    level=logging.DEBUG,
-    format="%(levelname)s: %(asctime)s \
-        pid:%(process)s module:%(module)s %(message)s",
-    datefmt="%d/%m/%y %H:%M:%S",
-)
+# Application configuration
+MAX_UPLOAD_SIZE = os.environ.get('MAX_FILE_UPLOAD_SIZE', 100)
