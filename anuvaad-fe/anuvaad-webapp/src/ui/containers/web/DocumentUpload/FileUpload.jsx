@@ -139,7 +139,7 @@ class PdfUpload extends Component {
 
   getSnapshotBeforeUpdate(prevProps, prevState) {
     TELEMETRY.pageLoadStarted('document-upload')
-
+    console.log("=======================================================")
     /**
     * getSnapshotBeforeUpdate() must return null
     */
@@ -172,8 +172,8 @@ class PdfUpload extends Component {
 
     if (prevProps.workflowStatus !== this.props.workflowStatus) {
       this.props.createJobEntry(this.props.workflowStatus)
-
-      TELEMETRY.startWorkflow(this.state.source, this.state.target, this.props.workflowStatus.input.jobName, this.props.workflowStatus.jobID)
+      console.log(this.state.source, this.state.target)
+      TELEMETRY.startWorkflow(this.state.source_language_code, this.state.target_language_code, this.props.workflowStatus.input.jobName, this.props.workflowStatus.jobID)
       history.push(`${process.env.PUBLIC_URL}/view-document`);
     }
   }
