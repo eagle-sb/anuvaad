@@ -1,4 +1,5 @@
-FROM amritha219942/user-management:1.0
+#FROM amritha219942/user-management:1.0
+FROM anuvaadio/python-opencv-slim:2
 COPY / /app
 WORKDIR /app
 # RUN apt update
