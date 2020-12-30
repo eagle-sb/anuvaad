@@ -36,10 +36,13 @@ class UserManagementModel(object):
             users_data['email'] = user["email"]
             users_data['phoneNo'] = user["phoneNo"]
             users_data['roles'] = user_roles
+            
             users_data['is_verified'] =False
             users_data['is_active'] =False
             users_data['registered_time'] =eval(str(time.time()))
             users_data['activated_time'] =0
+            if "orgID" in user.keys():
+                users_data['orgID'] = user["orgID"]
 
             records.append(users_data)
         log_info("User records:{}".format(records), MODULE_CONTEXT)
@@ -71,6 +74,8 @@ class UserManagementModel(object):
                 users_data['name'] = user["name"]
                 users_data['email'] = user["email"]
                 users_data['phoneNo'] = user["phoneNo"]
+                if "orgID" in user.keys():
+                    users_data['orgID'] = user["orgID"]
 
                 results = collections.update(
                     {"userID": user_id}, {'$set': users_data})
@@ -143,6 +148,8 @@ class UserManagementModel(object):
             users_data['is_active'] =True
             users_data['registered_time'] =eval(str(time.time()))
             users_data['activated_time'] =eval(str(time.time()))
+            if "orgID" in user.keys():
+                users_data['orgID'] = user["orgID"]
 
             records.append(users_data)
         log_info("User records:{}".format(records), MODULE_CONTEXT)

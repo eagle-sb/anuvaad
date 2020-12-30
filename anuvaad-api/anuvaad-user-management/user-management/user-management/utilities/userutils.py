@@ -204,6 +204,7 @@ class UserUtils:
             return post_error("Key error", "phoneNo not found", None)
         if "roles" not in user.keys():
             return post_error("Key error", "roles not found", None)
+        
 
         name = user["name"]
         username = user["userName"]
