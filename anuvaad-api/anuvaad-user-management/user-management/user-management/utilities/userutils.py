@@ -129,16 +129,23 @@ class UserUtils:
                 return post_error("Database connection exception", "An error occurred while connecting to the database", None)
 #searching for the user based on auth token
     @staticmethod
-    def get_user_from_token(token):
+    def get_user_from_token(token,temp):
         token_received = token
-        try:
-            collections = get_db()[config.USR_TOKEN_MONGO_COLLECTION]
+
+        try: 
+            if temp:
+                document = config.USR_TEMP_TOKEN_MONGO_COLLECTION
+            else:
+                document = config.USR_TOKEN_MONGO_COLLECTION
+
+            collections = get_db()[document]
             result = collections.find(
                 {"token": token_received}, {"_id": 0, "user": 1})
             log_info("search result for username in usertokens db matching the recieved token:{}".format(
                 result), MODULE_CONTEXT)
             for record in result:
                 username = record["user"]
+        
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return post_error("Database connection exception", "An error occurred while connecting to the database", None)
@@ -355,10 +362,12 @@ class UserUtils:
             return post_error("Exception while generating email notification for user registration","Exception occurred:{}".format(str(e)),None)
 #generating email notification for forgot password
     @staticmethod
-    def generate_email_reset_password(userName):
+    def generate_email_reset_password(userName,rand_id):
         try:
             email = userName
-            rand_id=UserUtils.generate_user_id()
+            rand_id=rand_id
+
+
             msg = Message(subject="[Anuvaad] Please reset your Password ",
                               sender="anuvaad.support@tarento.com",
                               recipients=[email])

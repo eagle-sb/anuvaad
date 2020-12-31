@@ -69,9 +69,9 @@ class UserAuthenticationModel(object):
             return post_error("Database connection exception", "An error occurred while connecting to the database:{}".format(str(e)), None)
 
     @staticmethod
-    def token_search(token):
+    def token_search(token,temp):
         try:
-            result = UserUtils.get_user_from_token(token)
+            result = UserUtils.get_user_from_token(token,temp)
             log_info("searching for the user, using token", MODULE_CONTEXT)
             return result
 
@@ -81,7 +81,11 @@ class UserAuthenticationModel(object):
 
     @staticmethod
     def forgot_password(userName):
-        result = UserUtils.generate_email_reset_password(userName)
+
+        rand_id=UserUtils.generate_user_id()
+        collections = get_db()[config.USR_TEMP_TOKEN_MONGO_COLLECTION]
+        collections.insert({"user": userName, "token": rand_id, "start_time": datetime.datetime.utcnow()})
+        result = UserUtils.generate_email_reset_password(userName,rand_id)
         if result is not None:
             return result
         return True

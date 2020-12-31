@@ -20,6 +20,7 @@ MONGO_DB_PORT = os.environ.get('MONGO_PORT', 27017)
 MONGO_DB_SCHEMA = os.environ.get('MONGO_DB_IDENTIFIER', 'usermanagement')
 USR_MONGO_COLLECTION = os.environ.get('UMS_USR_COLLECTION', 'sample')
 USR_TOKEN_MONGO_COLLECTION = os.environ.get( 'UMS_USR_TOKEN_COLLECTION', 'usertokens')
+USR_TEMP_TOKEN_MONGO_COLLECTION = os.environ.get( 'UMS_USR_TEMP_TOKEN_COLLECTION', 'usertemptoken')
 
 #common-variables
 MIN_LENGTH = os.environ.get('UMS_PASSWORD_MIN_LENGTH', 6)

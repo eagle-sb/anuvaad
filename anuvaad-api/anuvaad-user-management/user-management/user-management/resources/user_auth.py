@@ -7,6 +7,9 @@ import ast
 from anuvaad_auditor.loghandler import log_info, log_exception
 from flask import request
 from anuvaad_auditor.errorhandler import post_error
+import datetime
+
+
 
 
 class UserLogin(Resource):
@@ -81,13 +84,18 @@ class AuthTokenSearch(Resource):
         if "token" not in body.keys():
             return post_error("Key error","token not found",None), 400
         token = body["token"]
-        validity=UserUtils.token_validation(token)
-        log_info("Token validation result:{}".format(validity),MODULE_CONTEXT)
-        if validity is not None:
-                return validity, 400
+
+        if len(token.split('.')) ==3:
+            temp = False
+            validity=UserUtils.token_validation(token)
+            log_info("Token validation result:{}".format(validity),MODULE_CONTEXT)
+            if validity is not None:
+                    return validity, 400
+        else:
+            temp = True
 
         try:
-            result = UserAuthenticationRepositories.token_search(token)
+            result = UserAuthenticationRepositories.token_search(token,temp)
             log_info("User auth token search result:{}".format(result),MODULE_CONTEXT)
             if result == False:
                 res = CustomResponse(

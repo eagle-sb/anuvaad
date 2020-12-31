@@ -18,9 +18,9 @@ class UserAuthenticationRepositories:
         return result
 
     @staticmethod
-    def token_search(token):
+    def token_search(token,temp):
 
-        result = UserAuthenticationModel.token_search(token)
+        result = UserAuthenticationModel.token_search(token,temp)
         return result
 
     @staticmethod
