@@ -90,8 +90,11 @@ class UserUtils:
         log_info("roles : {}".format(roles), MODULE_CONTEXT)
         
         for role in roles:
-            if role not in role_codes:
-                return False
+            try:
+                if role not in role_codes:
+                    return False
+            except Exception:
+                return post_error("Roles missing","No roles are read from json,empty json or invalid path",None)
 #validating auth token of the user
     @staticmethod
     def token_validation(token):
