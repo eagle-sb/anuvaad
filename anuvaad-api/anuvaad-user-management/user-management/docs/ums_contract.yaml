@@ -333,6 +333,9 @@ definitions:
         items:
           type: object
           $ref: '#/definitions/Role'
+      orgID:
+        type: string
+        description: organization Id of the user
   Role:
     type: object
     properties:
@@ -427,6 +430,9 @@ definitions:
             phoneNo:
               type: string
               description: mobile number of the user
+            orgID:
+              type: string
+              description: organization Id of the user
         description: user details to update
 
   SearchUserRequest:
