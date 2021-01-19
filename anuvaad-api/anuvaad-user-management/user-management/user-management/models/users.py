@@ -6,9 +6,18 @@ import bcrypt
 from anuvaad_auditor.errorhandler import post_error
 import config
 import time
-
+import pymongo
 
 class UserManagementModel(object):
+
+    def __init__(self):
+        collections = get_db()[config.USR_MONGO_COLLECTION]
+        try:
+            collections.create_index('userName')
+        except pymongo.errors.DuplicateKeyError as e:
+            log_info("duplicate key, ignoring",MODULE_CONTEXT)
+        except Exception as e:
+            log_exception("db connection exception ",  MODULE_CONTEXT, e)
 
     @staticmethod
     def create_users(users):
@@ -113,6 +122,7 @@ class UserManagementModel(object):
                 ]}, exclude)
                 log_info("user search is executed:{}".format(out), MODULE_CONTEXT)
                 record_count=out.count()
+                print(record_count,"#########")
 
             result = []
             for record in out:
