@@ -20,7 +20,7 @@ class OrgUtils:
     def validate_org(orgCode):
         try:
             collections = get_db()[config.USR_ORG_MONGO_COLLECTION]
-            result = collections.find({"Code": orgCode}, {"_id": 0, "active": 1})
+            result = collections.find({"code": orgCode}, {"_id": 0, "active": 1})
             log_info("searching for record with the recieved orgID:{}".format(result), MODULE_CONTEXT)
             if result.count() == 0:
                 return post_error("Invalid Organization", "No such registered organization with the given code", None)
@@ -33,7 +33,7 @@ class OrgUtils:
             return post_error("Database connection exception", "An error occurred while connecting to the database:{}".format(str(e)), None)
 
     @staticmethod
-    def validate_org_creation(org):
+    def validate_org_creation(i,org):
         if "code" not in org.keys():
             return post_error("Key error", "code not found", None)
         if "active" not in org.keys():
@@ -48,5 +48,7 @@ class OrgUtils:
             
 
             
-        if not code or not active or not description:
-            return post_error("Data missing", "code,active,description", None)
+        if not code  or not description:
+            return post_error("Data missing", "code,active,description are mandatory they cannot be null for record {}".format(str(i+1)), None)
+        if active==None:
+            return post_error("Data missing", "active status is mandatory that cannot be null for record {}".format(str(i+1)), None)

@@ -35,9 +35,4 @@ class UserManagementRepositories:
         if result is not None:
             return result
 
-    @staticmethod
-    def search_users_records(userIDs,offset,limit_value):
-        result = UserManagementModel.search_users_records(userIDs,offset,limit_value)
-        if result is not None:
-            return result
-        
+  

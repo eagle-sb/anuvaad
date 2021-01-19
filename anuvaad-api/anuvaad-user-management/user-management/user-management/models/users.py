@@ -42,8 +42,8 @@ class UserManagementModel(object):
             users_data['registered_time'] =eval(str(time.time()))
             users_data['activated_time'] =0
             if "orgID" in user.keys():
-                users_data['orgID'] = user["orgID"]
-                validity =OrgUtils.validate_org(user["orgID"])
+                users_data['orgID'] = str(user["orgID"]).upper()
+                validity =OrgUtils.validate_org(str(user["orgID"]).upper())
                 if validity is not None:
                     return validity
 
@@ -78,8 +78,8 @@ class UserManagementModel(object):
                 users_data['email'] = user["email"]
                 users_data['phoneNo'] = user["phoneNo"]
                 if "orgID" in user.keys():
-                    users_data['orgID'] = user["orgID"]
-                    validity =OrgUtils.validate_org(user["orgID"])
+                    users_data['orgID'] = str(user["orgID"]).upper()
+                    validity =OrgUtils.validate_org(str(user["orgID"]).upper())
                     if validity is not None:
                         return validity
 
@@ -100,7 +100,7 @@ class UserManagementModel(object):
 
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
-            if not userIDs and not userNames and not roleCodes :
+            if not userIDs and not userNames and not roleCodes and not orgCodes :
                 out = collections.find({"is_verified":True},exclude).sort([("_id",-1)]).skip(offset).limit(limit_value)
                 record_count=collections.find({"is_verified":True}).count()
             else:
@@ -156,8 +156,10 @@ class UserManagementModel(object):
             users_data['registered_time'] =eval(str(time.time()))
             users_data['activated_time'] =eval(str(time.time()))
             if "orgID" in user.keys():
-                users_data['orgID'] = user["orgID"]
-
+                users_data['orgID'] = str(user["orgID"]).upper()
+                validity =OrgUtils.validate_org(str(user["orgID"]).upper())
+                if validity is not None:
+                    return validity
             records.append(users_data)
         log_info("User records:{}".format(records), MODULE_CONTEXT)
 
@@ -175,27 +177,4 @@ class UserManagementModel(object):
                           str(e),  MODULE_CONTEXT, e)
             return post_error("Database  exception", "An error occurred while processing on the db :{}".format(str(e)), None)
 
-    @staticmethod
-    def search_users_records(userIDs,offset,limit_value):
-        exclude = {"_id": False, "password": False}
-        
-        try:
-            collections = get_db()[config.USR_MONGO_COLLECTION]
-            if offset == None and limit_value == False:
-                out = collections.find({'userID': {'$in': userIDs},'is_verified': True}, exclude)
-            if not userIDs:
-                out = collections.find({"is_verified":True},exclude).sort({"_id": 1}).skip(offset).limit(limit_value)
-            
-            
-            log_info("user search is executed:{}".format(out), MODULE_CONTEXT)
-            result = []
-            for record in out:
-                result.append(record)
-            if not result:
-                return None
-            return result
-
-        except Exception as e:
-            log_exception("db connection exception ",  MODULE_CONTEXT, e)
-            return post_error("Database connection exception", "An error occurred while connecting to the database:{}".format(str(e)), None)
-
+    

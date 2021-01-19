@@ -25,8 +25,8 @@ class CreateOrganization(Resource):
         if not organizations:
             return post_error("Data Null", "data received for org creation is empty", None), 400
 
-        for org in organizations:
-            validity = OrgUtils.validate_org_creation(org)
+        for i,org in enumerate(organizations):
+            validity = OrgUtils.validate_org_creation(i,org)
             log_info("Org is validated:{}".format(validity), MODULE_CONTEXT)
             if validity is not None:
                 return validity, 400
@@ -49,37 +49,6 @@ class CreateOrganization(Resource):
             return post_error("Exception occurred", "Exception while performing organization creation:{}".format(str(e)), None), 400
 
 
-class UpdateOrganization(Resource):
-
-    def post(self):
-        pass
-        body = request.get_json()
-        if 'organizations' not in body.keys():
-            return post_error("Key error", "organizations not found", None), 400
-
-        organizations = body['organizations']
-        log_info("Data recieved for organization updation is:{}".format(
-            organizations), MODULE_CONTEXT)
-        if not organizations:
-            return post_error("Data Null", "Data received for organization updation is empty", None), 400
-        for org in organizations:
-            validity = OrgUtils.validate_org_creation(org)
-            log_info("Org is validated:{}".format(validity), MODULE_CONTEXT)
-            if validity is not None:
-                return validity, 400
-        try:
-            result = UserOrganizationRepositories.update_organizations(organizations)
-            log_info("organizations updation result:{}".format(result), MODULE_CONTEXT)
-            if result== True:
-                res = CustomResponse(Status.SUCCESS_ORG_UPDATION.value, None)
-                return res.getresjson(), 200
-            else:
-                return result, 400
-
-        except Exception as e:
-            log_exception("Exception while updating organization records: " +
-                          str(e), MODULE_CONTEXT, e)
-            return post_error("Exception occurred", "Exception while performing org updation:{}".format(str(e)), None), 400
 
 
 class SearchOrganization(Resource):

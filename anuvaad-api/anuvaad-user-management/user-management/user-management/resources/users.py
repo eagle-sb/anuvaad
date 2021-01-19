@@ -116,7 +116,7 @@ class SearchUsers(Resource):
             limit_value=config.LIMIT_VALUE
 
         try:
-            result = UserManagementRepositories.search_users(userIDs, userNames, roleCodes,offset,limit_value)
+            result = UserManagementRepositories.search_users(userIDs, userNames, roleCodes,orgCodes,offset,limit_value)
             log_info("User search result:{}".format(result), MODULE_CONTEXT)
             if result == None:
                 res = CustomResponse(
@@ -127,7 +127,7 @@ class SearchUsers(Resource):
         except Exception as e:
             log_exception("Exception while searching user records: " +
                           str(e), MODULE_CONTEXT, e)
-            return post_error("Exception occurred", "Exception while performing user updation::{}".format(str(e)), None), 400
+            return post_error("Exception occurred", "Exception while performing user search::{}".format(str(e)), None), 400
 
 
 class OnboardUsers(Resource):
@@ -168,37 +168,7 @@ class OnboardUsers(Resource):
                           str(e), MODULE_CONTEXT, e)
             return post_error("Exception occurred", "Exception while performing users on-boarding::{}".format(str(e)), None), 400
 
-class RegisteredUsersRecords(Resource):
 
-    def post(self):
-        
-        body = request.get_json()
-        if "userIDs" not in body.keys():
-            return post_error("Key error", "userIDs not found", None), 400
-        if "offset" not in body.keys():
-            return post_error("Key error", "offset not found", None), 400
-        if "limit" not in body.keys():
-            return post_error("Key error", "limit not found", None), 400
-
-        userIDs = body['userIDs']
-        offset = body['offset']
-        limit_value = body['limit']
-        print(userIDs,offset,limit_value)
-        try:
-            result = UserManagementRepositories.search_users_records(userIDs,offset,limit_value)
-            log_info("User search result:{}".format(result), MODULE_CONTEXT)
-            if result is not None:
-                res = CustomResponse(Status.SUCCESS_USR_SEARCH.value, result)
-                return res.getresjson(), 200
-            res = CustomResponse(Status.EMPTY_USR_SEARCH.value, None)
-            return res.getresjson(), 400
-            
-        except Exception as e:
-            log_exception("Exception while searching user records: " +
-                          str(e), MODULE_CONTEXT, e)
-            return post_error("Exception occurred", "Exception while performing user updation::{}".format(str(e)), None), 400
-
-            
    
 
 class Health(Resource):

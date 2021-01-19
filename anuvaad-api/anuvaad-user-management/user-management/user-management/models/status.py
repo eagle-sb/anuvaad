@@ -10,19 +10,19 @@ class Status(enum.Enum):
 
     SUCCESS_USR_CREATION = {'ok': True, 'http': {'status': 200},
                             'why': "New users were created successfully"}
-    FAILURE_USR_CREATION = {'ok': False, 'http': {'status': 400},
-                            'why': "On input errors causing failure in user account creation"}
-
+    
     SUCCESS_USR_UPDATION = {'ok': True, 'http': {'status': 200},
                             'why': "users were updated successfully"}
     
-    FAILURE_USR_UPDATION = {'ok': False, 'http': {'status': 400},
-                            'why': "On input errors causing failure in user account updation"}
-
+    
     SUCCESS_USR_SEARCH = {'ok': True, 'http': {'status': 200},
                           'why': "users were searched successfully"}
+    SUCCESS_ORG_SEARCH = {'ok': True, 'http': {'status': 200},
+                          'why': "organizations were searched successfully"}
     EMPTY_USR_SEARCH = {'ok': True, 'http': {'status': 200},
                           'why': "No such users"}
+    EMPTY_ORG_SEARCH = {'ok': True, 'http': {'status': 200},
+                          'why': "No such organizations"}
 
     SUCCESS_USR_LOGIN = {'ok': True, 'http': {'status': 200},
                          'why': "Logged in successfully"}
@@ -41,9 +41,7 @@ class Status(enum.Enum):
 
     SUCCESS_FORGOT_PWD = {'ok': True, 'http': {'status': 200},
                             'why': "User is notified successfully"}
-    FAILURE_FORGOT_PWD  = {'ok': False, 'http': {'status': 400},
-                         'why': "On input errors causing failure in user notification"}
-
+   
     SUCCESS_RESET_PWD = {'ok': True, 'http': {'status': 200},
                             'why': "Password has resetted successfully"}
     FAILURE_RESET_PWD  = {'ok': False, 'http': {'status': 400},
@@ -57,7 +55,7 @@ class Status(enum.Enum):
     SUCCESS_USR_ONBOARD = {'ok': True, 'http': {'status': 200},
                             'why': "New users were onboarded successfully"}
     SUCCESS_ORG_CREATION = {'ok': True, 'http': {'status': 200},
-                            'why': "New organizations were created successfully"}
+                            'why': "New organizations were created/updated successfully"}
     SUCCESS_ORG_UPDATION = {'ok': True, 'http': {'status': 200},
                             'why': "organizations were updated successfully"}
 
