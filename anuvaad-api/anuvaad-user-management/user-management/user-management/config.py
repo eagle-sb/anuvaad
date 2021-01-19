@@ -2,7 +2,8 @@ import os
 import time
 
 #CROSS_MODULE_COMMON_CONFIGS
-MONGO_SERVER_HOST = os.environ.get('MONGO_CLUSTER_URL', 'mongodb://localhost:27017,localhost:27018/?replicaSet=foo') #
+MONGO_SERVER_HOST = os.environ.get('MONGO_CLUSTER_URL', 'mongodb://localhost:27017,localhost:27018/?replicaSet=foo')#
+
 
 #MODULE-SPECIFIC-CONFIGS
 
@@ -38,8 +39,8 @@ MAIL_SETTINGS = {
     "MAIL_PORT": 465,
     "MAIL_USE_TLS": False,
     "MAIL_USE_SSL": True,
-    "MAIL_USERNAME": os.environ.get('SUPPORT_EMAIL','XXXXXXX'),
-    "MAIL_PASSWORD": os.environ.get('SUPPORT_EMAIL_PASSWORD','xx')}
+    "MAIL_USERNAME": os.environ.get('SUPPORT_EMAIL','XXXXX'),
+    "MAIL_PASSWORD": os.environ.get('SUPPORT_EMAIL_PASSWORD','XX')}
 
 # HREF_LINK=os.environ.get('MAIL_HREF_LINK','https://users.anuvaad.org')
 

@@ -14,7 +14,6 @@ class CreateOrganization(Resource):
 
     def post(self):
         body = request.get_json()
-        print(body.keys())
         if 'organizations' not in body.keys():
             return post_error("Key error", "organizations not found", None), 400
 
@@ -27,12 +26,11 @@ class CreateOrganization(Resource):
 
         orgcodes=[]
         for i,org in enumerate(organizations):
-            orgcodes.append(str(org["code"]).upper())
-            
             validity = OrgUtils.validate_org_creation(i,org)
             log_info("Org is validated:{}".format(validity), MODULE_CONTEXT)
             if validity is not None:
                 return validity, 400
+            orgcodes.append(str(org["code"]).upper())
         if (len(organizations) != len(set(orgcodes))):
             return post_error("Duplicate org code","Org codes should be unique",None), 400
 
