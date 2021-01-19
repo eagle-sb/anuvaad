@@ -25,11 +25,16 @@ class CreateOrganization(Resource):
         if not organizations:
             return post_error("Data Null", "data received for org creation is empty", None), 400
 
+        orgcodes=[]
         for i,org in enumerate(organizations):
+            orgcodes.append(str(org["code"]).upper())
+            
             validity = OrgUtils.validate_org_creation(i,org)
             log_info("Org is validated:{}".format(validity), MODULE_CONTEXT)
             if validity is not None:
                 return validity, 400
+        if (len(organizations) != len(set(orgcodes))):
+            return post_error("Duplicate org code","Org codes should be unique",None), 400
 
         try:
             result = UserOrganizationRepositories.create_organizations(organizations)
@@ -64,9 +69,9 @@ class SearchOrganization(Resource):
             log_info("User search result:{}".format(result), MODULE_CONTEXT)
             if result == None:
                 res = CustomResponse(
-                    Status.EMPTY_USR_SEARCH.value, None)
+                    Status.EMPTY_ORG_SEARCH.value, None)
                 return res.getresjson(), 400
-            res = CustomResponse(Status.SUCCESS_USR_SEARCH.value, result[0],result[1])
+            res = CustomResponse(Status.SUCCESS_ORG_SEARCH.value, result[0],result[1])
             return res.getresjson(), 200
         except Exception as e:
             log_exception("Exception while searching user records: " +

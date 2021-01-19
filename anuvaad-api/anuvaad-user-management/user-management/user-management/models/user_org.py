@@ -52,7 +52,7 @@ class UserOrganizationModel(object):
         try:
             collections = get_db()[config.USR_ORG_MONGO_COLLECTION]
             if org_code== None :
-                out = collections.find({},exclude)
+                out = collections.find({"active":True},exclude)
                 record_count=out.count()
             else:
                 out = collections.find({"code":str(org_code).upper()}, exclude)
