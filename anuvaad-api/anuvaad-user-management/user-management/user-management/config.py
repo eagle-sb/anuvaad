@@ -40,7 +40,7 @@ MAIL_SETTINGS = {
     "MAIL_USE_TLS": False,
     "MAIL_USE_SSL": True,
     "MAIL_USERNAME": os.environ.get('SUPPORT_EMAIL','XXXXX'),
-    "MAIL_PASSWORD": os.environ.get('SUPPORT_EMAIL_PASSWORD','XX')}
+    "MAIL_PASSWORD": os.environ.get('SUPPORT_EMAIL_PASSWORD','xxxxx')}
 
 # HREF_LINK=os.environ.get('MAIL_HREF_LINK','https://users.anuvaad.org')
 
