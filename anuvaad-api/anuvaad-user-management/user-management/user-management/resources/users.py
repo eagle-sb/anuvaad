@@ -94,6 +94,8 @@ class SearchUsers(Resource):
             return post_error("Key error", "userNames not found", None), 400
         if "roleCodes" not in body.keys():
             return post_error("Key error", "roleCodes not found", None), 400
+        if "orgCodes" not in body.keys():
+            return post_error("Key error", "orgCodes not found", None), 400
         if "offset" not in body.keys():
             return post_error("Key error", "offset not found", None), 400
         if "limit" not in body.keys():
@@ -102,11 +104,14 @@ class SearchUsers(Resource):
         userIDs = body['userIDs']
         userNames = body['userNames']
         roleCodes = body['roleCodes']
+        orgCodes = body['orgCodes']
+
         offset = body['offset']
         limit_value = body['limit']
         log_info("data recieved for user search is;user Ids:{}".format(userIDs)+'\n'+"user names:{}".format(userNames) +
-                 '\n'+"role codes:{}".format(roleCodes), MODULE_CONTEXT)
-        if not userIDs and not userNames and not roleCodes and not offset and not limit_value:
+                 '\n'+"role codes:{}".format(roleCodes)+
+                 '\n'+"org codes:{}".format(orgCodes), MODULE_CONTEXT)
+        if not userIDs and not userNames and not roleCodes and not orgCodes and not offset and not limit_value:
             offset=config.OFFSET_VALUE
             limit_value=config.LIMIT_VALUE
 

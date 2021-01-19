@@ -1,6 +1,6 @@
 from utilities import MODULE_CONTEXT
 from db import get_db
-from utilities import UserUtils
+from utilities import UserUtils, OrgUtils
 from anuvaad_auditor.loghandler import log_info, log_exception
 import bcrypt
 from anuvaad_auditor.errorhandler import post_error
@@ -43,6 +43,9 @@ class UserManagementModel(object):
             users_data['activated_time'] =0
             if "orgID" in user.keys():
                 users_data['orgID'] = user["orgID"]
+                validity =OrgUtils.validate_org(user["orgID"])
+                if validity is not None:
+                    return validity
 
             records.append(users_data)
         log_info("User records:{}".format(records), MODULE_CONTEXT)
@@ -76,6 +79,9 @@ class UserManagementModel(object):
                 users_data['phoneNo'] = user["phoneNo"]
                 if "orgID" in user.keys():
                     users_data['orgID'] = user["orgID"]
+                    validity =OrgUtils.validate_org(user["orgID"])
+                    if validity is not None:
+                        return validity
 
                 results = collections.update(
                     {"userID": user_id}, {'$set': users_data})
@@ -88,7 +94,7 @@ class UserManagementModel(object):
             return post_error("Database connection exception", "An error occurred while connecting to the database:{}".format(str(e)), None)
 
     @staticmethod
-    def get_user_by_keys(userIDs, userNames, roleCodes,offset,limit_value):
+    def get_user_by_keys(userIDs, userNames, roleCodes,orgCodes,offset,limit_value):
 
         exclude = {"password": False,"_id":False}
 
@@ -102,7 +108,8 @@ class UserManagementModel(object):
                 {'$or': [
                     {'userID': {'$in': userIDs},'is_verified': True},
                     {'userName': {'$in': userNames},'is_verified': True},
-                    {'roles.roleCode': {'$in': roleCodes},'is_verified': True}
+                    {'roles.roleCode': {'$in': roleCodes},'is_verified': True},
+                    {'orgID': {'$in': orgCodes},'is_verified': True}
                 ]}, exclude)
                 log_info("user search is executed:{}".format(out), MODULE_CONTEXT)
                 record_count=out.count()
