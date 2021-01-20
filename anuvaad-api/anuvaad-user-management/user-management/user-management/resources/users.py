@@ -86,31 +86,32 @@ class UpdateUsers(Resource):
 class SearchUsers(Resource):
 
     def post(self):
+        
+        userIDs = []
+        userNames = []
+        roleCodes = []
+        orgCodes = []
 
         body = request.get_json()
-        if "userIDs" not in body.keys():
-            return post_error("Key error", "userIDs not found", None), 400
-        if "userNames" not in body.keys():
-            return post_error("Key error", "userNames not found", None), 400
-        if "roleCodes" not in body.keys():
-            return post_error("Key error", "roleCodes not found", None), 400
-        if "orgCodes" not in body.keys():
-            return post_error("Key error", "orgCodes not found", None), 400
+        if "userIDs" in body.keys():
+            userIDs = body['userIDs']
+        if "userNames" in body.keys():
+            userNames = body['userNames']
+        if "roleCodes" in body.keys():
+            roleCodes = body['roleCodes']
+        if "orgCodes" in body.keys():
+            orgCodes = body['orgCodes']
         if "offset" not in body.keys():
             return post_error("Key error", "offset not found", None), 400
         if "limit" not in body.keys():
             return post_error("Key error", "limit not found", None), 400
-
-        userIDs = body['userIDs']
-        userNames = body['userNames']
-        roleCodes = body['roleCodes']
-        orgCodes = body['orgCodes']
-
         offset = body['offset']
         limit_value = body['limit']
+        
         log_info("data recieved for user search is;user Ids:{}".format(userIDs)+'\n'+"user names:{}".format(userNames) +
                  '\n'+"role codes:{}".format(roleCodes)+
                  '\n'+"org codes:{}".format(orgCodes), MODULE_CONTEXT)
+        
         if not userIDs and not userNames and not roleCodes and not orgCodes and not offset and not limit_value:
             offset=config.OFFSET_VALUE
             limit_value=config.LIMIT_VALUE
