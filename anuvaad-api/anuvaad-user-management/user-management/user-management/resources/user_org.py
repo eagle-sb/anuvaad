@@ -26,7 +26,7 @@ class CreateOrganization(Resource):
 
         orgcodes=[]
         for i,org in enumerate(organizations):
-            validity = OrgUtils.validate_org_creation(i,org)
+            validity = OrgUtils.validate_org_upsert(i,org)
             log_info("Org is validated:{}".format(validity), MODULE_CONTEXT)
             if validity is not None:
                 return validity, 400
@@ -39,11 +39,14 @@ class CreateOrganization(Resource):
             
             log_info("Org creation result:{}".format(result), MODULE_CONTEXT)
             if result is not None:
-                return result, 400
-                
-            else:
-                res = CustomResponse(Status.SUCCESS_ORG_CREATION.value, None)
-                return res.getresjson(), 200
+                if result[1]==True:
+                    res = CustomResponse(Status.SUCCESS_ORG_CREATION.value, None)
+                    return res.getresjson(), 200
+                if result[1]==False:
+                    res = CustomResponse(Status.SUCCESS_ORG_DEACTIVATE.value, None)
+                    return res.getresjson(), 200
+                else:
+                    return result, 400
                 
 
         except Exception as e:
@@ -61,7 +64,7 @@ class SearchOrganization(Resource):
         parser.add_argument('org_code', type=str, location='args', help='organization code to be searched', required=False)
         args    = parser.parse_args()
         org_code=args["org_code"]
-        print(org_code)
+        print(org_code,"$$$$$$$$$$$$$$$$$")
         try:
             result = UserOrganizationRepositories.search_organizations(org_code)
             log_info("User search result:{}".format(result), MODULE_CONTEXT)
@@ -69,12 +72,12 @@ class SearchOrganization(Resource):
                 res = CustomResponse(
                     Status.EMPTY_ORG_SEARCH.value, None)
                 return res.getresjson(), 400
-            res = CustomResponse(Status.SUCCESS_ORG_SEARCH.value, result[0],result[1])
+            res = CustomResponse(Status.SUCCESS_ORG_SEARCH.value, result)
             return res.getresjson(), 200
         except Exception as e:
             log_exception("Exception while searching user records: " +
                           str(e), MODULE_CONTEXT, e)
-            return post_error("Exception occurred", "Exception while performing user updation::{}".format(str(e)), None), 400
+            return post_error("Exception occurred", "Exception while performing user search::{}".format(str(e)), None), 400
 
 
 

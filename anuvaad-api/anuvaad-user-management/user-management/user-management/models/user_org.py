@@ -5,7 +5,7 @@ from anuvaad_auditor.loghandler import log_info, log_exception
 from anuvaad_auditor.errorhandler import post_error
 import config
 import pymongo
-
+import time
 
 class UserOrganizationModel(object):
 
@@ -24,18 +24,32 @@ class UserOrganizationModel(object):
             collections = get_db()[config.USR_ORG_MONGO_COLLECTION]
         
             for org in orgs:
+                active_orgs=[]
+                deactive_orgs=[]
+
+                # if "active" in org.keys() and org["active"]!= None:
+
                 org_data = {}
                 code=str(org["code"]).upper()
-                orgId =OrgUtils.generate_org_id()
-
-                org_data['orgID'] = orgId
                 org_data['active'] = org["active"]
-                org_data['description'] = org["description"]
-                
-                collections.update({'code': code},{'$set': org_data},upsert=True)
-        except pymongo.errors.WriteError as e:
-            log_info("some of the record has duplicates ",  MODULE_CONTEXT)
-            log_exception("update organization: exception ",  MODULE_CONTEXT, e)
+                if org_data["active"] == True:
+                    orgId =OrgUtils.generate_org_id()
+                    org_data['orgID'] = orgId
+                    org_data["activated_time"]=eval(str(time.time()))
+                    if "description" in org.keys() and org["description"]:
+                        org_data['description'] = org["description"]                
+                        collections.update({'code': code},{'$set': org_data},upsert=True)
+                        log_info("Activation request for org processed", MODULE_CONTEXT)
+                        active_orgs.append(code)
+                else:
+                    collections.update({'code': code},{'$set': {'active':False,"deactivated_time":eval(str(time.time()))}},upsert=True)
+                    log_info("Deactivation request for org processed", MODULE_CONTEXT)
+                    deactive_orgs.append(org)
+            
+                if len(active_orgs)!= 0:
+                    return (active_orgs,True)
+                else:
+                    return(deactive_orgs,False)
         
         except Exception as e:
             log_exception("db connection exception " +
@@ -52,19 +66,17 @@ class UserOrganizationModel(object):
         try:
             collections = get_db()[config.USR_ORG_MONGO_COLLECTION]
             if org_code== None :
-                out = collections.find({"active":True},exclude)
-                record_count=out.count()
+                out = collections.find({"active":True},exclude).sort([("_id",-1)])
             else:
                 out = collections.find({"code":str(org_code).upper()}, exclude)
                 log_info("org search is executed:{}".format(out), MODULE_CONTEXT)
-                record_count=out.count()
 
             result = []
             for record in out:
                 result.append(record)
             if not result:
                 return None
-            return result,record_count
+            return result
 
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)

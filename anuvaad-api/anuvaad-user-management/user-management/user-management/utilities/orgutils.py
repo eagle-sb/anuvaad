@@ -33,22 +33,26 @@ class OrgUtils:
             return post_error("Database connection exception", "An error occurred while connecting to the database:{}".format(str(e)), None)
 
     @staticmethod
-    def validate_org_creation(i,org):
+    def validate_org_upsert(i,org):
         if "code" not in org.keys():
             return post_error("Key error", "code not found", None)
         if "active" not in org.keys():
             return post_error("Key error", "active not found", None)
-        if "description" not in org.keys():
-            return post_error("Key error", "description not found", None)
-            
-
-        code = org["code"]
+        code = str(org["code"]).upper()
         active = org["active"]
-        description = org["description"]
             
-
-            
-        if not code  or not description:
-            return post_error("Data missing", "code,active,description are mandatory they cannot be null for record {}".format(str(i+1)), None)
+        if not code:
+            return post_error("Data missing", "code is mandatory field this cannot be null for record {}".format(str(i+1)), None)
         if active==None:
             return post_error("Data missing", "active status is mandatory that cannot be null for record {}".format(str(i+1)), None)
+        if active == False:
+            try:
+                collections = get_db()[config.USR_MONGO_COLLECTION]
+                result = collections.find({"orgID": code,"is_active":True})
+                if result.count()!=0:
+                    log_info("Deactivation request for org failed, {} active users with the orgID".format(str(result.count())), MODULE_CONTEXT)
+                    return post_error("Deactivation Failed","There exist active users in {} hence this action cannot be performed".format(code),None)
+
+            except Exception as e:
+                log_exception("db connection exception ",  MODULE_CONTEXT, e)
+                return post_error("Database connection exception", "An error occurred while connecting to the database:{}".format(str(e)), None)

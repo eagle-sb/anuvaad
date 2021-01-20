@@ -55,9 +55,9 @@ class Status(enum.Enum):
     SUCCESS_USR_ONBOARD = {'ok': True, 'http': {'status': 200},
                             'why': "New users were onboarded successfully"}
     SUCCESS_ORG_CREATION = {'ok': True, 'http': {'status': 200},
-                            'why': "New organizations were created/updated successfully"}
-    SUCCESS_ORG_UPDATION = {'ok': True, 'http': {'status': 200},
-                            'why': "organizations were updated successfully"}
+                            'why': "New organization added successfully"}
+    SUCCESS_ORG_DEACTIVATE = {'ok': True, 'http': {'status': 200},
+                            'why': "Organization has deactivated successfully"}
 
     ERR_GLOBAL_SYSTEM = {'ok': False, 'http': {
         'status': 500}, 'why': "Internal Server Error"}

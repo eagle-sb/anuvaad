@@ -122,7 +122,6 @@ class UserManagementModel(object):
                 ]}, exclude)
                 log_info("user search is executed:{}".format(out), MODULE_CONTEXT)
                 record_count=out.count()
-                print(record_count,"#########")
 
             result = []
             for record in out:
