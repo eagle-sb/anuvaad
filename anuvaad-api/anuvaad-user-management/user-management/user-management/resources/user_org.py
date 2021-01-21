@@ -64,7 +64,6 @@ class SearchOrganization(Resource):
         parser.add_argument('org_code', type=str, location='args', help='organization code to be searched', required=False)
         args    = parser.parse_args()
         org_code=args["org_code"]
-        print(org_code,"$$$$$$$$$$$$$$$$$")
         try:
             result = UserOrganizationRepositories.search_organizations(org_code)
             log_info("User search result:{}".format(result), MODULE_CONTEXT)

@@ -15,8 +15,6 @@ PORT = 5001
 ENABLE_CORS = False
 
 #mongodb-configs
-MONGO_DB_HOST = os.environ.get('MONGO_IP', 'localhost')
-MONGO_DB_PORT = os.environ.get('MONGO_PORT', 27017)
 MONGO_DB_SCHEMA = os.environ.get('MONGO_DB_IDENTIFIER', 'usermanagement')
 USR_MONGO_COLLECTION = os.environ.get('UMS_USR_COLLECTION', 'sample')
 USR_TOKEN_MONGO_COLLECTION = os.environ.get( 'UMS_USR_TOKEN_COLLECTION', 'usertokens')
