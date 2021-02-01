@@ -22,13 +22,9 @@ class UserOrganizationModel(object):
     def create_organizations(self,orgs):
         try:
             collections = get_db()[config.USR_ORG_MONGO_COLLECTION]
-        
+            active_orgs=[]
+            deactive_orgs=[]
             for org in orgs:
-                active_orgs=[]
-                deactive_orgs=[]
-
-                # if "active" in org.keys() and org["active"]!= None:
-
                 org_data = {}
                 code=str(org["code"]).upper()
                 org_data['active'] = org["active"]
@@ -38,18 +34,15 @@ class UserOrganizationModel(object):
                     org_data["activated_time"]=eval(str(time.time()))
                     if "description" in org.keys() and org["description"]:
                         org_data['description'] = org["description"]                
-                        collections.update({'code': code},{'$set': org_data},upsert=True)
-                        log_info("Activation request for org processed", MODULE_CONTEXT)
-                        active_orgs.append(code)
+                    collections.update({'code': code},{'$set': org_data},upsert=True)
+                    log_info("Activation request for org processed", MODULE_CONTEXT)
+                    active_orgs.append(code)
                 else:
                     collections.update({'code': code},{'$set': {'active':False,"deactivated_time":eval(str(time.time()))}},upsert=True)
                     log_info("Deactivation request for org processed", MODULE_CONTEXT)
-                    deactive_orgs.append(org)
-            
-                if len(active_orgs)!= 0:
-                    return (active_orgs,True)
-                else:
-                    return(deactive_orgs,False)
+                    deactive_orgs.append(code)
+                
+            return({'Activated':active_orgs,'Deactivated':deactive_orgs})
         
         except Exception as e:
             log_exception("db connection exception " +

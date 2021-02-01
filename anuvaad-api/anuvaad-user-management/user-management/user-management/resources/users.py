@@ -122,13 +122,13 @@ class SearchUsers(Resource):
             if result == None:
                 res = CustomResponse(
                     Status.EMPTY_USR_SEARCH.value, None)
-                return res.getresjson(), 400
+                return res.getresjson(), 200
             res = CustomResponse(Status.SUCCESS_USR_SEARCH.value, result[0],result[1])
             return res.getresjson(), 200
         except Exception as e:
             log_exception("Exception while searching user records: " +
                           str(e), MODULE_CONTEXT, e)
-            return post_error("Exception occurred", "Exception while performing user search::{}".format(str(e)), None), 400
+            return post_error("Exception occurred", "Exception while performing user search:{}".format(str(e)), None), 400
 
 
 class OnboardUsers(Resource):

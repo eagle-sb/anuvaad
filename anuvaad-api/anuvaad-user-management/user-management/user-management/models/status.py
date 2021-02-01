@@ -54,8 +54,8 @@ class Status(enum.Enum):
     
     SUCCESS_USR_ONBOARD = {'ok': True, 'http': {'status': 200},
                             'why': "New users were onboarded successfully"}
-    SUCCESS_ORG_CREATION = {'ok': True, 'http': {'status': 200},
-                            'why': "New organization added successfully"}
+    SUCCESS_ORG_UPSERTION = {'ok': True, 'http': {'status': 200},
+                            'why': "Request Successful"}
     SUCCESS_ORG_DEACTIVATE = {'ok': True, 'http': {'status': 200},
                             'why': "Organization has deactivated successfully"}
 

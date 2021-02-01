@@ -37,17 +37,12 @@ class CreateOrganization(Resource):
 
         try:
             result = orgRepo.create_organizations(organizations)
-            
             log_info("Org creation result:{}".format(result), MODULE_CONTEXT)
-            if result is not None:
-                if result[1]==True:
-                    res = CustomResponse(Status.SUCCESS_ORG_CREATION.value, None)
-                    return res.getresjson(), 200
-                if result[1]==False:
-                    res = CustomResponse(Status.SUCCESS_ORG_DEACTIVATE.value, None)
-                    return res.getresjson(), 200
-                else:
-                    return result, 400
+            if result is not None and len(result.keys())==2:
+                res = CustomResponse(Status.SUCCESS_ORG_UPSERTION.value, result)
+                return res.getresjson(), 200
+            else:
+                return result, 400
                 
 
         except Exception as e:
@@ -71,7 +66,7 @@ class SearchOrganization(Resource):
             if result == None:
                 res = CustomResponse(
                     Status.EMPTY_ORG_SEARCH.value, None)
-                return res.getresjson(), 400
+                return res.getresjson(), 200
             res = CustomResponse(Status.SUCCESS_ORG_SEARCH.value, result)
             return res.getresjson(), 200
         except Exception as e:
