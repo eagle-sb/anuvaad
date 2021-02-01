@@ -9,6 +9,7 @@ from flask import jsonify
 from anuvaad_auditor.errorhandler import post_error
 import config
 
+orgRepo = UserOrganizationRepositories()
 
 class CreateOrganization(Resource):
 
@@ -35,7 +36,7 @@ class CreateOrganization(Resource):
             return post_error("Duplicate org code","Org codes should be unique",None), 400
 
         try:
-            result = UserOrganizationRepositories.create_organizations(organizations)
+            result = orgRepo.create_organizations(organizations)
             
             log_info("Org creation result:{}".format(result), MODULE_CONTEXT)
             if result is not None:
@@ -65,7 +66,7 @@ class SearchOrganization(Resource):
         args    = parser.parse_args()
         org_code=args["org_code"]
         try:
-            result = UserOrganizationRepositories.search_organizations(org_code)
+            result = orgRepo.search_organizations(org_code)
             log_info("User search result:{}".format(result), MODULE_CONTEXT)
             if result == None:
                 res = CustomResponse(

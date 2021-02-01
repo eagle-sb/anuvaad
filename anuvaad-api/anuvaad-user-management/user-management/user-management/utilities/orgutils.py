@@ -23,10 +23,10 @@ class OrgUtils:
             result = collections.find({"code": orgCode}, {"_id": 0, "active": 1})
             log_info("searching for record with the recieved orgID:{}".format(result), MODULE_CONTEXT)
             if result.count() == 0:
-                return post_error("Invalid Organization", "No such registered organization with the given code", None)
+                return post_error("Invalid Organization", "No such registered organization with the given Org Id", None)
             for value in result:
                 if value["active"] == False:
-                    return post_error("Invalid Organization", "This Organization is currently inactive", None)
+                    return post_error("Invalid Organization", "Organization is currently inactive", None)
 
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)

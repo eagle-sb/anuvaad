@@ -18,8 +18,8 @@ class UserOrganizationModel(object):
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
 
-    @staticmethod
-    def create_organizations(orgs):
+    
+    def create_organizations(self,orgs):
         try:
             collections = get_db()[config.USR_ORG_MONGO_COLLECTION]
         
@@ -57,8 +57,7 @@ class UserOrganizationModel(object):
             return post_error("Database  exception", "An error occurred while processing on the db :{}".format(str(e)), None)
 
 
-    @staticmethod
-    def get_orgs_by_keys(org_code):
+    def get_orgs_by_keys(self,org_code):
         
 
         exclude = {"_id":False}

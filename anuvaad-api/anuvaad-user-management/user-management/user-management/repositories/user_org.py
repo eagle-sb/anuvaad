@@ -2,16 +2,18 @@ from models import UserOrganizationModel
 
 
 class UserOrganizationRepositories:
+    def __init__(self):
+        self.orgModel = UserOrganizationModel()
 
-    @staticmethod
-    def create_organizations(orgs):
-        result = UserOrganizationModel.create_organizations(orgs)
+    
+    def create_organizations(self,orgs):
+        result = self.orgModel.create_organizations(orgs)
         if result is not None:
             return result
         
 
-    @staticmethod
-    def search_organizations(org_code):
-        result = UserOrganizationModel.get_orgs_by_keys(org_code)
+    
+    def search_organizations(self,org_code):
+        result = self.orgModel.get_orgs_by_keys(org_code)
         if result is not None:
             return result

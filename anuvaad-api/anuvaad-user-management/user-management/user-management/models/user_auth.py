@@ -1,6 +1,6 @@
 from utilities import MODULE_CONTEXT
 from db import get_db
-from utilities import UserUtils
+from utilities import UserUtils, OrgUtils
 from anuvaad_auditor.loghandler import log_info, log_exception
 from anuvaad_auditor.errorhandler import post_error
 import bcrypt
@@ -164,6 +164,9 @@ class UserAuthenticationModel(object):
                 return post_error("Data Not valid","Not a verified user",None)
             if record.count() ==1:
                 for user in record:
+                    validity=OrgUtils.validate_org(user["orgID"])
+                    if validity is not None:
+                        return validity
                     results = collections.update(user, {"$set": {"is_active": status}})
                     if 'writeError' in list(results.keys()):
                         return post_error("db error", "writeError whie updating record", None)
