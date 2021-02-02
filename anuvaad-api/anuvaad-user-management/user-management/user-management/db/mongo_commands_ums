@@ -1,0 +1,3 @@
+use usermanagement
+db.organization.createIndex( {"code": 1},{ unique: true })
+db.usertemptoken.createIndex( { "start_time": 1 }, { expireAfterSeconds: 600 } )

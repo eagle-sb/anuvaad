@@ -10,13 +10,7 @@ import time
 class UserOrganizationModel(object):
 
     def __init__(self):
-        collections = get_db()[config.USR_ORG_MONGO_COLLECTION]
-        try:
-            collections.create_index('code', unique = True)
-        except pymongo.errors.DuplicateKeyError as e:
-            log_info("duplicate key, ignoring",MODULE_CONTEXT)
-        except Exception as e:
-            log_exception("db connection exception ",  MODULE_CONTEXT, e)
+        pass
 
     
     def create_organizations(self,orgs):
