@@ -232,6 +232,10 @@ class ActivateDeactivateUser(Resource):
         user_email = body["userName"]
         status= body["is_active"]
 
+        if not isinstance(status,bool):
+            print("not bool")
+            return post_error("Invalid format", "status should be bool", None), 400
+        
         if not user_email:
             return post_error("userName missing", "userName field cannot be empty", None), 400
        
