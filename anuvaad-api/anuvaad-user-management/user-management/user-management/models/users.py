@@ -27,30 +27,30 @@ class UserManagementModel(object):
             hashed = UserUtils.hash_password(user["password"])
             log_info("hash created:{}".format(hashed), MODULE_CONTEXT)
             userId = UserUtils.generate_user_id()
-            validated_userID = UserUtils.validate_userid(userId)
-            log_info("user Id validated:{}".format(
-                validated_userID), MODULE_CONTEXT)
             user_roles = []
             for role in user["roles"]:
                 role_info = {}
                 role_info["roleCode"] = role["roleCode"].upper()
-                role_info["roleDesc"] = role["roleDesc"]
+                if "roleDesc" in role:
+                    role_info["roleDesc"] = role["roleDesc"]
                 user_roles.append(role_info)
             log_info("User roles:{}".format(user_roles), MODULE_CONTEXT)
 
-            users_data['userID'] = validated_userID
+            users_data['userID'] = userId
             users_data['name'] = user["name"]
             users_data['userName'] = user["userName"]
             users_data['password'] = hashed.decode("utf-8")
             users_data['email'] = user["email"]
-            users_data['phoneNo'] = user["phoneNo"]
             users_data['roles'] = user_roles
             
             users_data['is_verified'] =False
             users_data['is_active'] =False
             users_data['registered_time'] =eval(str(time.time()))
             users_data['activated_time'] =0
-            if "orgID" in user.keys():
+
+            if "phoneNo" in user:
+                users_data['phoneNo'] = user["phoneNo"]
+            if "orgID" in user:
                 users_data['orgID'] = str(user["orgID"]).upper()
                 validity =OrgUtils.validate_org(str(user["orgID"]).upper())
                 if validity is not None:
@@ -85,8 +85,9 @@ class UserManagementModel(object):
                 users_data = {}
                 users_data['name'] = user["name"]
                 users_data['email'] = user["email"]
-                users_data['phoneNo'] = user["phoneNo"]
-                if "orgID" in user.keys():
+                if "phoneNo" in user:
+                    users_data['phoneNo'] = user["phoneNo"]
+                if "orgID" in user:
                     users_data['orgID'] = str(user["orgID"]).upper()
                     validity =OrgUtils.validate_org(str(user["orgID"]).upper())
                     if validity is not None:
@@ -142,23 +143,22 @@ class UserManagementModel(object):
             hashed = UserUtils.hash_password(user["password"])
             log_info("hash created:{}".format(hashed), MODULE_CONTEXT)
             userId = UserUtils.generate_user_id()
-            validated_userID = UserUtils.validate_userid(userId)
-            log_info("user Id validated:{}".format(
-                validated_userID), MODULE_CONTEXT)
             user_roles = []
             for role in user["roles"]:
                 role_info = {}
                 role_info["roleCode"] = role["roleCode"].upper()
-                role_info["roleDesc"] = role["roleDesc"]
+                if "roleDesc" in role:
+                    role_info["roleDesc"] = role["roleDesc"]
                 user_roles.append(role_info)
             log_info("User roles:{}".format(user_roles), MODULE_CONTEXT)
 
-            users_data['userID'] = validated_userID
+            users_data['userID'] = userId
             users_data['name'] = user["name"]
             users_data['userName'] = user["userName"]
             users_data['password'] = hashed.decode("utf-8")
             users_data['email'] = user["email"]
-            users_data['phoneNo'] = user["phoneNo"]
+            if "phoneNo" in user:
+                users_data['phoneNo'] = user["phoneNo"]
             users_data['roles'] = user_roles
             users_data['is_verified'] =True
             users_data['is_active'] =True

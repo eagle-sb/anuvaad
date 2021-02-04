@@ -66,16 +66,7 @@ class UserUtils:
         pattern = re.compile(regex)
         if re.search(pattern, password) is None:
             return post_error("Invalid password", "password must contain atleast one uppercase,one lowercase, one numeric and one special character", None)
-#userId validation (uniqueness)
-    @staticmethod
-    def validate_userid(usrId):
-        collections = get_db()[config.USR_MONGO_COLLECTION]
-        valid = collections.find({'userID': {'$in': [usrId]}})
-        if valid.count() != 0:
-            userID = UserUtils.generate_user_id()
-            UserUtils.validate_userid(userID)
-        else:
-            return(usrId)
+
 
 #validating rolecodes (rolecodes should match with the rolecodes read from json)
     @staticmethod
@@ -202,76 +193,61 @@ class UserUtils:
 
     @staticmethod
     def validate_user_input_creation(user):
-        if "name" not in user.keys():
-            return post_error("Key error", "name not found", None)
-        if "userName" not in user.keys():
-            return post_error("Key error", "userName not found", None)
-        if "password" not in user.keys():
-            return post_error("Key error", "password not found", None)
-        if "email" not in user.keys():
-            return post_error("Key error", "email not found", None)
-        if "phoneNo" not in user.keys():
-            return post_error("Key error", "phoneNo not found", None)
-        if "roles" not in user.keys():
-            return post_error("Key error", "roles not found", None)
-        
 
-        name = user["name"]
-        username = user["userName"]
-        password = user["password"]
-        email = user["email"]
-        roles = user["roles"]
-        rolecodes = []
-
-        
-        if not username or not password or not email or not name or not roles:
-            return post_error("Data missing", "Username,password,name,email,roles are mandatory fields, they cannot be empty", None)
-        password_validity = UserUtils.validate_password(password)
-        log_info("password validated:{}".format(
-            password_validity), MODULE_CONTEXT)
+        if "name" not in user or not user["name"]:
+            return post_error("Data Missing", "name not found", None)
+        if "userName" not in user or not user["userName"]:
+            return post_error("Data Missing", "userName not found", None)
+        if "password" not in user or not user["password"]:
+            return post_error("Data Missing", "password not found", None)
+        if "email" not in user or not user["email"]:
+            return post_error("Data Missing", "email not found", None)
+        if "roles" not in user or not user["roles"]:
+            return post_error("Data Missing", "roles not found", None)
+  
+        password_validity = UserUtils.validate_password(user["password"])
+        log_info("password validated:{}".format(password_validity), MODULE_CONTEXT)
         if password_validity is not None:
             return password_validity
-        if UserUtils.validate_email(email) == False:
+
+        # if "phoneNo" in user and user["phoneNo"]:
+            # if (UserUtils.validate_phone(user["phoneNo"])) == False:
+            #     return post_error("Data not valid", "Phone number given is not valid", None)
+        if UserUtils.validate_email(user["email"]) == False:
             return post_error("Data not valid", "Email Id given is not valid", None)
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]
-            user_record = collections.find({'userName': username,"is_verified":True})
+            user_record = collections.find({'userName': user["userName"],"is_verified":True})
             if user_record.count() != 0:
                 return post_error("Data not valid", "The username already exists. Please use a different username", None)
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return post_error("Database exception", "An error occurred while working on the database:{}".format(str(e)), None)
-        for rol in roles:
-            if "roleCode" not in rol.keys():
-                return post_error("Key error", "roleCode not found", None)
-            if "roleDesc" not in rol.keys():
-                return post_error("Key error", "roleDesc not found", None)
+
+        rolecodes = []
+        for rol in user["roles"]:
+            if "roleCode" not in rol or not rol["roleCode"]:
+                return post_error("Data Missing", "roleCode not found", None)
             rolecodes.append(rol["roleCode"])
-        if not rolecodes:
-            return post_error("Data Missing", "No rolecodes are given", None)
         if UserUtils.validate_rolecodes(rolecodes) == False:
-            return post_error("Data not valid", "Rolecode given is not valid", None)
+            return post_error("Invalid data", "Rolecode given is not valid", None)
 
     @staticmethod
     def validate_user_input_updation(user):
-        if "userID" not in user.keys():
-            return post_error("Key error", "userID not found", None)
-        if "name" not in user.keys():
-            return post_error("Key error", "name not found", None)
+        if "userID" not in user or not user["userID"]:
+            return post_error("Data Missing", "userID not found", None)
+        if "name" not in user or not user["name"]:
+            return post_error("Data Missing", "name not found", None)
         if "email" not in user.keys():
-            return post_error("Key error", "email not found", None)
-        if "phoneNo" not in user.keys():
-            return post_error("Key error", "phoneNo not found", None)
+            return post_error("Data Missing", "email not found", None)
+        
 
         userId = user["userID"]
-        name = user["name"]
-        email = user["email"]
 
-        if not userId:
-            return post_error("Id missing", "UserID field cannot be empty", None)
-        if not email or not name:
-            return post_error("Data missing", "name,email are mandatory fields, they cannot be empty", None)
-        if UserUtils.validate_email(email) == False:
+        # if "phoneNo" in user and user["phoneNo"]:
+            # if (UserUtils.validate_phone(user["phoneNo"])) == False:
+            #     return post_error("Data not valid", "Phone number given is not valid", None)
+        if UserUtils.validate_email(user["email"]) == False:
             return post_error("Data not valid", "Email Id given is not valid", None)
         try:
             collections = get_db()[config.USR_MONGO_COLLECTION]

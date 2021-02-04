@@ -14,17 +14,12 @@ class CreateUsers(Resource):
 
     def post(self):
         body = request.get_json()
-        print(body.keys())
-        if 'users' not in body.keys():
-            return post_error("Key error", "users not found", None), 400
+        if 'users' not in body or not body['users']:
+            return post_error("Data Missing", "users not found", None), 400
 
-        if 'users' in body:
-            users = body['users']
-        log_info("data recieved for user creation is:{}".format(
-            users), MODULE_CONTEXT)
-        if not users:
-            return post_error("Data Null", "data received for user creation is empty", None), 400
-
+        users = body['users']
+        log_info("Data received for user creation is:{}".format(users), MODULE_CONTEXT)
+        
         for user in users:
             validity = UserUtils.validate_user_input_creation(user)
             log_info("User is validated:{}".format(validity), MODULE_CONTEXT)
@@ -53,15 +48,13 @@ class UpdateUsers(Resource):
 
     def post(self):
         body = request.get_json()
-        if 'users' not in body.keys():
-            return post_error("Key error", "users not found", None), 400
+        if 'users' not in body or not body['users']:
+            return post_error("Data Missing", "users not found", None), 400
 
         users = body['users']
         log_info("Data recieved for user updation is:{}".format(
             users), MODULE_CONTEXT)
-        if not users:
-            return post_error("Data Null", "Data received for user updation is empty", None), 400
-
+        
         for user in users:
             validity = UserUtils.validate_user_input_updation(user)
             log_info("User is validated: {}".format(validity), MODULE_CONTEXT)
@@ -91,22 +84,23 @@ class SearchUsers(Resource):
         userNames = []
         roleCodes = []
         orgCodes = []
-
+        offset = None
+        limit_value = None
         body = request.get_json()
-        if "userIDs" in body.keys():
+        if "userIDs" in body:
             userIDs = body['userIDs']
-        if "userNames" in body.keys():
+        if "userNames" in body:
             userNames = body['userNames']
-        if "roleCodes" in body.keys():
+        if "roleCodes" in body:
             roleCodes = body['roleCodes']
-        if "orgCodes" in body.keys():
+        if "orgCodes" in body:
             orgCodes = body['orgCodes']
-        if "offset" not in body.keys():
-            return post_error("Key error", "offset not found", None), 400
-        if "limit" not in body.keys():
-            return post_error("Key error", "limit not found", None), 400
-        offset = body['offset']
-        limit_value = body['limit']
+        if "offset" in body:
+            offset = body['offset']
+        if "limit" in body:
+            limit_value = body['limit']
+        
+        
         
         log_info("data recieved for user search is;user Ids:{}".format(userIDs)+'\n'+"user names:{}".format(userNames) +
                  '\n'+"role codes:{}".format(roleCodes)+
