@@ -1,5 +1,6 @@
 from config import MONGO_SERVER_HOST
 from config import MONGO_DB_SCHEMA
+from utilities import MODULE_CONTEXT
 from pymongo import MongoClient
 from anuvaad_auditor.loghandler import log_info, log_exception
 
@@ -20,10 +21,13 @@ class DbConnector:
         
 
     def instantiate(self):
-        print("**********Db connected")
-        client = MongoClient(MONGO_SERVER_HOST)
-        self.db = client[MONGO_DB_SCHEMA]
-        return self.db
+        log_info("Establishing database connectivity",MODULE_CONTEXT)
+        try:
+            client = MongoClient(MONGO_SERVER_HOST)
+            self.db = client[MONGO_DB_SCHEMA]
+            return self.db
+        except Exception as e:
+            log_exception("db connection exception ",  MODULE_CONTEXT, e)
 
     def get_mongo_instance(self, collection):
         if not self.db:
@@ -34,24 +38,3 @@ class DbConnector:
 
     
 
-
-# class DbConnector:
-
-#     def __init__(self):
-#         pass
-
-#     def instantiate(self):
-#         client = pymongo.MongoClient(mongo_server_host)
-#         db = client[mongo_translator_db]
-#         return db
-
-#     def get_mongo_instance(self, collection):
-#         if not db:
-#             db_instance = self.instantiate()
-#         else:
-#             db_instance = db
-#         return db_instance[collection]
-
-#     def create(self, object_in):
-#             col = self.get_mongo_instance(mongo_translator_collection) 
-#             col.insert_one(object_in)
