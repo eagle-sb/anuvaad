@@ -15,13 +15,15 @@ from flask_mail import Mail, Message
 from app import mail
 from flask import render_template
 
+from config import USR_MONGO_COLLECTION,USR_TEMP_TOKEN_MONGO_COLLECTION,USR_TOKEN_MONGO_COLLECTION
+
+
 role_codes_filepath = config.ROLE_CODES_URL
 json_file_dir = config.ROLE_CODES_DIR_PATH
 json_file_name = config.ROLE_CODES_FILE_NAME
 
 mail_ui_link=config.BASE_URL
 role_codes = []
-# sender_email=config.MAIL_SETTINGS
 
 
 class UserUtils:
@@ -94,13 +96,13 @@ class UserUtils:
             return post_error("Invalid token", "Token recieved is empty", None)
         else:
             try:
-                collections = get_db()[config.USR_TOKEN_MONGO_COLLECTION]
+                collections = get_db()[USR_TOKEN_MONGO_COLLECTION]      
                 result = collections.find({"token": token_received}, {
                                           "_id": 0, "user": 1, "active": 1, "secret_key": 1})
-                log_info("searching for record with the recieved token:{}".format(
+                log_info("searching for record with the received token:{}".format(
                     result), MODULE_CONTEXT)
                 if result.count() == 0:
-                    return post_error("Invalid token", "Token recieved is not matching", None)
+                    return post_error("Invalid token", "Token received is not matching", None)
                 for value in result:
                     if value["active"] == False:
                         return post_error("Invalid token", "Token has expired", None)
@@ -128,11 +130,11 @@ class UserUtils:
 
         try: 
             if temp:
-                document = config.USR_TEMP_TOKEN_MONGO_COLLECTION
+                document = USR_TEMP_TOKEN_MONGO_COLLECTION  
             else:
-                document = config.USR_TOKEN_MONGO_COLLECTION
+                document = USR_TOKEN_MONGO_COLLECTION  
 
-            collections = get_db()[document]
+            collections = get_db()[document] 
             result = collections.find(
                 {"token": token_received}, {"_id": 0, "user": 1})
             log_info("search result for username in usertokens db matching the recieved token:{}".format(
@@ -144,7 +146,7 @@ class UserUtils:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return post_error("Database connection exception", "An error occurred while connecting to the database", None)
         try:
-            collections_usr = get_db()[config.USR_MONGO_COLLECTION]
+            collections_usr = get_db()[USR_MONGO_COLLECTION]    #connector.get_mongo_instance(USR_MONGO_COLLECTION)    
             result_usr = collections_usr.find(
                 {"userName": username,"is_verified":True}, {"_id": 0, "password": 0})
             log_info("record in users db matching the recieved token:{}".format(
@@ -161,7 +163,7 @@ class UserUtils:
     @staticmethod
     def get_token(userName):
         try:
-            collections = get_db()[config.USR_TOKEN_MONGO_COLLECTION]
+            collections = get_db()[USR_TOKEN_MONGO_COLLECTION]  #connector.get_mongo_instance()
             record = collections.find(
                 {"user": userName, "active": True}, {"_id": 0, "token": 1, "secret_key": 1})
             log_info("search result for an active token matching the username:{}".format(
@@ -216,7 +218,7 @@ class UserUtils:
         if UserUtils.validate_email(user["email"]) == False:
             return post_error("Data not valid", "Email Id given is not valid", None)
         try:
-            collections = get_db()[config.USR_MONGO_COLLECTION]
+            collections = get_db()[USR_MONGO_COLLECTION]
             user_record = collections.find({'userName': user["userName"],"is_verified":True})
             if user_record.count() != 0:
                 return post_error("Data not valid", "The username already exists. Please use a different username", None)
@@ -250,7 +252,7 @@ class UserUtils:
         if UserUtils.validate_email(user["email"]) == False:
             return post_error("Data not valid", "Email Id given is not valid", None)
         try:
-            collections = get_db()[config.USR_MONGO_COLLECTION]
+            collections = get_db()[USR_MONGO_COLLECTION]
             record = collections.find({'userID': userId,"is_verified":True})
             if record.count() == 0:
                 return post_error("Data not valid", "No such verified user with the given Id", None)
@@ -266,13 +268,9 @@ class UserUtils:
     def validate_user_login_input(userName, Password):
         username = userName
         password = Password
-        if not username:
-            return post_error("Username missing", "Username field cannot be empty", None)
-        if not password:
-            return post_error("Password missing", "Password field cannot be empty", None)
 
         try:
-            collections = get_db()[config.USR_MONGO_COLLECTION]
+            collections = get_db()[USR_MONGO_COLLECTION]
             result = collections.find({'userName': username,"is_verified":True}, {
                 'password': 1, '_id': 0,'is_active':1})
             log_info("searching for password of the requested user:{}".format(
@@ -361,7 +359,7 @@ class UserUtils:
     @staticmethod
     def validate_username(usrName):
         try:
-            collections = get_db()[config.USR_MONGO_COLLECTION]
+            collections = get_db()[USR_MONGO_COLLECTION]
             valid = collections.find({'userName':usrName,"is_verified":True})
             for value in valid:
                 if value["is_active"]== False:

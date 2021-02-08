@@ -1,13 +1,11 @@
 import uuid
 from utilities import MODULE_CONTEXT
 from config import USR_ORG_MONGO_COLLECTION, USR_MONGO_COLLECTION
-from db import DbConnector
 from db import get_db
 from anuvaad_auditor.loghandler import log_info, log_exception
 from anuvaad_auditor.errorhandler import post_error
 
 
-connector=DbConnector()
 class OrgUtils:
 
     def __init__(self):
@@ -20,7 +18,7 @@ class OrgUtils:
     @staticmethod
     def validate_org(orgCode):
         try:
-            collections = connector.get_mongo_instance(USR_ORG_MONGO_COLLECTION)
+            collections = get_db()[USR_ORG_MONGO_COLLECTION]
             result = collections.find({"code": orgCode}, {"_id": 0, "active": 1})
             log_info("searching for record with the recieved orgID:{}".format(result), MODULE_CONTEXT)
             if result.count() == 0:
@@ -48,7 +46,7 @@ class OrgUtils:
             return post_error("Data missing", "active status is mandatory that cannot be null for record {}".format(str(i+1)), None)
         if active == False:
             try:
-                collections = connector.get_mongo_instance(USR_MONGO_COLLECTION)
+                collections = get_db()[USR_MONGO_COLLECTION]
                 result = collections.find({"orgID": code,"is_active":True})
                 if result.count()!=0:
                     log_info("Deactivation request for org failed, {} active users with the orgID".format(str(result.count())), MODULE_CONTEXT)

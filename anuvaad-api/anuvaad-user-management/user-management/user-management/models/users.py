@@ -5,13 +5,14 @@ from anuvaad_auditor.loghandler import log_info, log_exception
 import bcrypt
 from anuvaad_auditor.errorhandler import post_error
 import config
+from config import USR_MONGO_COLLECTION
 import time
 import pymongo
 
 class UserManagementModel(object):
 
     def __init__(self):
-        collections = get_db()[config.USR_MONGO_COLLECTION]
+        collections = get_db()[USR_MONGO_COLLECTION]
         try:
             collections.create_index('userName')
         except pymongo.errors.DuplicateKeyError as e:
@@ -62,7 +63,7 @@ class UserManagementModel(object):
         if not records:
             return post_error("Data Null", "data recieved for insert operation is null", None)
         try:
-            collections = get_db()[config.USR_MONGO_COLLECTION]
+            collections = get_db()[USR_MONGO_COLLECTION]
             results = collections.insert(records)
             if len(records) != len(results):
                 return post_error("db error", "some of the records were not inserted into db", None)
@@ -80,7 +81,7 @@ class UserManagementModel(object):
     def update_users_by_uid(users):
         try:
             for user in users:
-                collections = get_db()[config.USR_MONGO_COLLECTION]
+                collections = get_db()[USR_MONGO_COLLECTION]
                 user_id = user["userID"]
                 users_data = {}
                 users_data['name'] = user["name"]
@@ -109,7 +110,7 @@ class UserManagementModel(object):
         exclude = {"password": False,"_id":False}
 
         try:
-            collections = get_db()[config.USR_MONGO_COLLECTION]
+            collections = get_db()[USR_MONGO_COLLECTION]
             if not userIDs and not userNames and not roleCodes and not orgCodes :
                 out = collections.find({"is_verified":True},exclude).sort([("_id",-1)]).skip(offset).limit(limit_value)
                 record_count=collections.find({"is_verified":True}).count()
@@ -175,7 +176,7 @@ class UserManagementModel(object):
         if not records:
             return post_error("Data Null", "Data recieved for insert operation is null", None)
         try:
-            collections = get_db()[config.USR_MONGO_COLLECTION]
+            collections = get_db()[USR_MONGO_COLLECTION]
             results = collections.insert(records)
             if len(records) != len(results):
                 return post_error("db error", "some of the records were not inserted into db", None)

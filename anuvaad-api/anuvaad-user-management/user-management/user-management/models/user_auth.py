@@ -10,6 +10,7 @@ import secrets
 from utilities import UserUtils
 import time
 import config
+from config import USR_TOKEN_MONGO_COLLECTION, USR_MONGO_COLLECTION, USR_TEMP_TOKEN_MONGO_COLLECTION
 SECRET_KEY = secrets.token_bytes()
 
 
@@ -19,7 +20,7 @@ class UserAuthenticationModel(object):
     def user_login(userName, password):
 
         try:
-            collections = get_db()[config.USR_TOKEN_MONGO_COLLECTION]
+            collections = get_db()[USR_TOKEN_MONGO_COLLECTION]
             if (UserUtils.get_token(userName)["status"] != True):
                 timeLimit = datetime.datetime.utcnow(
                 ) + datetime.timedelta(hours=24)  # set limit for user
@@ -50,7 +51,7 @@ class UserAuthenticationModel(object):
     def user_logout(userName):
 
         try:
-            collections = get_db()[config.USR_TOKEN_MONGO_COLLECTION]
+            collections = get_db()[USR_TOKEN_MONGO_COLLECTION]
             record = collections.find({"user": userName, "active": True})
             log_info("search on db for user logout :{}".format(
                 record), MODULE_CONTEXT)
@@ -83,7 +84,7 @@ class UserAuthenticationModel(object):
     def forgot_password(userName):
 
         rand_id=UserUtils.generate_user_id()
-        collections = get_db()[config.USR_TEMP_TOKEN_MONGO_COLLECTION]
+        collections = get_db()[USR_TEMP_TOKEN_MONGO_COLLECTION]
         collections.insert({"user": userName, "token": rand_id, "start_time": datetime.datetime.utcnow()})
         result = UserUtils.generate_email_reset_password(userName,rand_id)
         if result is not None:
@@ -95,7 +96,7 @@ class UserAuthenticationModel(object):
 
         hashed = UserUtils.hash_password(password).decode("utf-8")
         try:
-            collections = get_db()[config.USR_MONGO_COLLECTION]
+            collections = get_db()[USR_MONGO_COLLECTION]
             record = collections.find({"userID": userId})
             log_info("search on db for authentication of the userId passed:{}".format(
                 record), MODULE_CONTEXT)
@@ -128,7 +129,7 @@ class UserAuthenticationModel(object):
     @staticmethod
     def verify_user(user_email,user_id):
         try:
-            collections = get_db()[config.USR_MONGO_COLLECTION]
+            collections = get_db()[USR_MONGO_COLLECTION]
             primary_record= collections.find({"userName": user_email,"is_verified": True})
             if primary_record.count()!=0:
                 return post_error("Not allowed","This user already have a verified account",None)
@@ -156,7 +157,7 @@ class UserAuthenticationModel(object):
     @staticmethod
     def activate_deactivate_user(user_email,status):
         try:
-            collections = get_db()[config.USR_MONGO_COLLECTION]
+            collections = get_db()[USR_MONGO_COLLECTION]
             record = collections.find({"userName": user_email,"is_verified":True})
             log_info("search on db for user activation/deactivation :{},record count:{}".format(
                 record,record.count()), MODULE_CONTEXT)

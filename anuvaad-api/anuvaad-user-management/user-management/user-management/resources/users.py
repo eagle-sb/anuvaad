@@ -129,16 +129,12 @@ class OnboardUsers(Resource):
 
     def post(self):
         body = request.get_json()
-        print(body.keys())
-        if 'users' not in body.keys():
-            return post_error("Key error", "users not found", None), 400
+        if 'users' not in body or not body['users']:
+            return post_error("Data Missing", "users not found", None), 400
 
-        if 'users' in body:
-            users = body['users']
-        log_info("data recieved for users on-boarding is:{}".format(
-            users), MODULE_CONTEXT)
-        if not users:
-            return post_error("Data Null", "data received for users on-boarding is empty", None), 400
+        users = body['users']
+        log_info("Data received for user onboarding is:{}".format(users), MODULE_CONTEXT)
+
 
         for user in users:
             validity = UserUtils.validate_user_input_creation(user)

@@ -1,14 +1,13 @@
 from utilities import MODULE_CONTEXT
-from db import DbConnector
+from db import get_db
 from utilities import OrgUtils
 from anuvaad_auditor.loghandler import log_info, log_exception
 from anuvaad_auditor.errorhandler import post_error
 import config
-from config import USR_MONGO_COLLECTION,USR_ORG_MONGO_COLLECTION
+from config import USR_ORG_MONGO_COLLECTION
 import pymongo
 import time
 
-connector=DbConnector()
 
 class UserOrganizationModel(object):
 
@@ -18,7 +17,7 @@ class UserOrganizationModel(object):
     
     def create_organizations(self,orgs):
         try:
-            collections = connector.get_mongo_instance(USR_ORG_MONGO_COLLECTION)     #get_db()[config.USR_ORG_MONGO_COLLECTION]
+            collections = get_db()[USR_ORG_MONGO_COLLECTION]
             active_orgs=[]
             deactive_orgs=[]
             for org in orgs:
@@ -53,7 +52,7 @@ class UserOrganizationModel(object):
         exclude = {"_id":False}
 
         try:
-            collections = connector.get_mongo_instance(USR_ORG_MONGO_COLLECTION)   #get_db()[config.USR_ORG_MONGO_COLLECTION]
+            collections = get_db()[USR_ORG_MONGO_COLLECTION]
             if org_code== None :
                 out = collections.find({"active":True},exclude).sort([("_id",-1)])
             else:

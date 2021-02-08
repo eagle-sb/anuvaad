@@ -16,10 +16,10 @@ class UserLogin(Resource):
 
     def post(self):
         body = request.get_json()
-        if "userName" not in body.keys():
-            return post_error("Key error","userName not found",None), 400
-        if "password" not in body.keys():
-            return post_error("Key error","password not found",None), 400
+        if "userName" not in body or not body["userName"]:
+            return post_error("Data Missing","userName not found",None), 400
+        if "password" not in body or not body["password"]:
+            return post_error("Data Missing","password not found",None), 400
         
         userName = body["userName"]
         password = body["password"]
@@ -51,14 +51,9 @@ class UserLogout(Resource):
 
     def post(self):
         body = request.get_json()
-        if "userName" not in body.keys():
-            return post_error("Key error","userName not found",None), 400
+        if "userName" not in body or not body["userName"]:
+            return post_error("Data Missing","userName not found",None), 400
         userName = body["userName"]
-
-        if not userName:
-            res = CustomResponse(
-                Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
-            return res.getresjson(), 400
 
         try:
             result = UserAuthenticationRepositories.user_logout(userName)
@@ -81,8 +76,8 @@ class AuthTokenSearch(Resource):
 
     def post(self):
         body = request.get_json()
-        if "token" not in body.keys():
-            return post_error("Key error","token not found",None), 400
+        if "token" not in body or not body["token"]:
+            return post_error("Data Missing","token not found",None), 400
         token = body["token"]
 
         if len(token.split('.')) ==3:
@@ -114,11 +109,10 @@ class ForgotPassword(Resource):
         
     def post(self):
         body = request.get_json()
-        if "userName" not in body.keys():
-            return post_error("Key error","userName not found",None), 400
+        if "userName" not in body or not body["userName"]:
+            return post_error("Data Missing","userName not found",None), 400
         userName = body["userName"]
-        if not userName:
-            return post_error("Data null","userName received is empty",None), 400
+        
         validity = UserUtils.validate_username(userName)
         log_info("Username/email is validated for generating reset password notification:{}".format(validity), MODULE_CONTEXT)
         if validity is not None:
@@ -147,10 +141,10 @@ class ResetPassword(Resource):
     def post(self):
         
         body = request.get_json()
-        if "userName" not in body.keys():
-            return post_error("Key error","userName not found",None), 400
-        if "password" not in body.keys():
-            return post_error("Key error","Password not found",None), 400
+        if "userName" not in body or not body["userName"]:
+            return post_error("Data Missing","userName not found",None), 400
+        if "password" not in body or not body["password"]:
+            return post_error("Data Missing","Password not found",None), 400
 
         userId=request.headers["x-user-id"]
         userName = body["userName"]
@@ -159,10 +153,7 @@ class ResetPassword(Resource):
 
         if not userId:
             return post_error("userId missing","userId is mandatory",None), 400
-        if not userName:
-            return post_error("Username missing", "Username field cannot be empty", None), 400
-        if not password:
-            return post_error("Password missing", "Password field cannot be empty", None), 400
+        
         validity = UserUtils.validate_username(userName)
         log_info("Username/email is validated for resetting password:{}".format(validity), MODULE_CONTEXT)
         pwd_validity=UserUtils.validate_password(password)
@@ -194,17 +185,12 @@ class VerifyUser(Resource):
 
     def post(self):
         body = request.get_json()
-        if "userName" not in body.keys():
-            return post_error("Key error","userName not found",None), 400
-        if "userID" not in body.keys():
-            return post_error("Key error","userID not found",None), 400
+        if "userName" not in body or not body["userName"]:
+            return post_error("Data Missing","userName not found",None), 400
+        if "userID" not in body or not body["userID"]:
+            return post_error("Data Missing","userID not found",None), 400
         user_email = body["userName"]
         user_id = body["userID"]
-
-        if not user_email:
-            return post_error("userName missing", "userName field cannot be empty", None), 400
-        if not user_id:
-            return post_error("userID missing", "userID field cannot be empty", None), 400
        
         try:
             result = UserAuthenticationRepositories.verify_user(user_email,user_id)
@@ -225,10 +211,10 @@ class ActivateDeactivateUser(Resource):
 
     def post(self):
         body = request.get_json()
-        if "userName" not in body.keys():
-            return post_error("Key error","userName not found",None), 400
-        if "is_active" not in body.keys():
-            return post_error("Key error","is_active not found",None), 400
+        if "userName" not in body or not body["userName"]:
+            return post_error("Data Missing","userName not found",None), 400
+        if "is_active" not in body or not body["is_active"]:
+            return post_error("Data Missing","is_active not found",None), 400
         user_email = body["userName"]
         status= body["is_active"]
 
@@ -236,9 +222,6 @@ class ActivateDeactivateUser(Resource):
             print("not bool")
             return post_error("Invalid format", "status should be bool", None), 400
         
-        if not user_email:
-            return post_error("userName missing", "userName field cannot be empty", None), 400
-       
         try:
             result = UserAuthenticationRepositories.activate_deactivate_user(user_email,status)
             log_info("Deactivate user api call result:{}".format(result),MODULE_CONTEXT)
