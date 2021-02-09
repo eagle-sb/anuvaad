@@ -29,6 +29,7 @@ import UserReport from './ui/containers/web/AdminPanel/UserReport';
 import DocumentStats from './ui/containers/web/AdminPanel/DocumentStats';
 import OrganizationList from './ui/containers/web/AdminPanel/OrganizatonList';
 import AddOrganization from "./ui/containers/web/AdminPanel/AddOrganization";
+import DocumentUpload from './ui/containers/web/ParallelDocument/DocumentUpload';
 
 
 const PrivateRoute = ({ headerAttribute: headerAttribute, component: Component, userRoles, title, drawer, showLogo, forDemo, dontShowLoader, dontShowHeader, currentMenu, authenticate, ...rest }) => (
@@ -147,6 +148,16 @@ class AppRoutes extends React.Component {
               userRoles={["TRANSLATOR"]}
               component={FileUpload}
               title="Start Translate"
+              authenticate={this.authenticateUser}
+              currentMenu="texttranslate"
+              dontShowHeader={true}
+            />
+
+<PrivateRoute
+              path={`${process.env.PUBLIC_URL}/parallel-upload`}
+              userRoles={["TRANSLATOR"]}
+              component={DocumentUpload}
+              title="Parallel file upload"
               authenticate={this.authenticateUser}
               currentMenu="texttranslate"
               dontShowHeader={true}
