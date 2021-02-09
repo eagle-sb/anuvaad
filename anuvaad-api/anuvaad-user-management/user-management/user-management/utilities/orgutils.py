@@ -33,17 +33,15 @@ class OrgUtils:
 
     @staticmethod
     def validate_org_upsert(i,org):
-        if "code" not in org.keys():
-            return post_error("Key error", "code not found", None)
-        if "active" not in org.keys():
-            return post_error("Key error", "active not found", None)
+        if "code" not in org or not org["code"]:
+            return post_error("Data Missing", "code not found", None)
+        if "active" not in org:
+            return post_error("Data Missing", "active not found", None)
         code = str(org["code"]).upper()
         active = org["active"]
             
-        if not code:
-            return post_error("Data missing", "code is mandatory field this cannot be null for record {}".format(str(i+1)), None)
-        if active==None:
-            return post_error("Data missing", "active status is mandatory that cannot be null for record {}".format(str(i+1)), None)
+        if not isinstance(active,bool):
+            return post_error("Invalid format", "active should be bool", None), 400
         if active == False:
             try:
                 collections = get_db()[USR_MONGO_COLLECTION]

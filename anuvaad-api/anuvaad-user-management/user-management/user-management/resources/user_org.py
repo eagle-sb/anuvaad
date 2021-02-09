@@ -15,16 +15,13 @@ class CreateOrganization(Resource):
 
     def post(self):
         body = request.get_json()
-        if 'organizations' not in body.keys():
-            return post_error("Key error", "organizations not found", None), 400
+        if 'organizations' not in body or not body['organizations']:
+            return post_error("Data Missing", "organizations not found", None), 400
 
-        if 'organizations' in body:
-            organizations = body['organizations']
+        organizations = body['organizations']
         log_info("data recieved for organization creation is:{}".format(
             organizations), MODULE_CONTEXT)
-        if not organizations:
-            return post_error("Data Null", "data received for org creation is empty", None), 400
-
+       
         orgcodes=[]
         for i,org in enumerate(organizations):
             validity = OrgUtils.validate_org_upsert(i,org)

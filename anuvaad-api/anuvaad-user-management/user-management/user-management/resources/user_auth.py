@@ -213,13 +213,12 @@ class ActivateDeactivateUser(Resource):
         body = request.get_json()
         if "userName" not in body or not body["userName"]:
             return post_error("Data Missing","userName not found",None), 400
-        if "is_active" not in body or not body["is_active"]:
+        if "is_active" not in body:
             return post_error("Data Missing","is_active not found",None), 400
         user_email = body["userName"]
         status= body["is_active"]
 
         if not isinstance(status,bool):
-            print("not bool")
             return post_error("Invalid format", "status should be bool", None), 400
         
         try:

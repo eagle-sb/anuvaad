@@ -10,7 +10,6 @@ from flask import g
 def get_db(): 
     if 'db' not in g:
         log_info("Establishing database connectivity for the current request",MODULE_CONTEXT)
-        print("*************Db Connecting NEW",g)
         client = MongoClient(MONGO_SERVER_HOST)
         g.db = client[MONGO_DB_SCHEMA]
 
