@@ -30,34 +30,35 @@ const TELEMETRY = require('../../../../utils/TelemetryManager')
 const LANG_MODEL = require('../../../../utils/language.model')
 
 const theme = createMuiTheme({
-  overrides: {
-    MuiDropzoneArea: {
-      root: {
-        paddingTop: '15%',
-        top: "auto",
-        width: '98%',
-        minHeight: '320px',
-        height: "65%",
-        borderColor: '#1C9AB7',
-        backgroundColor: '#F5F9FA',
-        border: '1px dashed #1C9AB7',
-        fontColor: '#1C9AB7',
-        marginTop: "3%",
-        marginLeft: '1%',
-        "& svg": { color: '#1C9AB7', },
-        "& p": {
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-          overflow: "hidden",
-          fontSize: "19px",
-          color: '#1C9AB7',
-
-        }
-      },
-
+    overrides: {
+      MuiDropzoneArea: {
+        root: {
+          paddingTop: '5%',
+          top: "auto",
+          width: '98%', 
+          minHeight: '220px',
+          height: "45%",
+          borderColor: '#1C9AB7',
+          backgroundColor: '#F5F9FA',
+          border: '1px dashed #1C9AB7',
+          fontColor: '#1C9AB7',
+          marginTop: "3%",
+          marginLeft: '1%',
+          "& svg": { color: '#1C9AB7',marginTop:'-20px' },
+          "& p": {
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            overflow: "hidden",
+            fontSize: "17px",
+            paddingTop:'-50px',
+            color: '#1C9AB7',
+  
+          }
+        },
+  
+      }
     }
-  }
-});
+  });
 
 class PdfUpload extends Component {
   constructor() {
@@ -368,8 +369,8 @@ class PdfUpload extends Component {
           <br />
           <Typography className={classes.typographySubHeader}>{translate("pdf_upload.page.label.uploadMessage")}</Typography>
           <br />
-          <Paper elevation={3} className={classes.paper}>
-            <Grid container spacing={8}>
+          <Paper elevation={3} className={classes.paper} >
+            <Grid container spacing={2} >
 
               <Grid item xs={12} sm={6} lg={6} xl={6}>
                 <MuiThemeProvider theme={theme}>
@@ -411,7 +412,7 @@ class PdfUpload extends Component {
 
               </Grid>
 
-              <Grid item xs={12} sm={6} lg={6} xl={6} style={{ paddingTop: "25px" }}>
+              <Grid item xs={12} sm={6} lg={6} xl={6}>
                 <Button
                   id="back"
                   variant="contained" color="primary"
@@ -427,7 +428,7 @@ class PdfUpload extends Component {
                   {translate("common.page.button.back")}
                 </Button>
               </Grid>
-              <Grid item xs={6} sm={6} lg={6} xl={6} style={{ paddingTop: "25px" }}>
+              <Grid item xs={6} sm={6} lg={6} xl={6}>
                 <Grid item xs={12} sm={12} lg={12} xl={12}>
                   <Button
                     id="upload"
