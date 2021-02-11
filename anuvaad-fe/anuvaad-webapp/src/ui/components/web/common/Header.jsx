@@ -19,7 +19,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
-import logo from '../../../../assets/suvas-logo.png';
+// import logo from '../../../../assets/suvas-logo.png';
 import anuvaadLogo from '../../../../assets/AnuvaadLogo.svg';
 import { translate } from '../../../../../src/assets/localisation';
 import themeAnuvaad from "../../../theme/web/theme-anuvaad";
@@ -151,7 +151,7 @@ class Header extends React.Component {
                 </IconButton>
               }
               <div style={{ borderLeft: "1px solid #D6D6D6", height: "40px", marginRight: "10px" }}></div>
-              {forDemo &&
+              {/* {forDemo &&
                 <img src={logo}
                   alt=""
                   style={{
@@ -159,7 +159,7 @@ class Header extends React.Component {
                     display: 'block',
                     marginLeft: '1%'
                   }} />
-              }
+              } */}
 
               <Typography variant="h5" color="inherit" className={forDemo ? classes.felxDemo : classes.flex}>
                 {title}
@@ -194,12 +194,12 @@ class Header extends React.Component {
                   <ListItem>
                     <ListItemText
                       disableTypography
-                      style={{ textAlign: "left", marginLeft: "6%" }}
-                      primary={
-                        <img src={logo}
-                          width={100}
-                          alt="" />
-                      }
+                      style={{ textAlign: "left", marginLeft: "6%", height:'22px' }}
+                      // primary={
+                      //   <img src={logo}
+                      //     width={100}
+                      //     alt="" />
+                      // }
                     />
                   </ListItem>
 

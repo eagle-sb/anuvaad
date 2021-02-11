@@ -134,13 +134,13 @@ class Login extends React.Component {
     return (
       <MuiThemeProvider theme={ThemeDefault} >
 
-        <div style={{ height: window.innerHeight, overflow: 'hidden' }}>
-          <Grid container spacing={8}>
+        <div style={{ height: "100vh", overflow: 'hidden' }}>
+          <Grid container spacing={8}style={{ height: "110vh" }}>
             <Grid item xs={12} sm={4} lg={5} xl={5} style={{ paddingRight: "0px" }}>
-              <img src="logo.png" width="85%" height="80%" style={{paddingLeft:'10%'}} alt="" style={{ backgroundRepeat: 'repeat-y',marginLeft:'7%', marginTop:'7%' }} />
+              <img src="bd.png" width="85%" height="50%" style={{paddingLeft:'10%'}} alt="" style={{ backgroundRepeat: 'repeat-y',marginLeft:'10%', marginTop:'30%' }} />
             </Grid>
             <Grid item xs={12} sm={8} lg={7} xl={7} className={classes.signUpPaper} >
-              <Typography align='center' variant='h4' className={classes.typographyHeader} style={{ marginTop: '240px' }}>Welcome to SUVAS</Typography>
+              <Typography align='center' variant='h4' className={classes.typographyHeader} style={{ marginTop: '240px' }}>Welcome</Typography>
 
               <FormControl align='center' fullWidth >
                 <TextField value={this.state.email} id="email" type="email-username" placeholder={translate('common.page.placeholder.emailUsername')}
