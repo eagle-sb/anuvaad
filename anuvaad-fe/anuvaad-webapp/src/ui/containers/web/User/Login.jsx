@@ -10,7 +10,7 @@ import { withStyles, Typography } from "@material-ui/core";
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Link from '@material-ui/core/Link';
-
+import Hidden from '@material-ui/core/Hidden';
 import ThemeDefault from "../../../theme/web/theme-default";
 import LoginStyles from "../../../styles/web/LoginStyles";
 import history from "../../../../web.history";
@@ -135,11 +135,13 @@ class Login extends React.Component {
       <MuiThemeProvider theme={ThemeDefault} >
 
         <div style={{ height: "100vh", overflow: 'hidden' }}>
-          <Grid container spacing={8}style={{ height: "110vh" }}>
-            <Grid item xs={12} sm={4} lg={5} xl={5} style={{ paddingRight: "0px" }}>
-              <img src="bd.png" width="85%" height="50%" style={{paddingLeft:'10%'}} alt="" style={{ backgroundRepeat: 'repeat-y',marginLeft:'10%', marginTop:'30%' }} />
+          <Grid container spacing={8}style={{ height: "108vh" }}>
+            <Grid item xs={false} sm={5} lg={5} xl={5} style={{ paddingRight: "0px" }}>
+            <Hidden only="xs">
+              <img src="bg-page-logo.png" width="100%" height="100%" style={{paddingLeft:'0%'}} alt="" style={{ backgroundRepeat: 'repeat-y',marginLeft:'0%', marginTop:'0%' }} />
+            </Hidden>
             </Grid>
-            <Grid item xs={12} sm={8} lg={7} xl={7} className={classes.signUpPaper} >
+            <Grid item xs={12} sm={7} lg={7} xl={7} className={classes.signUpPaper} >
               <Typography align='center' variant='h4' className={classes.typographyHeader} style={{ marginTop: '240px' }}>Welcome</Typography>
 
               <FormControl align='center' fullWidth >

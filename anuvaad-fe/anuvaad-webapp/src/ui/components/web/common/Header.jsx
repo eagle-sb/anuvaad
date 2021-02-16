@@ -19,8 +19,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
-// import logo from '../../../../assets/suvas-logo.png';
-import anuvaadLogo from '../../../../assets/AnuvaadLogo.svg';
+// import logo from '../../../../../public/inner-logo.png'
 import { translate } from '../../../../../src/assets/localisation';
 import themeAnuvaad from "../../../theme/web/theme-anuvaad";
 
@@ -191,15 +190,15 @@ class Header extends React.Component {
                 }}
               >
                 <List>
-                  <ListItem>
+                <ListItem>
                     <ListItemText
                       disableTypography
-                      style={{ textAlign: "left", marginLeft: "6%", height:'22px' }}
-                      // primary={
-                      //   <img src={logo}
-                      //     width={100}
-                      //     alt="" />
-                      // }
+                      style={{ textAlign: "left", marginLeft: "1%",marginTop:'-1%',marginBottom:'-6%' }}
+                      primary={
+                        <img src={"inner-logo.png"}
+                          width={160}
+                          alt="" />
+                      }
                     />
                   </ListItem>
 
