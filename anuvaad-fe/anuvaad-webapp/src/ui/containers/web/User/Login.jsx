@@ -142,7 +142,7 @@ class Login extends React.Component {
             </Hidden>
             </Grid>
             <Grid item xs={12} sm={7} lg={7} xl={7} className={classes.signUpPaper} >
-              <Typography align='center' variant='h4' className={classes.typographyHeader} style={{ marginTop: '240px' }}>Welcome</Typography>
+              <Typography align='center' variant='h4' className={classes.typographyHeader} style={{ marginTop: '240px' }}>Welcome  to Amarvasha</Typography>
 
               <FormControl align='center' fullWidth >
                 <TextField value={this.state.email} id="email" type="email-username" placeholder={translate('common.page.placeholder.emailUsername')}
