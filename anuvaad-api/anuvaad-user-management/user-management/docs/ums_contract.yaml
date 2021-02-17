@@ -1,7 +1,7 @@
 swagger: '2.0'
 info:
   version: 1.0.0
-  title: Anuvaad User Management
+  title: Anuvaad User Management -API Contract
   description: >-
     A python based microservice for user management. This service will expose
     REST APIs to maintain user and admin functionalities.
@@ -9,14 +9,15 @@ info:
     name: Jainy Joy
     email: jainy.joy@tarento.com
 schemes:
-  - http
   - https
-host: localhost
-basePath: /anuvaad/user-mgmt
+host: 'auth.anuvaad.org'
+basePath: '/anuvaad/user-mgmt'
 consumes:
   - application/json
 produces:
   - application/json
+  
+  
 paths:
   /v1/users/create:
     post:
@@ -30,7 +31,7 @@ paths:
           schema:
             $ref: '#/definitions/CreateUserRequest'
       tags:
-        - Create User
+        - Create Users
       responses:
         '200':
           description: New users were created successfully.
@@ -44,6 +45,7 @@ paths:
           description: On system level errors causing failure in user account creation.
           schema:
             $ref: '#/definitions/Error'
+            
   /v1/users/onboard-users:
     post:
       summary: REST API to onboard new users.
@@ -124,6 +126,7 @@ paths:
           description: On system level errors causing failure in user activation.
           schema:
             $ref: '#/definitions/Error'
+            
   /v1/users/update:
     post:
       summary: REST API to update users.
@@ -152,6 +155,7 @@ paths:
           description: On system level errors causing failure in user account updation.
           schema:
             $ref: '#/definitions/Error'
+            
   /v1/users/search:
     post:
       summary: REST API to search users.
@@ -197,6 +201,7 @@ paths:
           description: On system level errors causing failure in auth token search.
           schema:
             $ref: '#/definitions/Error'
+            
   /v1/users/login:
     post:
       summary: REST API to login.
@@ -223,6 +228,7 @@ paths:
           description: On system level errors causing failure in user login.
           schema:
             $ref: '#/definitions/Error'
+            
   /v1/users/logout:
     post:
       summary: REST API to logout.
@@ -276,6 +282,7 @@ paths:
           description: On system level errors causing failure in user notification.
           schema:
             $ref: '#/definitions/Error'
+            
   /v1/users/reset-password:
     post:
       summary: REST API for resetting password.
@@ -302,6 +309,7 @@ paths:
           description: On system level errors causing failure in password resetting.
           schema:
             $ref: '#/definitions/Error'
+            
   /v1/org/upsert:
     post:
       summary: REST API to create and update organizations.
@@ -328,6 +336,7 @@ paths:
           description: On system level errors causing failure in org upsert.
           schema:
             $ref: '#/definitions/Error'
+            
   /v1/org/search:
     get:
       summary: REST API to search organizations.
@@ -386,6 +395,8 @@ definitions:
       orgID:
         type: string
         description: organization Id of the user
+        
+        
   Role:
     type: object
     properties:
@@ -404,6 +415,8 @@ definitions:
       token:
         type: string
         description: auth token for the logged in user
+        
+        
   Org:
     type: object
     properties: 
@@ -438,7 +451,6 @@ definitions:
         description: count of data items
     
   
-  
   CreateUserRequest:
     type: object
     properties:
@@ -449,6 +461,7 @@ definitions:
           $ref: '#/definitions/User'
         description: Details of the users to be registered.
 
+
   OnboardUserRequest:
     type: object
     properties:
@@ -458,6 +471,8 @@ definitions:
           type: object
           $ref: '#/definitions/User'
         description: Details of the users to be registered.
+        
+        
   ActivateUserRequest:
     type: object
     properties:
@@ -467,6 +482,7 @@ definitions:
       is_active:
         type: boolean
         description: active status(true or false) of the user.
+
 
   UpdateUserRequest:
     type: object
@@ -493,6 +509,7 @@ definitions:
               description: organization Id of the user
         description: user details to update
 
+
   SearchUserRequest:
     type: object
     properties:
@@ -517,6 +534,8 @@ definitions:
       limit:
         type: integer
         description: limit count
+        
+        
   SearchUserResponse:
     type: object
     properties:
@@ -552,6 +571,8 @@ definitions:
         type: string
         description: Password of the user
     description: Details of the user to be logged in.
+    
+    
   UserLoginResponse:
     type: object
     properties:
@@ -575,6 +596,8 @@ definitions:
       count:
         type: integer
         description: count of data items
+        
+        
   UserLogoutRequest:
     type: object
     properties:
@@ -582,6 +605,7 @@ definitions:
         type: string
         description: Unique username of the user
     description: Details of the user to be logged out.
+
 
   AuthTokenSearchRequest:
     type: object
@@ -591,6 +615,7 @@ definitions:
         description: Unique auth token of verified user
     description: Request for user records.
 
+
   ForgotPasswordRequest:
     type: object
     properties:
@@ -598,6 +623,7 @@ definitions:
         type: string
         description: Unique username of the user.
     description: Request for user records.
+    
 
   ResetPasswordRequest:
     type: object
@@ -610,6 +636,7 @@ definitions:
         description: password to be updated
     description: Request for user records.
 
+
   VerifyUserRequest:
     type: object
     properties:
@@ -620,6 +647,7 @@ definitions:
         type: string
         description: unique userid value.
   
+  
   UpsertOrgRequest:
     type: object
     properties:
@@ -629,6 +657,7 @@ definitions:
           type: object
           $ref: '#/definitions/Org'
         description: Details of the orgs to be upserted.
+  
   
   SearchOrgrResponse:
     type: object
