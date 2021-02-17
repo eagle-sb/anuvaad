@@ -2,7 +2,7 @@ from flask_restful import fields, marshal_with, reqparse, Resource
 from repositories import UserAuthenticationRepositories
 from models import CustomResponse, Status
 from utilities import UserUtils
-from utilities import MODULE_CONTEXT
+from utilities import MODULE_CONTEXT,AppContext
 import ast
 from anuvaad_auditor.loghandler import log_info, log_exception
 from flask import request
@@ -24,14 +24,18 @@ class UserLogin(Resource):
         userName = body["userName"]
         password = body["password"]
 
+        AppContext.adduserName(userName)
+        log_info("Request for login",MODULE_CONTEXT)
         validity=UserUtils.validate_user_login_input(userName, password)
-        log_info("User validation:{}".format(validity),MODULE_CONTEXT)
+        
         if validity is not None:
                 return validity, 400
-
+        AppContext.adduserName(userName)
+        log_info("Login credentials validated ",MODULE_CONTEXT)
         try:
             result = UserAuthenticationRepositories.user_login(
                 userName, password)
+            AppContext.adduserName(userName)
             log_info("User login result:{}".format(result),MODULE_CONTEXT)
             if result == False:
                 res = CustomResponse(
@@ -41,6 +45,7 @@ class UserLogin(Resource):
             res = CustomResponse(Status.SUCCESS_USR_LOGIN.value, result)
             return res.getresjson(), 200
         except Exception as e:
+            AppContext.adduserName(userName)
             log_exception("Exception while  user login: " +
                       str(e), MODULE_CONTEXT, e)
             return post_error("Exception occurred", "Exception while performing user login", None), 400
@@ -55,8 +60,11 @@ class UserLogout(Resource):
             return post_error("Data Missing","userName not found",None), 400
         userName = body["userName"]
 
+        AppContext.adduserName(userName)
+        log_info("Request for logout",MODULE_CONTEXT)
         try:
             result = UserAuthenticationRepositories.user_logout(userName)
+            AppContext.adduserName(userName)
             log_info("User logout result:{}".format(result),MODULE_CONTEXT)
             if result == False:
                 res = CustomResponse(
@@ -76,10 +84,11 @@ class AuthTokenSearch(Resource):
 
     def post(self):
         body = request.get_json()
+        
         if "token" not in body or not body["token"]:
             return post_error("Data Missing","token not found",None), 400
         token = body["token"]
-
+        log_info("Request for token search",MODULE_CONTEXT)
         if len(token.split('.')) ==3:
             temp = False
             validity=UserUtils.token_validation(token)
@@ -112,7 +121,9 @@ class ForgotPassword(Resource):
         if "userName" not in body or not body["userName"]:
             return post_error("Data Missing","userName not found",None), 400
         userName = body["userName"]
-        
+
+        AppContext.adduserName(userName)
+        log_info("Request for reset password link",MODULE_CONTEXT)
         validity = UserUtils.validate_username(userName)
         log_info("Username/email is validated for generating reset password notification:{}".format(validity), MODULE_CONTEXT)
         if validity is not None:
@@ -150,7 +161,9 @@ class ResetPassword(Resource):
         userName = body["userName"]
         password = body["password"]
         
-
+        AppContext.adduserName(userName)
+        AppContext.addUserID(userId)
+        log_info("Request for password resetting",MODULE_CONTEXT)
         if not userId:
             return post_error("userId missing","userId is mandatory",None), 400
         
@@ -191,7 +204,10 @@ class VerifyUser(Resource):
             return post_error("Data Missing","userID not found",None), 400
         user_email = body["userName"]
         user_id = body["userID"]
-       
+
+        AppContext.adduserName(user_email)
+        AppContext.addUserID(user_id)
+        log_info("Request for password resetting",MODULE_CONTEXT)
         try:
             result = UserAuthenticationRepositories.verify_user(user_email,user_id)
             log_info("Activate user api call result:{}".format(result),MODULE_CONTEXT)
@@ -220,7 +236,9 @@ class ActivateDeactivateUser(Resource):
 
         if not isinstance(status,bool):
             return post_error("Invalid format", "status should be bool", None), 400
-        
+
+        AppContext.adduserName(user_email)
+        log_info("Request for updating user activation status",MODULE_CONTEXT)
         try:
             result = UserAuthenticationRepositories.activate_deactivate_user(user_email,status)
             log_info("Deactivate user api call result:{}".format(result),MODULE_CONTEXT)

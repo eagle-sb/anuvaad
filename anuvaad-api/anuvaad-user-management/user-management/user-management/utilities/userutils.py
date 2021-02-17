@@ -273,15 +273,12 @@ class UserUtils:
             collections = get_db()[USR_MONGO_COLLECTION]
             result = collections.find({'userName': username,"is_verified":True}, {
                 'password': 1, '_id': 0,'is_active':1})
-            log_info("searching for password of the requested user:{}".format(
-                result), MODULE_CONTEXT)
             if result.count() == 0:
                 return post_error("Not verified", "User account is not verified", None)
             for value in result:
                 if value["is_active"]== False:
                     return post_error("Not active", "This operation is not allowed for an inactive user", None)
                 password_in_db = value["password"].encode("utf-8")
-                log_info("password stored on db is retrieved", MODULE_CONTEXT)
                 try:
                     if bcrypt.checkpw(password.encode("utf-8"), password_in_db)== False:
                         return post_error("Invalid Credentials", "Incorrect username or password", None)
