@@ -302,7 +302,57 @@ paths:
           description: On system level errors causing failure in password resetting.
           schema:
             $ref: '#/definitions/Error'
-
+  /v1/org/upsert:
+    post:
+      summary: REST API to create and update organizations.
+      description: This API helps to create and update organizations.
+      parameters:
+        - name: request
+          in: body
+          required: true
+          description: The org details to create/update.
+          schema:
+            $ref: '#/definitions/UpsertOrgRequest'
+      tags:
+        - Upsert Org
+      responses:
+        '200':
+          description: Request Successful.
+          schema:
+            $ref: '#/definitions/Status'
+        '400':
+          description: On input errors causing failure inorg upsert.
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: On system level errors causing failure in org upsert.
+          schema:
+            $ref: '#/definitions/Error'
+  /v1/org/search:
+    get:
+      summary: REST API to search organizations.
+      description: This API helps to search for organizations.
+      parameters:
+        - name: org-code
+          type: string
+          in: query
+          required: false
+          description: code of the org to search
+      tags:
+        - Search Org
+      responses:
+        '200':
+          description: Organizations were searched successfully.
+          schema:
+            $ref: '#/definitions/SearchOrgrResponse'
+        '400':
+          description: On input errors causing failure in org search.
+          schema:
+            $ref: '#/definitions/Error'
+        '500':
+          description: On system level errors causing failure in org search.
+          schema:
+            $ref: '#/definitions/Error'
 
 definitions:
   User:
@@ -354,7 +404,15 @@ definitions:
       token:
         type: string
         description: auth token for the logged in user
-      
+  Org:
+    type: object
+    properties: 
+      code:
+        type: string
+      active:
+        type: boolean
+      description:
+        type: string
   
         
   Status:
@@ -561,6 +619,40 @@ definitions:
       userID:
         type: string
         description: unique userid value.
+  
+  UpsertOrgRequest:
+    type: object
+    properties:
+      organizations:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/Org'
+        description: Details of the orgs to be upserted.
+  
+  SearchOrgrResponse:
+    type: object
+    properties:
+      ok:
+        type: string
+        description: true or false 
+      http:
+        type: object
+        properties:
+          status:
+            type: string
+            description: status code of the request
+      why:
+        type: string
+        description: response message
+      data:
+        type: array
+        items:
+          type: object
+          $ref: '#/definitions/Org'
+      count:
+        type: integer
+        description: count of data items
 
   Error:
     type: object
