@@ -1,17 +1,14 @@
 import React from "react";
-import { Paper, Divider } from "@material-ui/core";
+import { Paper, Divider, Button } from "@material-ui/core";
 import TextField from '@material-ui/core/TextField';
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import sentenceHighlight from '../../../../utils/SentenceHighlight'
-import DownloadJSON from '../../../../flux/actions/apis/download/download_json';
 import DownloadFile from '../../../../flux/actions/apis/download/download_zip_file';
 import { Textfit } from "react-textfit";
 import { highlightSentence, clearHighlighBlock, cancelMergeSentence } from '../../../../flux/actions/users/translator_actions';
-import Popper from '@material-ui/core/Popper';
-import SENTENCE_ACTION from '../DocumentEditor/SentenceActions'
-import { confscore } from '../../../../utils/OcrConfScore'
-
+import SENTENCE_ACTION from '../DocumentEditor/SentenceActions';
+import SaveEditedWord from './SaveEditedWord';
+import Modal from '@material-ui/core/Modal';
 const PAGE_OPS = require("../../../../utils/page.operations");
 const TELEMETRY = require('../../../../utils/TelemetryManager')
 
@@ -22,9 +19,6 @@ const styles = {
         borderRadius: 10,
         border: 0,
         color: 'green',
-    },
-    resize: {
-        fontSize: '600'
     }
 }
 
@@ -36,7 +30,7 @@ class OcrPageCard extends React.Component {
             value: '',
             text: '',
             url: '',
-            event: false
+            isOpen: false
         };
         this.handleTextChange = this.handleTextChange.bind(this);
         this.action = null
@@ -72,13 +66,9 @@ class OcrPageCard extends React.Component {
      * render Sentences span
      */
 
-    clearEvent = () => {
-        this.setState({ event: false })
-    }
     renderTextSpan = (word, line, region) => {
         return (
             <div
-                // contentEditable={this.action === word.identifier}
                 style={{
                     position: "absolute",
                     zIndex: this.action === word.identifier ? 100000 : 2,
@@ -92,31 +82,34 @@ class OcrPageCard extends React.Component {
                     width: 'auto'
                 }}
                 key={word.identifier}
-            // onDoubleClick={(e) => this.handleSelectedSentenceId(e, word)}
-            // onBlur={this.clearEvent}
+                onDoubleClick={() => this.setModalState(word)}
             >
 
                 <Textfit mode="single" min={1} max={region.avg_size} >
                     {word.text}
                 </Textfit>
-                {/* {this.state.event &&
-                    this.showPopper(word)} */}
-
             </div>
         )
     }
 
-    showPopper = (word) => {
-        return (
-            <Popper style={{ zIndex: 3 }} id={word.identifier} open={true} anchorEl={this.state.event}>
-                <div style={{ border: '1px solid black' }}>The content of the Popper.</div>
-                {/* <TextField variant="outlined" value={word.text}>
-                    {word.text}
-                </TextField> */}
-            </Popper>
-        );
+    setModalState = (word) => {
+        this.setState({ isOpen: true, text: word.text })
     }
 
+    renderModal = () => {
+        return (
+            <Modal
+                open={this.state.isOpen}
+                onClose={this.handleClose}
+            >
+                <SaveEditedWord handleClose={this.handleClose} text={this.state.text} />
+            </Modal>
+        )
+    }
+
+    handleClose = () => {
+        this.setState({ text: '', isOpen: false })
+    }
     /**
      * sentence change
      */
@@ -270,12 +263,7 @@ class OcrPageCard extends React.Component {
                     <Paper elevation={2} style={{ position: 'relative', width: width, height: height }}>
                         {page['regions'].map(region => this.renderChild(region))}
                         {
-                            // page['regions'].map(region => {
-                            //     if (region.class === 'BGIMAGE') {
-                            // return 
                             this.renderImage(image)
-                            //     }
-                            // })
                         }
                     </Paper>
                     <Divider />
@@ -289,7 +277,13 @@ class OcrPageCard extends React.Component {
 
     render() {
         return (
-            <span style={{ zoom: `${this.props.zoomPercent}%` }}>{this.renderPage(this.props.page, this.props.image)}</span>
+            <>
+                <span style={{ zoom: `${this.props.zoomPercent}%` }}>{this.renderPage(this.props.page, this.props.image)}</span>
+                {
+                    this.state.isOpen &&
+                    this.renderModal()
+                }
+            </>
         )
     }
 
