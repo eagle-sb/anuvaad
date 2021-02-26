@@ -45,47 +45,67 @@ class OcrPageCard extends React.Component {
         }
     }
 
-    /**
-     * render Sentences
-     */
+    renderChild = (region) => {
+        let width = (region.boundingBox.vertices[1].x - region.boundingBox.vertices[0].x) + 'px'
+        let height = (region.boundingBox.vertices[2].y - region.boundingBox.vertices[0].y) + 'px'
+        let top = (region.boundingBox.vertices[0].y) + 'px'
+        let left = (region.boundingBox.vertices[0].x) + 'px'
+        return (
+            <div style={{
+                position: "absolute",
+                height: height,
+                width: width,
+                top: top,
+                left: left,
+                zIndex: 2,
+            }}
+                id={region.identifier}
+                key={region.identifier}
+            >
+
+                {region['children'] &&
+                    region['children'].map(line => this.renderText(line, region))
+                }
+            </div>
+        );
+    }
+
     renderText = (line, region) => {
         return (
-            <div
-                key={line.identifier}
+            <div style={{
+                position: "absolute",
+                zIndex: 2,
+                width: line.boundingBox.vertices[1].x - line.boundingBox.vertices[0].x + 'px',
+                height: line.boundingBox.vertices[2].y - line.boundingBox.vertices[0].y + 'px',
+                top: line.boundingBox.vertices[0].y - region.boundingBox.vertices[0].y + 'px',
+                left: line.boundingBox.vertices[0].x - region.boundingBox.vertices[0].x + 'px',
+            }}
+                key={region.identifier}
             >
                 {
-                    line['children'].map(word => {
-                        return this.renderTextSpan(word, line, region)
-                    })
 
+                    this.renderTextSpan(line, region)
                 }
             </div>
         )
     }
-    /**
-     * render Sentences span
-     */
 
     renderTextSpan = (word, line, region) => {
         return (
             <div
                 style={{
-                    position: "absolute",
-                    zIndex: this.action === word.identifier ? 100000 : 2,
-                    color: word.conf < this.props.percent ? 'red' : 'black',
+                    zIndex: 2,
+                    color: 'black',
                     padding: '0%',
-                    fontSize: parseInt(Math.ceil(region.avg_size + 1)) + 'px',
-                    fontStyle: region.font.family,
-                    top: line.boundingBox.vertices[0].y + 'px',
-                    left: word.boundingBox.vertices[0].x - line.boundingBox.vertices[0].x + 'px',
-                    maxWidth: word.boundingBox.vertices[1].x - word.boundingBox.vertices[0].x + 'px',
-                    width: 'auto'
+                    fontSize: region.avg_size + 'px',
+                    width: word.boundingBox.vertices[1].x - word.boundingBox.vertices[0].x + 'px',
+                    top: word.boundingBox.vertices[0].y + 'px',
+                    left: word.boundingBox.vertices[0].x + 'px',
                 }}
                 key={word.identifier}
                 onDoubleClick={() => this.setModalState(word)}
             >
-
-                <Textfit mode="single" min={1} max={region.avg_size} >
+                <Textfit mode="single" style={{ width: '100%' }} min={1} max={parseInt(Math.ceil(region.avg_size * 3))} >
                     {word.text}
                 </Textfit>
             </div>
@@ -165,31 +185,6 @@ class OcrPageCard extends React.Component {
             behavior: "smooth",
             block: "center"
         });
-    }
-
-
-    renderChild = (region) => {
-        let width = (region.boundingBox.vertices[1].x - region.boundingBox.vertices[0].x) + 'px'
-        let height = (region.boundingBox.vertices[2].y - region.boundingBox.vertices[0].y) + 'px'
-        let top = region.boundingBox.vertices[0].y + 'px'
-        let left = (region.boundingBox.vertices[0].x) + 'px'
-        return (
-            <div style={{
-                position: "absolute",
-                height: height,
-                width: width,
-                left: left,
-                zIndex: 2,
-            }}
-                id={region.identifier}
-                key={region.identifier}
-            >
-
-                {region['children'] &&
-                    region['children'].map(line => this.renderText(line, region))
-                }
-            </div>
-        );
     }
 
     getBGImage = (image) => {
