@@ -90,7 +90,7 @@ class OcrPageCard extends React.Component {
         )
     }
 
-    renderTextSpan = (word, line, region) => {
+    renderTextSpan = (word, region) => {
         return (
             <div
                 style={{
