@@ -137,8 +137,7 @@ class UserUtils:
             collections = get_db()[document] 
             result = collections.find(
                 {"token": token_received}, {"_id": 0, "user": 1})
-            log_info("search result for username in usertokens db matching the recieved token:{}".format(
-                result), MODULE_CONTEXT)
+            log_info("search result for username in usertokens db matching the recieved token:{}".format(result), MODULE_CONTEXT)
             for record in result:
                 username = record["user"]
         

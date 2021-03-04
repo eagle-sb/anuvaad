@@ -1,5 +1,5 @@
 
-MODULE_CONTEXT = {'metadata': {'module': 'USER-MANAGEMENT','userID':None,'userName':None}}
+MODULE_CONTEXT = {'metadata': {'module': 'USER-MANAGEMENT'},'userID':None,'userName':None}
 
 class AppContext:
     @staticmethod
