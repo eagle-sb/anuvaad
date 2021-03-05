@@ -105,12 +105,14 @@ class UserManagementModel(object):
             return post_error("Database connection exception", "An error occurred while connecting to the database:{}".format(str(e)), None)
 
     @staticmethod
-    def get_user_by_keys(userIDs, userNames, roleCodes,orgCodes,offset,limit_value):
+    def get_user_by_keys(userIDs, userNames, roleCodes,orgCodes,offset,limit_value,skip_pagination):
 
         exclude = {"password": False,"_id":False}
 
         try:
             collections = get_db()[USR_MONGO_COLLECTION]
+
+            
             if not userIDs and not userNames and not roleCodes and not orgCodes :
                 out = collections.find({"is_verified":True},exclude).sort([("_id",-1)]).skip(offset).limit(limit_value)
                 record_count=collections.find({"is_verified":True}).count()

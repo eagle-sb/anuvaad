@@ -86,6 +86,8 @@ class SearchUsers(Resource):
         orgCodes = []
         offset = None
         limit_value = None
+        skip_pagination=None
+
         body = request.get_json()
         if "userIDs" in body:
             userIDs = body['userIDs']
@@ -99,8 +101,8 @@ class SearchUsers(Resource):
             offset = body['offset']
         if "limit" in body:
             limit_value = body['limit']
-        
-        
+        if "skip_pagination" in body:
+            skip_pagination=body[skip_pagination]
         
         log_info("data recieved for user search is;user Ids:{}".format(userIDs)+'\n'+"user names:{}".format(userNames) +
                  '\n'+"role codes:{}".format(roleCodes)+
@@ -111,7 +113,7 @@ class SearchUsers(Resource):
             limit_value=config.LIMIT_VALUE
 
         try:
-            result = UserManagementRepositories.search_users(userIDs, userNames, roleCodes,orgCodes,offset,limit_value)
+            result = UserManagementRepositories.search_users(userIDs, userNames, roleCodes,orgCodes,offset,limit_value,skip_pagination)
             log_info("User search result:{}".format(result), MODULE_CONTEXT)
             if result == None:
                 res = CustomResponse(
