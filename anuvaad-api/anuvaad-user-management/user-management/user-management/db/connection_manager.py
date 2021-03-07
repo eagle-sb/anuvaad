@@ -8,9 +8,9 @@ from flask import g
 # establishing connection with mongo instance
 
 def get_db():
-    if db not in g:
+    if 'db' not in g:
         log_info("Establishing database connectivity for the current request",MODULE_CONTEXT)
         client = MongoClient(MONGO_SERVER_HOST)
-        db = client[MONGO_DB_SCHEMA]
-    return db
+        g.db = client[MONGO_DB_SCHEMA]
+    return g.db
 

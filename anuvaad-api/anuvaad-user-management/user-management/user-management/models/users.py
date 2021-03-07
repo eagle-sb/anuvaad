@@ -112,8 +112,10 @@ class UserManagementModel(object):
         try:
             collections = get_db()[USR_MONGO_COLLECTION]
 
-            
-            if not userIDs and not userNames and not roleCodes and not orgCodes :
+            if skip_pagination==True:
+                out = collections.find({"is_verified":True},exclude)
+                record_count=out.count()
+            elif not userIDs and not userNames and not roleCodes and not orgCodes :
                 out = collections.find({"is_verified":True},exclude).sort([("_id",-1)]).skip(offset).limit(limit_value)
                 record_count=collections.find({"is_verified":True}).count()
             else:
