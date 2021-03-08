@@ -6,9 +6,13 @@ import { bindActionCreators } from "redux";
 import DownloadFile from '../../../../flux/actions/apis/download/download_zip_file';
 import { Textfit } from "react-textfit";
 import { highlightSentence, clearHighlighBlock, cancelMergeSentence } from '../../../../flux/actions/users/translator_actions';
-import SENTENCE_ACTION from '../DocumentEditor/SentenceActions';
+import Popper from '@material-ui/core/Popper';
+import SENTENCE_ACTION from '../DocumentEditor/SentenceActions'
+import { confscore } from '../../../../utils/OcrConfScore'
 import SaveEditedWord from './SaveEditedWord';
 import Modal from '@material-ui/core/Modal';
+
+
 const PAGE_OPS = require("../../../../utils/page.operations");
 const TELEMETRY = require('../../../../utils/TelemetryManager')
 
@@ -30,6 +34,7 @@ class OcrPageCard extends React.Component {
             value: '',
             text: '',
             url: '',
+            event: false,
             isOpen: false
         };
         this.handleTextChange = this.handleTextChange.bind(this);
@@ -44,6 +49,10 @@ class OcrPageCard extends React.Component {
             this.setState({ url: '' })
         }
     }
+
+    /**
+     * render Sentences
+     */
 
     renderChild = (region) => {
         let width = (region.boundingBox.vertices[1].x - region.boundingBox.vertices[0].x) + 'px'
@@ -72,90 +81,86 @@ class OcrPageCard extends React.Component {
 
     renderText = (line, region) => {
         return (
-            <div style={{
-                position: "absolute",
-                zIndex: 2,
-                width: line.boundingBox.vertices[1].x - line.boundingBox.vertices[0].x + 'px',
-                height: line.boundingBox.vertices[2].y - line.boundingBox.vertices[0].y + 'px',
-                top: line.boundingBox.vertices[0].y - region.boundingBox.vertices[0].y + 'px',
-                left: line.boundingBox.vertices[0].x - region.boundingBox.vertices[0].x + 'px',
-            }}
-                key={region.identifier}
-            >
+            <div key={line.identifier}>
                 {
-
-                    this.renderTextSpan(line, region)
+                    line.children.map(word => this.renderTextSpan(word, line, region))
                 }
             </div>
         )
     }
 
-    renderTable = (word, line) => {
+    renderTable = (word, region) => {
         return (
             <div
                 style={{
                     position: "absolute",
-                    zIndex: this.action === word.identifier ? 100000 : 2,
-                    color: word.conf < this.props.percent ? 'red' : 'black',
-                    fontSize: word.font && parseInt(Math.ceil(word.font.size)) + 'px',
-                    top: word.boundingBox.vertices[0].y - line.boundingBox.vertices[0].y + 'px',
-                    left: word.boundingBox.vertices[0].x - line.boundingBox.vertices[0].x + 'px',
+                    zIndex: 2,
+                    fontSize: this.props.fontSize + 'px',
+                    top: word.boundingBox.vertices[0].y - region.boundingBox.vertices[0].y + 'px',
+                    left: word.boundingBox.vertices[0].x - region.boundingBox.vertices[0].x + 'px',
                     width: word.boundingBox.vertices[1].x - word.boundingBox.vertices[0].x + 'px',
-                }
-                }
+                }}
                 key={word.identifier}
                 onDoubleClick={() => this.setModalState(word)}
             >
-                <Textfit mode="single" style={{ width: '100%' }} min={1} max={word.font && parseInt(Math.ceil(word.font.size))} >
-                    {word.text}
-                </Textfit>
+                {
+                    <Textfit mode="single" style={{ width: '100%' }} min={1} max={parseInt(Math.ceil(this.props.fontSize))} >
+                        {
+                            word.text
+                        }
+                    </Textfit>
+                }
             </div >
         )
     }
 
-    renderTextSpan = (line, region) => {
+    renderTextSpan = (word, line, region) => {
         if (line.class === "CELL") {
-            return line.children.map(word => this.renderTable(word, line))
+            line.children.map(word => this.renderTable(word, region))
         }
         return (
             <div
                 style={{
-                    zIndex: 2,
-                    color: 'black',
-                    padding: '0%',
-                    fontSize: region.avg_size + 'px',
-                    width: line.boundingBox.vertices[1].x - line.boundingBox.vertices[0].x + 'px',
-                    top: line.boundingBox.vertices[0].y + 'px',
-                    left: line.boundingBox.vertices[0].x + 'px',
-                    textAlignLast: 'justify'
+                    position: "absolute",
+                    fontSize: this.props.fontSize + 'px',
+                    top: word.boundingBox.vertices[0].y - region.boundingBox.vertices[0].y + 'px',
+                    left: word.boundingBox.vertices[0].x - region.boundingBox.vertices[0].x + 'px',
+                    width: word.boundingBox.vertices[1].x - word.boundingBox.vertices[0].x + 'px',
                 }}
-                key={line.identifier}
-                onDoubleClick={() => this.setModalState(line)}
+                key={word.identifier}
+                onDoubleClick={() => this.setModalState(word)}
             >
-                <Textfit mode="single" style={{ width: '100%' }} min={1} max={parseInt(Math.ceil(region.avg_size))} >
-                    {line.text}
-                </Textfit>
-            </div>
+
+                {
+                    <Textfit mode="single" style={{ width: '100%' }} min={1} max={parseInt(Math.ceil(this.props.fontSize))}>
+                        {
+                            this.state.id === word.identifier ? this.state.text : word.text
+                        }
+                    </Textfit>
+                }
+                </div>
         )
     }
-
     setModalState = (word) => {
-        this.setState({ isOpen: true, text: word.text })
+        this.setState({ isOpen: true, text: word.text, id: word.identifier })
     }
 
+    saveWord = (word) => {
+        this.setState({ isOpen: false, text: word })
+    }
     renderModal = () => {
         return (
             <Modal
                 open={this.state.isOpen}
                 onClose={this.handleClose}
             >
-                <SaveEditedWord handleClose={this.handleClose} text={this.state.text} />
+                <SaveEditedWord handleClose={this.handleClose} text={this.state.text} id={this.state.id} saveWord={this.saveWord} />
             </Modal>
         )
     }
 
     handleClose = () => {
-        this.setState({ text: '', isOpen: false })
+        this.setState({ isOpen: false })
     }
     /**
      * sentence change
@@ -284,9 +289,9 @@ class OcrPageCard extends React.Component {
                 <div>
                     <Paper elevation={2} style={{ position: 'relative', width: width, height: height }}>
                         {page['regions'].map(region => this.renderChild(region))}
-                        {
+                        {/* {
                             this.renderImage(image)
-                        }
+                        } */}
                     </Paper>
                     <Divider />
                 </div>
@@ -301,10 +306,7 @@ class OcrPageCard extends React.Component {
         return (
             <>
                 <span style={{ zoom: `${this.props.zoomPercent}%` }}>{this.renderPage(this.props.page, this.props.image)}</span>
-                {
-                    this.state.isOpen &&
-                    this.renderModal()
-                }
+                {this.renderModal()}
             </>
         )
     }
@@ -317,7 +319,9 @@ const mapStateToProps = state => ({
     block_page: state.block_highlight.page_no,
     sentence_highlight: state.sentence_highlight.sentence,
     percent: state.fetchpercent.percent,
-    status: state.showimagestatus.status
+    status: state.showimagestatus.status,
+    switch_style: state.switch_style.status,
+    fontSize: state.fetch_slider_pixel.percent
 });
 
 const mapDispatchToProps = dispatch => bindActionCreators(

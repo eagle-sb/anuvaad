@@ -1,16 +1,17 @@
 var jp                = require('jsonpath')
 
-export const get_language_name = (languages, language_code)  => {
-    let condition   = `$..[?(@.source_language_code == '${language_code}' && @.is_primary==true)]`
+export const get_language_name = (languages, language_code, translate)  => {
+    debugger
+    let condition   = translate ? `$..[?(@.status == 'ACTIVE' && @.target_language_code == '${language_code}' && @.is_primary==true)]` :  `$..[?(@.status == 'INACTIVE' && @.target_language_code == '${language_code}' && @.is_primary==true)]` ;
     let language    = jp.query(languages, condition)
     if (language.length > 0) {
-        return language[0].source_language_name
+        return language[0].target_language_name
     }
     return 'UNKNOWN'
 }
 
-export const get_supported_languages = (languages) => {
-    let condition   = `$..[?(@.is_primary==true)]`
+export const get_supported_languages = (languages, translate) => {
+    let condition   = translate ? `$..[?( @.status == 'ACTIVE' && @.is_primary == true)]` : `$..[?(@.status == 'INACTIVE' && @.is_primary == true)]`
     let result      = jp.query(languages, condition)
     if (result.length > 0) {
         return result.map((lang) => { return {language_code: lang.source_language_code, language_name: lang.source_language_name} }).filter((v,i,a)=>a.findIndex(t=>(t.language_code === v.language_code))===i)
@@ -18,16 +19,16 @@ export const get_supported_languages = (languages) => {
     return []
 }
 
-export const get_counterpart_languages = (languages, language_code) => {
-    let condition   = `$..[?(@.source_language_code == '${language_code}' && @.is_primary== true)]`
+export const get_counterpart_languages = (languages, language_code, translate) => {
+    let condition   = translate ?`$..[?( @.status == 'ACTIVE' && @.source_language_code == '${language_code}' && @.is_primary== true)]` :`$..[?(@.source_language_code == '${language_code}' && @.is_primary== true && @.status == 'INACTIVE' )]`
     let result      = jp.query(languages, condition)
     return result.map((lang) => { 
         return {
             source_language_code: lang.source_language_code, 
-            source_language_name: get_language_name(languages, lang.source_language_code),
+            source_language_name: get_language_name(languages, lang.source_language_code, translate),
 
             language_code: lang.target_language_code,
-            language_name: get_language_name(languages, lang.target_language_code)
+            language_name: get_language_name(languages, lang.target_language_code, translate)
         } 
     })
 }
@@ -39,3 +40,14 @@ export const get_model_details = (languages, source_language_code, target_langua
         return language[0]
     }
 }
+
+export const fetchModel = (modelId, docs) => {
+    let model = ""
+
+    if (docs && docs.length > 0) {
+      let condition = `$[?(@.model_id == '${modelId}')]`;
+      model = jp.query(docs, condition)
+    }
+
+    return model.length > 0 ? model[0] : null
+  }

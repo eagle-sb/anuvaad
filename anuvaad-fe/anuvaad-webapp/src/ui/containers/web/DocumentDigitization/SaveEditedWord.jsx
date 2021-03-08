@@ -16,18 +16,24 @@ class SaveEditedWord extends React.Component {
 
     }
 
+<<<<<<< HEAD
     processSubmitBtn = () => {
 
     }
 
+=======
+>>>>>>> develop
     handleInputFieldChange = (e) => {
         this.setState({ word: e.target.value })
     }
 
+<<<<<<< HEAD
     handleKeyPress = () => {
         console.log('inside')
     }
 
+=======
+>>>>>>> develop
     render() {
         return (
             <div>
@@ -55,7 +61,13 @@ class SaveEditedWord extends React.Component {
                             variant="contained" aria-label="edit" style={{
                                 width: '40%', marginRight: '2%', marginBottom: '2%', marginTop: '2%', borderRadius: '20px', height: '45px', textTransform: 'initial', fontWeight: '20px',
                                 backgroundColor: '#1ca9c9', color: 'white',
+<<<<<<< HEAD
                             }} disabled={this.state.loading}>
+=======
+                            }} disabled={this.state.loading}
+                            onClick={() => this.props.saveWord(this.state.word)}
+                        >
+>>>>>>> develop
                             {this.state.loading && <CircularProgress size={24} className={'success'} style={{
                                 color: 'green[500]',
                                 position: 'absolute',
