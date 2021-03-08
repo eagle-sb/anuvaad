@@ -96,20 +96,9 @@ class DownloadDigitziedDoc extends React.Component {
                     top: word.boundingBox.vertices[0].y - region.boundingBox.vertices[0].y + 'px',
                     left: word.boundingBox.vertices[0].x - region.boundingBox.vertices[0].x + 'px',
                     width: word.boundingBox.vertices[1].x - word.boundingBox.vertices[0].x + 'px',
-<<<<<<< HEAD
-                    top: word.boundingBox.vertices[0].y + 'px',
-                    left: word.boundingBox.vertices[0].x + 'px',
-                    textAlignLast: 'justify'
-=======
->>>>>>> develop
                 }}
                 key={line.identifier}
             >
-<<<<<<< HEAD
-                <Textfit mode="single" style={{ width: '100%' }} min={1} max={parseInt(Math.ceil(region.avg_size))} >
-                    {word.text}
-                </Textfit>
-=======
 
                 {
                     <Textfit mode="single" style={{ width: '100%' }} min={1} max={parseInt(Math.ceil(this.props.fontSize))}>
@@ -119,7 +108,6 @@ class DownloadDigitziedDoc extends React.Component {
                     </Textfit>
                 }
 
->>>>>>> develop
             </div>
         )
     }
