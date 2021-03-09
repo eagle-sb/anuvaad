@@ -11,7 +11,7 @@ import SENTENCE_ACTION from '../DocumentEditor/SentenceActions'
 import { confscore } from '../../../../utils/OcrConfScore'
 import SaveEditedWord from './SaveEditedWord';
 import Modal from '@material-ui/core/Modal';
-
+import TextClamp from 'react-string-clamp';
 
 const PAGE_OPS = require("../../../../utils/page.operations");
 const TELEMETRY = require('../../../../utils/TelemetryManager')
@@ -81,9 +81,12 @@ class OcrPageCard extends React.Component {
 
     renderText = (line, region) => {
         return (
-            <div key={line.identifier}>
-                {
+            <div
+                style={{
+                }}
+                key={line.identifier}>{
                     line.children.map(word => this.renderTextSpan(word, line, region))
+                    // line.children.map(word => this.renderTextSpanv2(word, line, region))
                 }
             </div>
         )
@@ -95,7 +98,7 @@ class OcrPageCard extends React.Component {
                 style={{
                     position: "absolute",
                     zIndex: 2,
-                    fontSize: this.props.fontSize + 'px',
+                    // fontSize: this.props.fontSize + 'px',
                     top: word.boundingBox.vertices[0].y - region.boundingBox.vertices[0].y + 'px',
                     left: word.boundingBox.vertices[0].x - region.boundingBox.vertices[0].x + 'px',
                     width: word.boundingBox.vertices[1].x - word.boundingBox.vertices[0].x + 'px',
@@ -104,11 +107,11 @@ class OcrPageCard extends React.Component {
                 onDoubleClick={() => this.setModalState(word)}
             >
                 {
-                    <Textfit mode="single" style={{ width: '100%' }} min={1} max={parseInt(Math.ceil(this.props.fontSize))} >
-                        {
-                            word.text
-                        }
-                    </Textfit>
+                    // <Textfit mode="single" style={{ width: '100%' }} min={1} max={parseInt(Math.ceil(this.props.fontSize))} >
+                    // {
+                    word.text
+                    // }
+                    // </Textfit>
                 }
             </div >
         )
@@ -122,23 +125,54 @@ class OcrPageCard extends React.Component {
             <div
                 style={{
                     position: "absolute",
-                    fontSize: this.props.fontSize + 'px',
+                    fontSize: `min(max(${region.avg_size}px),${this.props.fontSize}px)`,
                     top: word.boundingBox.vertices[0].y - region.boundingBox.vertices[0].y + 'px',
                     left: word.boundingBox.vertices[0].x - region.boundingBox.vertices[0].x + 'px',
-                    width: word.boundingBox.vertices[1].x - word.boundingBox.vertices[0].x + 'px',
+                    maxWidth: word.boundingBox.vertices[1].x - word.boundingBox.vertices[0].x + 'px',
+                    maxHeight: word.boundingBox.vertices[2].y - word.boundingBox.vertices[0].y + 'px',
+                    width: 'fit-content',
+                    height: '100%',
+                    fontFamily: word.font && word.font.family,
                 }}
                 key={word.identifier}
-                onDoubleClick={() => this.setModalState(word)}
-            >
-
+                onDoubleClick={() => this.setModalState(word)}>
                 {
-                    <Textfit mode="single" style={{ width: '100%' }} min={1} max={parseInt(Math.ceil(this.props.fontSize))}>
-                        {
-                            this.state.id === word.identifier ? this.state.text : word.text
-                        }
-                    </Textfit>
+                    this.state.id === word.identifier ? this.state.text : word.text
                 }
-                </div>
+            </div>
+        )
+    }
+    renderTextSpanv2 = (word, line, region) => {
+        if (line.class === "CELL") {
+            line.children.map(word => this.renderTable(word, region))
+        }
+        return (
+            <div
+                style={{
+                    position: "absolute",
+                    // fontSize: `min(max(${region.avg_size}px),${this.props.fontSize}px)`,
+                    fontSize: region.avg_size + 'px',
+                    top: word.boundingBox.vertices[0].y - region.boundingBox.vertices[0].y + 'px',
+                    left: word.boundingBox.vertices[0].x - region.boundingBox.vertices[0].x + 'px',
+                    // maxWidth: word.boundingBox.vertices[1].x - word.boundingBox.vertices[0].x + 'px',
+                    // maxHeight: word.boundingBox.vertices[2].y - word.boundingBox.vertices[0].y + 'px',
+                    // width: 'fit-content',
+                    // height: '100%',
+                    width: word.boundingBox.vertices[1].x - word.boundingBox.vertices[0].x + 'px',
+                    fontWeight: word.font && word.font.style.toLowerCase(),
+                    fontFamily: word.font && word.font.family,
+                    // border: '1px solid red',
+                    // overflow:'hidden'
+                }}
+                key={word.identifier}
+                onDoubleClick={() => this.setModalState(word)}>
+                <Textfit
+                    min={1} max={region.avg_size}>
+                    {
+                        this.state.id === word.identifier ? this.state.text : word.text
+                    }
+                </Textfit>
+            </div>
         )
     }
     setModalState = (word) => {
