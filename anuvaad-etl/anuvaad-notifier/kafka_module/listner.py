@@ -36,14 +36,17 @@ class Listner(PubSubManager):
         self.producer = kafka.KafkaProducer(bootstrap_servers=self.kafka_url)
         self.consumer = kafka.KafkaConsumer(self.channel,
                                             bootstrap_servers=self.kafka_url, group_id=CONSUMER_GROUP,
-                                            enable_auto_commit=True, auto_offset_reset='latest',
-                                            value_deserializer=lambda x: loads(x.decode('utf-8')))
+                                            enable_auto_commit=True, auto_offset_reset='latest'
+                                            ,value_deserializer=lambda x: loads(x.decode('utf-8'))
+                                            )
 
     def _publish(self, data):
+        log_info("INSIDE _publish KFMANGER", None)
         self.producer.send(self.channel, value=pickle.dumps(data))
         self.producer.flush()
 
     def _kafka_listen(self):
+        log_info("INSIDE _kafka_listen KFMANGER", None)
         for message in self.consumer:
             yield message
 
@@ -56,6 +59,7 @@ class Listner(PubSubManager):
                         log_info("INSIDE _LISTEN KFMANGER OVERIDDEN", None)
                         log_info("DATA FROM KAFKA TOPIC: %s" % (message.value), None)
                         room = message.value['jobs'][0]['metadata']['userID']
+                        print("NOTIFIER KAFKA: EMITING TO ROOM: ", room)
                         PubSubManager.emit(self, event='task_updated', data=message.value, namespace='/', room=room,
                                            ignore_queue=True)
                 except Exception as e:

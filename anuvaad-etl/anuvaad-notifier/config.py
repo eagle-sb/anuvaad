@@ -5,6 +5,9 @@ import os
 # mongo_server_host = os.environ.get('MONGO_CLUSTER_URL', 'mongodb://localhost:27017,localhost:27018/?replicaSet=foo')
 APP_HOST = os.environ.get('ANUVAAD_NOTIFIER_HOST', '0.0.0.0')
 APP_PORT = os.environ.get('ANUVAD_NOTIFIER_PORT', 5000)
+ENABLE_CORS = False
+context_path = '/anuvaad-etl/notifier'
+
 
 # MODULE-SPECIFIC-CONFIGS
 # common-variables
@@ -29,7 +32,7 @@ CONSUMER_GROUP = os.environ.get(KAFKA_NOTIFIER_CONSUMER_GROUP_IDENTIFIER, KAFKA_
 
 # DIFFERENT MODULE CONFIGS
 
-ANUVAAD_URL_HOST_DEFAULT = "https://auth.anuvaad.org"
+ANUVAAD_URL_HOST_DEFAULT = "https://auth.anuvaad.org/"
 ANUVAAD_URL_HOST_IDENTIFIER = 'ANUVAD_URL_HOST'
 ANUVAAD_URL_HOST = os.environ.get(ANUVAAD_URL_HOST_IDENTIFIER, ANUVAAD_URL_HOST_DEFAULT)
 
