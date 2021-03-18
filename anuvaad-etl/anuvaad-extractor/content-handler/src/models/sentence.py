@@ -1,11 +1,12 @@
 from utilities import AppContext
-from db import get_db
+from db import get_db,get_redis
 from anuvaad_auditor.loghandler import log_info, log_exception
 import sacrebleu
 from nltk.translate.bleu_score import corpus_bleu
+import json
 
 DB_SCHEMA_NAME  = 'file_content'
-
+redis_client = None
 class SentenceModel(object):
 
     def get_block_by_s_id(self, user_id, s_id):
@@ -49,12 +50,12 @@ class SentenceModel(object):
             log_exception("db connection exception ",  AppContext.getContext(), e)
             return None
 
-    def update_sentence_by_s_id(self, user_id, sentence):
+    def update_sentence_by_s_id(self, record_id, user_id, sentence):
         SENTENCE_KEYS   = ['n_id', 'pred_score', 's_id', 'src', 'tgt']
         try:
             collections     = get_db()[DB_SCHEMA_NAME]
 
-            results         = collections.update({'$and': [{'created_by': user_id}, { 'data.tokenized_sentences': {'$elemMatch': {'s_id': {'$eq': sentence['s_id']}}}}]},
+            results         = collections.update({'$and': [{'record_id': record_id}, {'created_by': user_id}, { 'data.tokenized_sentences': {'$elemMatch': {'s_id': {'$eq': sentence['s_id']}}}}]},
                                                 {
                                                     '$set':
                                                     {
@@ -108,10 +109,12 @@ class SentenceModel(object):
 
     def get_tokenized_sentences_count_status(self, record_id,bleu_return):
         try:
+            
             collections = get_db()[DB_SCHEMA_NAME]
             
             avg_bleu_score = 0
             if bleu_return:
+                log_info('calculating bleu score for record_id:{}'.format(record_id), AppContext.getContext())
                 target_docs=  collections.aggregate([
                                 { '$match': {'$and': [{"record_id": record_id}, {'data_type':'text_blocks'}]} },
                                 { '$unwind': "$data.tokenized_sentences" },
@@ -121,10 +124,13 @@ class SentenceModel(object):
                 tgt_nmt=[]
                 tgt_user=[]
                 for doc in target_docs:
-                    tgt_nmt.append(doc["tgt_nmt"])
-                    tgt_user.append(doc["tgt_user"])
-                
+                    if 'tgt_nmt' in doc:
+                        tgt_nmt.append(doc["tgt_nmt"])
+                    if 'tgt_user' in doc:
+                        tgt_user.append(doc["tgt_user"])
+
                 if tgt_nmt and tgt_user:
+                    log_info('tgt_nmt : {} \ntgt_uer : {} \n for record_id:{}'.format(tgt_nmt,tgt_user,record_id), AppContext.getContext())
                     preds=tgt_nmt
                     refs=[tgt_user]
                     sacre_bleu = sacrebleu.corpus_bleu(preds,refs).score
@@ -133,9 +139,11 @@ class SentenceModel(object):
                     log_info("\nSACRE_BLEU value** :{}".format(sacre_bleu), AppContext.getContext())
                     log_info("\n*****************************", AppContext.getContext())
                     avg_bleu_score      = round((sacre_bleu/100),2)
-               
+                else:
+                    log_info('tgt_nmt or tgt_user sentences are missing for record_id:{},hence skipping bleu score calculation'.format(record_id), AppContext.getContext())
+            else:
+                pass
             
-             
             docs   = collections.aggregate([
                                 { '$match': {'$and': [{"record_id": record_id}, {'data_type':'text_blocks'}]} },
                                 { '$unwind': "$data.tokenized_sentences" },
@@ -149,8 +157,8 @@ class SentenceModel(object):
                                      "total_time_spent":{"$sum": "$data.tokenized_sentences.time_spent_ms"} 
                                      }}
                                 ])
-
-  
+            
+            log_info('word,sentence count and time calculated for record_id {}'.format(record_id), AppContext.getContext())
                                     #  "total_bleu_score":{"$sum": "$data.tokenized_sentences.bleu_score"},          
 
             empty_sent_count     = 0
@@ -191,7 +199,7 @@ class SentenceModel(object):
             }
                 
         except Exception as e:
-            log_exception("db connection exception ",  AppContext.getContext(), e)
+            log_exception("Exception on sentence statistics calculation ",  AppContext.getContext(), e)
 
             return {
                 'total_sentences': 0,
@@ -201,3 +209,38 @@ class SentenceModel(object):
                 'avg_bleu_score' : 0,
                 'total_time_spent_ms': 0
             }
+    
+    # Initialises and fetches redis client
+    def save_sentences_on_hashkey(self,key,sent):
+        try:
+            client = get_redis()
+            client.lpush(key, json.dumps(sent))
+            return 1
+        except Exception as e:
+            log_exception("Exception in storing sentence data on redis store | Cause: " + str(e), AppContext.getContext(), e)
+            return None
+
+    def get_sentence_by_keys(self,keys):
+        try:
+            client = get_redis()
+            result = []
+            for key in keys:
+                sent_obj={}
+                val=client.lrange(key, 0, -1)
+                sent_obj["key"]=key
+                sent_obj["value"]=val
+                result.append(sent_obj)
+            return result
+        except Exception as e:
+            log_exception("Exception in fetching sentences from redis store  | Cause: " + str(e), None, e)
+            return None
+
+    # def search_key(self,sent_key):
+    #     try:
+    #         client = get_redis()
+    #         val = client.exists(sent_key)
+    #         return val
+    #     except Exception as e:
+    #         log_exception("Exception in searching for key on redis store  | Cause: " + str(e), None, e)
+    #         return None
+

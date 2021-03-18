@@ -1,9 +1,10 @@
-import config
 import json
+import hashlib
 from models import SentenceModel
 from utilities import AppContext
 from anuvaad_auditor.loghandler import log_info, log_exception
-
+from utilities import AppContext
+import time
 class SentenceRepositories:
     def __init__(self):
         self.sentenceModel  = SentenceModel()
@@ -42,8 +43,14 @@ class SentenceRepositories:
             if 'time_spent_ms' not in sentence:
                 sentence['time_spent_ms'] = 0
 
+            n_id_splits = sentence['n_id'].split('|')
+            record_id   = n_id_splits[0]+'|'+ n_id_splits[1]
+            # sentence['record_id'] = record_id
 
-            if self.sentenceModel.update_sentence_by_s_id(user_id, sentence) == False:
+            AppContext.addRecordID(record_id)
+            log_info("SaveSentenceRepo -saving sentence blocks", AppContext.getContext())
+
+            if self.sentenceModel.update_sentence_by_s_id(record_id,user_id, sentence) == False:
                 return False
         return True
 
@@ -68,3 +75,39 @@ class SentenceRepositories:
             result['record_id']         = record_id
             response.append(result)
         return response
+
+
+    def save_sentences(self,user_id, sentences):
+        # Creates a md5 hash values using userID and src
+        try:
+            
+            for sent in sentences:
+                sent["timestamp"]= eval(str(time.time()).replace('.', '')[0:13])
+                locale=sent["src_lang"]+"|"+sent["tgt_lang"]
+                sentence_hash= user_id + "___" + sent["src"]+"___"+locale
+                sent_key=hashlib.sha256(sentence_hash.encode('utf_16')).hexdigest()
+                save_result= self.sentenceModel.save_sentences_on_hashkey(sent_key,sent)
+                log_info("Sentences pushed to redis store", AppContext.getContext())
+        except Exception as e:
+            log_exception("Exception while storing sentence data on redis: " + str(e), AppContext.getContext(), e)
+            return None
+
+    def get_sentences_from_store(self,keys):
+        data_keys=[]
+        for key in keys:
+            if "userID" not in key or not key["userID"] or "src" not in key or not key["src"] or "locale" not in key or not key["locale"]:
+                return None
+            
+            log_info("Fetching sentences from redis store for userID:{} | src:{}".format(key["userID"],key["src"]), AppContext.getContext())
+            sentence_hash= key["userID"] + "___" + key["src"]+ "___"+key["locale"]
+            sent_key =hashlib.sha256(sentence_hash.encode('utf_16')).hexdigest()
+            data_keys.append(sent_key)
+        try:
+            result=self.sentenceModel.get_sentence_by_keys(data_keys)
+            return result
+        except Exception as e:
+            log_exception("Exception while fetching sentences from redis store: " + str(e), AppContext.getContext(), e)
+            return None
+        
+
+    

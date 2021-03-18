@@ -4,7 +4,7 @@ from models import CustomResponse, Status
 from utilities import AppContext
 from anuvaad_auditor.loghandler import log_info, log_exception
 from flask import request
-
+from config import USER_TRANSLATION_ENABLED
 sentenceRepo = SentenceRepositories()
 
 class FetchSentenceResource(Resource):
@@ -63,15 +63,13 @@ class SaveSentenceResource(Resource):
                 res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
                 return res.getresjson(), 400
             
-            sentence_ids = []
-            for sentence in sentences:
-                sentence_ids.append(sentence['s_id'])
-            
-            result  = sentenceRepo.get_sentence(user_id, sentence_ids)
-            if result == False:
-                res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
-                return res.getresjson(), 400
-            res = CustomResponse(Status.SUCCESS.value, result)
+            if USER_TRANSLATION_ENABLED:
+                try:
+                    result=sentenceRepo.save_sentences(user_id, sentences) 
+                except Exception as e:
+                    log_exception("SaveSentenceResource",  AppContext.getContext(), e)
+
+            res = CustomResponse(Status.SUCCESS.value, sentences)
             return res.getres()
 
         except Exception as e:
@@ -93,10 +91,11 @@ class SentenceStatisticsCount(Resource):
 
         record_ids       = body['record_ids']
 
-        bleu_return=False
+        bleu_return=None
         if 'bleu_score' in body:
             bleu_return=body['bleu_score']
-
+        else:
+            bleu_return=False
         AppContext.addRecordID(None)
         log_info("SentenceStatisticsCount for user {}, sentence count for record_ids {}".format(user_id, record_ids), AppContext.getContext())
 
@@ -130,5 +129,30 @@ class SentenceBlockGetResource(Resource):
             return result, 200
         except Exception as e:
             log_exception("SentenceBlockGetResource ",  AppContext.getContext(), e)
+            res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
+            return res.getresjson(), 400
+
+class GetSentencesResource(Resource):
+    def post(self):
+        body        = request.get_json()
+
+        if "keys" not in body or not body["keys"]:
+            res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
+            return res.getresjson(), 400
+
+        keys = body["keys"]
+
+        log_info("Fetching sentences from redis store", AppContext.getContext())
+
+        try:
+            result = sentenceRepo.get_sentences_from_store(keys)
+            if result == None:
+                res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
+                return res.getresjson(), 400
+            
+            res = CustomResponse(Status.SUCCESS.value, result)
+            return res.getres()
+        except Exception as e:
+            log_exception("Exception while fetching sentences from redis store ",  AppContext.getContext(), e)
             res = CustomResponse(Status.ERR_GLOBAL_MISSING_PARAMETERS.value, None)
             return res.getresjson(), 400

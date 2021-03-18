@@ -40,7 +40,7 @@ CONSUMER_GROUP_identifier    = 'KAFKA_ANUVAAD_ETL_WD_CONSUMER_GRP'
 CONSUMER_GROUP               = os.environ.get(CONSUMER_GROUP_identifier,CONSUMER_GROUP_default)
 #folders and file path
 #download_folder = 'upload'
-
+KAFKA_ANUVAAD_ETL_WF_ERROR_TOPIC='anuvaad-etl-wf-errors-v1'
 
 
 
@@ -54,6 +54,8 @@ logging.basicConfig(
 
 EXRACTION_RESOLUTION = 300
 
+
+
 CRAFT_MODEL_PATH=  './src/utilities/craft_pytorch/model/craft_mlt_25k.pth'
 CRAFT_REFINE_MODEL_PATH =  './src/utilities/craft_pytorch/model/craft_refiner_CTW1500.pth'
 
@@ -64,7 +66,12 @@ LANGUAGE_WORD_THRESOLDS ={
 'ma':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35},
 'ta':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35},
 'ml':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35},
-'ka':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35}
+'ka':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35},
+'te':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35},
+'bn':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35},
+'or':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35},
+'gu':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35},
+'kn':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35}
 }
 LANGUAGE_LINE_THRESOLDS ={
 'en':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35},
@@ -73,10 +80,23 @@ LANGUAGE_LINE_THRESOLDS ={
 'ma':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35},
 'ta':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35},
 'ml':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35},
-'ka':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35}
+'ka':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35},
+'te':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35},
+'bn':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35},
+'or':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35},
+'gu':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35},
+'kn':{'text_threshold':0.1 ,'low_text': 0.5,'link_threshold':0.35}
 }
 
 
+
+##########################################################################
+#Alignment
+ALIGN = True
+ALIGN_MODE= 'FAST'
+
+
+###########################################################################
 
 
 WATERMARK_THRESHOLD_LOW = 175
