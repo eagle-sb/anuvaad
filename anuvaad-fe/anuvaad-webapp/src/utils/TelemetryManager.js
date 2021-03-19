@@ -74,7 +74,9 @@ export const pageLoadStarted = (page_id) => {
   let options = {
     ets: Date.now(),
     actor: {
-      uid: user_id,
+      uid: user_profile.userID,
+      org_id: user_profile.org_id,
+      name : user_profile.user
     },
     context: {
       sid: session_id
@@ -115,7 +117,9 @@ export const pageLoadCompleted = (page_id) => {
   let options = {
     ets: Date.now(),
     actor: {
-      uid: user_id,
+      uid: user_profile.userID,
+      org_id: user_profile.org_id,
+      name : user_profile.user
     },
     context: {
       sid: session_id
@@ -176,7 +180,9 @@ export const startWorkflow = (source_language, target_language, filename, job_id
   let options = {
     ets: Date.now(),
     actor: {
-      uid: user_id,
+      uid: user_profile.userID,
+      org_id: user_profile.org_id,
+      name : user_profile.user
     },
     context: {
       cdata: [{
@@ -451,6 +457,7 @@ export const log = (action_type, message, api) => {
 
   if (user_profile != null) {
     user_id = user_profile.userID
+
   } else {
     user_id = 'anonymous'
   }
@@ -472,7 +479,9 @@ export const log = (action_type, message, api) => {
   let options = {
     ets: Date.now(),
     actor: {
-      uid: user_id,
+      uid: user_profile.userID,
+      org_id: user_profile.org_id,
+      name : user_profile.user,
     }
   }
 

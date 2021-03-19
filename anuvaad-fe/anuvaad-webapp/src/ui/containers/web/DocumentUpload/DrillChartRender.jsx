@@ -1,4 +1,5 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 import { withStyles } from '@material-ui/core/styles';
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
@@ -12,6 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import GlobalStyles from "../../../styles/web/styles";
 import Theme from "../../../theme/web/theme-anuvaad";
 import classNames from "classnames";
+
 import history from "../../../../web.history";
 import {
   BarChart, Bar, Brush, Cell, CartesianGrid, ReferenceLine, ReferenceArea,
@@ -131,7 +133,7 @@ const mapDispatchToProps = dispatch => bindActionCreators(
     dispatch
 );
 
-export default connect(
+export default withRouter(connect(
     mapStateToProps,
     mapDispatchToProps
-)(withStyles(GlobalStyles(Theme), { withTheme: true })(DrillCharts));
+)(withStyles(GlobalStyles(Theme), { withTheme: true })(DrillCharts)));

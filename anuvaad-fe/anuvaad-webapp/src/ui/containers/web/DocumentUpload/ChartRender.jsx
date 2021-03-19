@@ -1,5 +1,7 @@
 import React from "react";
+import { withRouter } from "react-router-dom";
 import { withStyles } from '@material-ui/core/styles';
+
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -11,22 +13,21 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import GlobalStyles from "../../../styles/web/styles";
 import Theme from "../../../theme/web/theme-anuvaad";
+
 import classNames from "classnames";
 import history from "../../../../web.history";
 import {
   BarChart, Bar, Brush, Cell, CartesianGrid, ReferenceLine, ReferenceArea,
   XAxis, YAxis, Tooltip, Legend, ErrorBar, LabelList, Rectangle
 } from 'recharts';
-
+import ReactECharts from 'echarts-for-react';
 import _ from 'lodash';
 
 import APITransport from "../../../../flux/actions/apitransport/apitransport";
 import { showSidebar } from '../../../../flux/actions/apis/common/showSidebar';
-import DrillChartRender from "./DrillChartRender";
-import DrillSourceRender from './DrillSourceRender';
 
 var randomColor = require('randomcolor');
-
+var jp                = require('jsonpath')
 const data = [
     {
         "updatedTimestamp" : "2021-02-25T00:00:00.000Z",
@@ -80,7 +81,7 @@ const data = [
       }
     
   ];
-class FileUploadHeader extends React.Component {
+class ChartRender extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -89,13 +90,41 @@ class FileUploadHeader extends React.Component {
         }
 
     }
-    
 
+    getData(dataValue){
+        let condition   = `$..[*].${dataValue}`
+    let dataCalue      = jp.query(data, condition)
+    return dataCalue
+    }
+    
+    getOption(){
+   
+        const option = {
+            tooltip: {},
+            xAxis: {
+                type: 'category',
+                data: this.getData("languagePair"),
+              },
+              yAxis: {
+                type: 'value',
+              },
+              series: [
+                {
+                  data:this.getData("count"),
+                  type: 'bar',
+                  smooth: true,
+                },
+              ],
+              
+        }
+    
+         return option
+      }
 
     handleOnClick(event) {
         // this.setState({secondRender:true})
         history.push(
-            `${process.env.PUBLIC_URL}/parallel-corp/${event.languagePair}`,
+            `${process.env.PUBLIC_URL}/parallel-corpus/${event.languagePair}`,
             this.state
           );
         
@@ -103,14 +132,23 @@ class FileUploadHeader extends React.Component {
 
     render() {
         const { classes, open_sidebar } = this.props;
-        const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
-        console.log("Sajish")
+        this.getData()
         return (
 
             <div>
-
-           
-            <BarChart width={800} height={400} data={data} maxBarSize={100} barSize={80} style={{marginLeft:'20%',marginTop:"10%"}}>
+                <ReactECharts
+  option={this.getOption()}
+  notMerge={true}
+  lazyUpdate={true}
+  theme={"theme_name"}
+  onChartReady={this.onChartReadyCallback}
+  onChartClick = {
+    console.log("sajish")
+}
+  
+  
+/>
+<BarChart width={800} height={400} data={data} maxBarSize={100} barSize={80} style={{marginLeft:'20%',marginTop:"10%"}}>
               <XAxis dataKey="languagePair"/>
               <YAxis type="number" />
               <CartesianGrid horizontal={true} vertical={false}/>
@@ -126,6 +164,8 @@ class FileUploadHeader extends React.Component {
        </Bar>
               {/* <Bar dataKey="count" fill={randomColor()} maxBarSize={100} isAnimationActive={false} onClick={(event)=>{this.handleOnClick(event)}}/> */}
             </BarChart>
+           
+           
             {/* {this.state.secondRender && <DrillChartRender />}
             <DrillSourceRender/> */}
             </div>
@@ -146,7 +186,8 @@ const mapDispatchToProps = dispatch => bindActionCreators(
     dispatch
 );
 
-export default connect(
+
+export default withRouter(connect(
     mapStateToProps,
     mapDispatchToProps
-)(withStyles(GlobalStyles(Theme), { withTheme: true })(FileUploadHeader));
+)(withStyles(GlobalStyles(Theme), { withTheme: true })(ChartRender)));

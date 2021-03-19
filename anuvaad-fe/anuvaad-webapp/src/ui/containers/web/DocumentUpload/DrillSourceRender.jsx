@@ -1,5 +1,6 @@
 import React from "react";
 import { withStyles } from '@material-ui/core/styles';
+import { withRouter } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -11,6 +12,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import GlobalStyles from "../../../styles/web/styles";
 import Theme from "../../../theme/web/theme-anuvaad";
+
 import classNames from "classnames";
 import history from "../../../../web.history";
 import {
@@ -78,7 +80,7 @@ const data = [
       }
     
   ];
-class FileUploadHeader extends React.Component {
+class SourceRender extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -128,7 +130,7 @@ const mapDispatchToProps = dispatch => bindActionCreators(
     dispatch
 );
 
-export default connect(
+export default withRouter(connect(
     mapStateToProps,
     mapDispatchToProps
-)(withStyles(GlobalStyles(Theme), { withTheme: true })(FileUploadHeader));
+)(withStyles(GlobalStyles(Theme), { withTheme: true })(SourceRender)));

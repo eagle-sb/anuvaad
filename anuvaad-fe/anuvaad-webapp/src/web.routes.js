@@ -34,6 +34,7 @@ import AddOrganization from "./ui/containers/web/AdminPanel/AddOrganization";
 import ViewDocumentDigitization from './ui/containers/web/DocumentDigitization/ViewDocumentDigitization';
 import DigitzeDocumentUpload from './ui/containers/web/DocumentDigitization/DocumentDigitizationUpload/StartDigitizationUpload';
 import DigitizedDocumentEditor from './ui/containers/web/DocumentDigitization/DigitizedDocumentEditor';
+import DrillSourceRender from "./ui/containers/web/DocumentUpload/DrillSourceRender";
 
 const PrivateRoute = ({ headerAttribute: headerAttribute, component: Component, userRoles, title, drawer, showLogo, forDemo, dontShowLoader, dontShowHeader, currentMenu, authenticate, ...rest }) => (
   <Route
@@ -273,10 +274,20 @@ class AppRoutes extends React.Component {
               authenticate={this.authenticateUser}
               currentMenu="add-organization"
             />
+              <PrivateRoute
+              path={`${process.env.PUBLIC_URL}/parallel-corpus/:lang/:source`}
+              dontShowLoader
+              title={"Organization List"}
+              userRoles={["TRANSLATOR"]}
+              component={DrillSourceRender}
+              authenticate={this.authenticateUser}
+              currentMenu="organization-list"
+              dontShowHeader={true}
 
+            />
             
             <PrivateRoute
-              path={`${process.env.PUBLIC_URL}/parallel-corp/:lang`}
+              path={`${process.env.PUBLIC_URL}/parallel-corpus/:lang`}
               dontShowLoader
               title={"Organization List"}
               userRoles={["TRANSLATOR"]}
@@ -288,7 +299,7 @@ class AppRoutes extends React.Component {
             />
 
 <PrivateRoute
-              path={`${process.env.PUBLIC_URL}/data/parallel-corpus`}
+              path={`${process.env.PUBLIC_URL}/parallel-corpus`}
               dontShowLoader
               title={"Organization List"}
               userRoles={["TRANSLATOR"]}
