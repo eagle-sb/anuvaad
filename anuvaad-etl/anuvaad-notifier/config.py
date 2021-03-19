@@ -4,7 +4,7 @@ import os
 # kafka_bootstrap_server_host = os.environ.get('KAFKA_BOOTSTRAP_SERVER_HOST', 'localhost:9092')
 # mongo_server_host = os.environ.get('MONGO_CLUSTER_URL', 'mongodb://localhost:27017,localhost:27018/?replicaSet=foo')
 APP_HOST = os.environ.get('ANUVAAD_NOTIFIER_HOST', '0.0.0.0')
-APP_PORT = os.environ.get('ANUVAD_NOTIFIER_PORT', 5000)
+APP_PORT = os.environ.get('ANUVAD_NOTIFIER_PORT', 5001)
 ENABLE_CORS = False
 context_path = '/anuvaad-etl/notifier'
 
@@ -33,7 +33,7 @@ CONSUMER_GROUP = os.environ.get(KAFKA_NOTIFIER_CONSUMER_GROUP_IDENTIFIER, KAFKA_
 # DIFFERENT MODULE CONFIGS
 
 ANUVAAD_URL_HOST_DEFAULT = "https://auth.anuvaad.org/"
-ANUVAAD_URL_HOST_IDENTIFIER = 'ANUVAD_URL_HOST'
+ANUVAAD_URL_HOST_IDENTIFIER = 'NOTIFIER_WF_MGR_URL_HOST'
 # ANUVAAD_URL_HOST = os.environ.get(ANUVAAD_URL_HOST_IDENTIFIER, ANUVAAD_URL_HOST_DEFAULT)
 ANUVAAD_URL_HOST = "http://gateway_anuvaad-etl-wf-manager:5001/"
 
