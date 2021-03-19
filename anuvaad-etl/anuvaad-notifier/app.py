@@ -20,7 +20,7 @@ from kafka_module.listner import Listner
 app = Flask(__name__)
 app.config['SECRET_KEY'] = NOTIFIER_SECRET_KEY
 
-socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins='*')
+socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins='*', logger=True, engineio_logger=True)
 # socketio.init_app(app, message_queue='kafka://localhost:9092', channel = input_topic, write_only = True)
 
 KAFKA_URL = list(str(KAFKA_URL).split(","))
@@ -104,7 +104,6 @@ if ENABLE_CORS:
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 for blueprint in vars(routes).values():
-    print("INSIDE BLUEPRINT")
     if isinstance(blueprint, Blueprint):
         app.register_blueprint(blueprint, url_prefix=context_path)
 # </CHANGES FOR MANUAL BULK SEARCH>
