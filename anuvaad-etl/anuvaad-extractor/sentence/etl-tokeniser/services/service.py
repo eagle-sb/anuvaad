@@ -81,12 +81,13 @@ class Tokenisation(object):
     def adding_tokenised_text_blockmerger(self, input_json_data_pagewise, in_locale, page_id):
         try:
             log_info("text block tokenisation started for page : %s"%(page_id+1), self.input_json_data)
-            blocks = input_json_data_pagewise['text_blocks']
+            blocks = input_json_data_pagewise['regions']
             if blocks is not None:
                 for block_id, item in enumerate(blocks):
-                    text_data = item['text']
-                    tokenised_text = self.tokenisation_core([text_data], in_locale)
-                    item['tokenized_sentences'] = [self.making_object_for_tokenised_text(text) for i, text in enumerate(tokenised_text)]
+                    if item['class'] == 'PARA':
+                        text_data = item['text']
+                        tokenised_text = self.tokenisation_core([text_data], in_locale)
+                        item['tokenized_sentences'] = [self.making_object_for_tokenised_text(text) for i, text in enumerate(tokenised_text)]
             return input_json_data_pagewise
         except:
             log_error("Keys in block merger response changed or tokenisation went wrong.", self.input_json_data, None) 
@@ -115,13 +116,13 @@ class Tokenisation(object):
             log_info("incomplete sentence identification and merging across pages started", self.input_json_data)
             for page_idx, page_data in enumerate(input_data_file):
                 log_info("Current Page: {}".format(page_idx), self.input_json_data)
-                page_width = page_data.get("page_width")
-                page_height = page_data.get("page_height")
-                if (page_height is not None) and (page_width is not None):
-                    if page_height < page_width: #If this condition is true means this is a PPT file where width will be more than the height
-                        log_info("Skipping logic for the merging incomplete sentence of last block to next text block", self.input_json_data)
-                        continue
-                page_data_blocks = page_data['text_blocks']
+                # page_width = page_data.get("page_width")
+                # page_height = page_data.get("page_height")
+                # if (page_height is not None) and (page_width is not None):
+                #     if page_height < page_width: #If this condition is true means this is a PPT file where width will be more than the height
+                #         log_info("Skipping logic for the merging incomplete sentence of last block to next text block", self.input_json_data)
+                #         continue
+                page_data_blocks = page_data['regions']
                 if page_idx+1 < len(input_data_file):
                     last_text_block_idx = self.get_last_text_block_with_text(page_data_blocks)
                     first_text_block_next_page = self.get_first_text_block_with_text(input_data_file[page_idx+1])
@@ -130,25 +131,24 @@ class Tokenisation(object):
                     try:
                         if last_text_block_idx != None and first_text_block_next_page != None:
                             if not page_data_blocks[last_text_block_idx]['text'].strip().endswith(('.',':','!','?','”',')')) \
-                            and input_data_file[page_idx+1]['text_blocks'][first_text_block_next_page]['text'] != None \
-                            and input_data_file[page_idx+1]['text_blocks'][first_text_block_next_page]['children'] != None\
+                            and input_data_file[page_idx+1]['regions'][first_text_block_next_page]['text'] != None \
                             and len(page_data_blocks[last_text_block_idx]['tokenized_sentences']) >= 1\
-                            and len(input_data_file[page_idx+1]['text_blocks'][first_text_block_next_page]['tokenized_sentences']) != 0:
+                            and len(input_data_file[page_idx+1]['regions'][first_text_block_next_page]['tokenized_sentences']) != 0:
 
                                 last_tokenised_sentence_idx = len(page_data_blocks[last_text_block_idx]['tokenized_sentences']) - 1
                                 last_sen = page_data_blocks[last_text_block_idx]['tokenized_sentences'][last_tokenised_sentence_idx]['src']
-                                first_sen = input_data_file[page_idx+1]['text_blocks'][first_text_block_next_page]['tokenized_sentences'][0]['src']
+                                first_sen = input_data_file[page_idx+1]['regions'][first_text_block_next_page]['tokenized_sentences'][0]['src']
 
                                 if len(last_sen) < len(first_sen):
-                                    input_data_file[page_idx+1]['text_blocks'][first_text_block_next_page]['tokenized_sentences'][0]['src'] = \
+                                    input_data_file[page_idx+1]['regions'][first_text_block_next_page]['tokenized_sentences'][0]['src'] = \
                                         page_data_blocks[last_text_block_idx]['tokenized_sentences'][last_tokenised_sentence_idx]['src'] + ' ' + \
-                                            input_data_file[page_idx+1]['text_blocks'][first_text_block_next_page]['tokenized_sentences'][0]['src']
+                                            input_data_file[page_idx+1]['regions'][first_text_block_next_page]['tokenized_sentences'][0]['src']
                                     del page_data_blocks[last_text_block_idx]['tokenized_sentences'][last_tokenised_sentence_idx]
                                 else:
                                     page_data_blocks[last_text_block_idx]['tokenized_sentences'][last_tokenised_sentence_idx]['src'] = \
                                         page_data_blocks[last_text_block_idx]['tokenized_sentences'][last_tokenised_sentence_idx]['src'] + ' ' + \
-                                            input_data_file[page_idx+1]['text_blocks'][first_text_block_next_page]['tokenized_sentences'][0]['src']
-                                    del input_data_file[page_idx+1]['text_blocks'][first_text_block_next_page]['tokenized_sentences'][0]
+                                            input_data_file[page_idx+1]['regions'][first_text_block_next_page]['tokenized_sentences'][0]['src']
+                                    del input_data_file[page_idx+1]['regions'][first_text_block_next_page]['tokenized_sentences'][0]
                     except:
                         log_exception("core logic of merging failed", self.input_json_data, None)
                         raise ServiceError(400, "core logic of merging failed")
@@ -160,14 +160,10 @@ class Tokenisation(object):
     # If for a paragraph the attribute is not in FOOTER, "", TABLE it is a valid paragraph
     def is_valid_paragraph(self, block):
         try:
-            if block['attrib'] is not None and type(block['attrib']) is str:
-                valid = True
-                for attrib in block['attrib'].split(','):
-                    if attrib in ["FOOTER", "HEADER", "TABLE"]:
-                        valid = False
-                return valid
+            if block['class'] is not None and type(block['class']) is str:
+                return block.get('class') == 'PARA' or False
             else:
-                return True
+                return False
         except:
             log_exception("Finding if valid paragraph failed", self.input_json_data, None)
             raise ServiceError(400, "Finding if valid paragraph failed")
@@ -189,9 +185,25 @@ class Tokenisation(object):
     # getting first text block of a page other than footer, header, table 
     def get_first_text_block_with_text(self, page_data):
         try:
-            for block_idx, block in enumerate(page_data['text_blocks']):
+            for block_idx, block in enumerate(page_data['regions']):
                 if self.is_valid_paragraph(block):
                     return block_idx
         except:
             log_exception("Finding First text block failed", self.input_json_data, None)
             raise ServiceError(400, "Finding first text block failed")
+
+    def get_all_the_paragraphs(self, page_data):
+        try:
+            pages = page_data['outputs'][0]['pages']
+            for page in pages:
+                for PARA in page['regions']:
+                    if PARA.get('class') == 'PARA' or False:
+                        txt = ''
+                        for LINE in PARA['regions']:
+                            if LINE.get('class') == 'LINE' or False:
+                                txt = txt + ' ' + str(LINE['text'])
+                        PARA['text'] = txt.strip()
+            return pages
+        except:
+            log_exception("Retriving paragraphs from input failed", self.input_json_data, None)
+            raise ServiceError(400, "Retriving paragraphs from input failed")

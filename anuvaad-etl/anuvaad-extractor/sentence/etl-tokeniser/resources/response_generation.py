@@ -42,10 +42,14 @@ class Response(object):
                             output_filename = tokenisation.tokenisation_response(input_file_data, in_locale, i)
                         elif in_file_type == "json":
                             input_jsonfile_data, file_write = file_ops.read_json_file(input_filename)
-                            input_jsonfile_data['result'] = [tokenisation.adding_tokenised_text_blockmerger(item, in_locale, page_id) 
-                                                                for page_id, item in enumerate(input_jsonfile_data['result'])]
-                            input_jsonfile_data['result'] = tokenisation.getting_incomplete_text_merging_blocks(input_jsonfile_data['result'])
-                            input_jsonfile_data['file_locale'] = in_locale
+
+                            pages = tokenisation.get_all_the_paragraphs(input_jsonfile_data)
+
+                            pages = [tokenisation.adding_tokenised_text_blockmerger(item, in_locale, page_id)
+                                                                for page_id, item in enumerate(pages)]
+                            pages = tokenisation.getting_incomplete_text_merging_blocks(pages)
+                            input_jsonfile_data['outputs'][0]['pages'] = pages
+                            # input_jsonfile_data['file_locale'] = in_locale
                             json_data_write = json.dumps(input_jsonfile_data)
                             file_write.seek(0)
                             file_write.truncate()
