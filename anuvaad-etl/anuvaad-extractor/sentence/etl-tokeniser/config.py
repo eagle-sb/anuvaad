@@ -8,6 +8,14 @@ HOST = '0.0.0.0'
 PORT = 5001
 ENABLE_CORS = False
 
+#EXTERNAL SERVICE CONFIG
+#SAVE_URL = "https://auth.anuvaad.org/anuvaad/ocr-content-handler/v0/ocr/save-document"
+SAVE_VAR = "OCR_CH_URL"
+SAVE_DEFAULT = "http://gateway_anuvaad-ocr-content-handler:5001/anuvaad/ocr-content-handler/v0/ocr/save-document"
+SAVE_URL = os.environ.get(SAVE_VAR, SAVE_DEFAULT)
+
+SAVE_NO_PAGE = 1
+
 # kafka
 consumer_grp_default = 'anuvaad-etl-tokeniser-ocr-consumer-group'
 consumer_grp_identifier = 'KAFKA_ANUVAAD_ETL_TOKENISER_OCR_CONSUMER_GRP'

@@ -42,9 +42,7 @@ class Response(object):
                             output_filename = tokenisation.tokenisation_response(input_file_data, in_locale, i)
                         elif in_file_type == "json":
                             input_jsonfile_data, file_write = file_ops.read_json_file(input_filename)
-
                             pages = tokenisation.get_all_the_paragraphs(input_jsonfile_data)
-
                             pages = [tokenisation.adding_tokenised_text_blockmerger(item, in_locale, page_id)
                                                                 for page_id, item in enumerate(pages)]
                             pages = tokenisation.getting_incomplete_text_merging_blocks(pages)
@@ -59,6 +57,7 @@ class Response(object):
                         file_req_obj = copy.deepcopy(item)
                         file_res = file_ops.add_aditional_fields(file_req_obj, file_res)
                         output_file_response.append(file_res)
+                        tokenisation.save_page_res(input_jsonfile_data, output_filename)
             # input key is a list data of objects, object contain text and language code
             else:
                 output_file_response = []

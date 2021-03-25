@@ -11,6 +11,7 @@ from utilities.utils import FileOperation
 from anuvaad_auditor.loghandler import log_info
 from anuvaad_auditor.loghandler import log_error
 from anuvaad_auditor.loghandler import log_exception
+import copy
 import re
 import json
 import requests
@@ -201,18 +202,19 @@ class Tokenisation(object):
 
     def get_all_the_paragraphs(self, page_data):
         try:
+            print(":: TOKENIZATION OCR INCOMING DATA ::", page_data)
             pages = page_data['outputs'][0]['pages']
             for page in pages:
                 for PARA in page['regions']:
                     if PARA.get('class') in ['PARA', 'TABLE']:
                         txt = ''
                         for LINE in PARA['regions']:
-                            if LINE.get('class') in ['LINE', 'TABLE_CELL']:
+                            if LINE.get('class') in ['LINE', 'CELL']:
                                 for WORD in LINE['regions']:
                                     if WORD.get('class') in ['WORD']:
                                         txt = txt + ' ' + str(WORD['text'])
 
-                                if LINE.get('class') in ['TABLE_CELL']:
+                                if LINE.get('class') in ['CELL']:
                                     txt = txt + '<END_OF_CELL>'
 
 
@@ -221,3 +223,27 @@ class Tokenisation(object):
         except:
             log_exception("Retriving paragraphs from input failed", self.input_json_data, None)
             raise ServiceError(400, "Retriving paragraphs from input failed")
+
+    def save_page_res(self, res, file_name):
+        try:
+            tmp_file = copy.deepcopy(res['rsp'])
+            del tmp_file['input']
+            tmp_file['files'] = res['rsp']['outputs']
+            del tmp_file['outputs']
+            json_file_name = file_name
+            for file in [tmp_file]:
+                recordID = file['jobID'] + '|' + json_file_name
+                page_idx = 0
+                total_pages = len(file['files'][0]['pages'])
+                file['files'][0]['config'] = copy.deepcopy(file['files'][0]['config']['OCR'])
+                while page_idx < total_pages:
+                    save_file = copy.deepcopy(file)
+                    pages = file['files'][0]['pages'][page_idx:page_idx + config.SAVE_NO_PAGE]
+                    save_file['files'][0]['pages'] = pages
+
+                    save_file['recordID'] = recordID
+                    page_idx = page_idx + config.SAVE_NO_PAGE
+                    rsp = requests.post(config.SAVE_URL, json=save_file)
+                    log_info("successfully saved data to database with record id: " + str(recordID), rsp)
+        except Exception as e:
+            log_exception("Error occured during saving page response", None, e)
