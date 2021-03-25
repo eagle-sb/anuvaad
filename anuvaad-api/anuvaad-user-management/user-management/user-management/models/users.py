@@ -12,13 +12,7 @@ import pymongo
 class UserManagementModel(object):
 
     def __init__(self):
-        collections = get_db()[USR_MONGO_COLLECTION]
-        try:
-            collections.create_index('userName')
-        except pymongo.errors.DuplicateKeyError as e:
-            log_info("duplicate key, ignoring",MODULE_CONTEXT)
-        except Exception as e:
-            log_exception("db connection exception ",  MODULE_CONTEXT, e)
+        pass
 
     @staticmethod
     def create_users(users):
@@ -129,13 +123,17 @@ class UserManagementModel(object):
                     {'orgID': {'$in': orgCodes},'is_verified': True}
                 ]}, exclude)
                 log_info("user search is executed:{}".format(out), MODULE_CONTEXT)
-                record_count=out.count()
-
+                record_count=out.count()          
             result = []
             for record in out:
                 result.append(record)
             if not result:
                 return None
+            #finding models for the users
+            # for user in result:
+            #     if "models" in user:
+            #         fetch_models=UserUtils.get_nmt_models(user["models"])
+
             return result,record_count
 
         except Exception as e:

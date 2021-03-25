@@ -369,3 +369,24 @@ class UserUtils:
             return post_error("Database exception","Exception occurred:{}".format(str(e)),None)
 
       
+    # @staticmethod
+    # def get_nmt_models(model_ids):
+    #     try:
+    #         token="xxx"
+    #         headers = {"Content-Type": "application/json","auth-token":token}
+    #         request_url='https://auth.anuvaad.org//nmt-inference/v2/fetch-models?models={}'.format(model_ids)
+    #         # request_url=config.NMT_FETCH_MODELS_URL
+    #         # params=model_ids
+    #         log_info("Intiating request to fetch data from %s"%request_url, MODULE_CONTEXT)
+    #         response = requests.get(request_url, headers = headers)
+    #         response_data = response.content
+    #         log_info("Received data from fetch-content end point of content handler", MODULE_CONTEXT)
+    #         dict_str = response_data.decode("UTF-8")
+    #         dict_json_data = json.loads(dict_str)
+    #         print(dict_json_data)
+    #         # return dict_json_data
+    #     except Exception as e:
+    #         log_exception("exception while fectching models from NMT"+str(e),  MODULE_CONTEXT, e)
+                
+
+        
