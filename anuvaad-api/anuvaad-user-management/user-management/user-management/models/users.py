@@ -93,6 +93,8 @@ class UserManagementModel(object):
                     validity =OrgUtils.validate_org(str(user["orgID"]).upper())
                     if validity is not None:
                         return validity
+                if "models" in user:
+                    users_data['models']= user["models"]
 
                 results = collections.update(
                     {"userID": user_id}, {'$set': users_data})
@@ -173,7 +175,9 @@ class UserManagementModel(object):
                 users_data['orgID'] = str(user["orgID"]).upper()
                 validity =OrgUtils.validate_org(str(user["orgID"]).upper())
                 if validity is not None:
-                    return validity
+                    return validity           
+            if "models" in user:
+                users_data['models']= user["models"]
             records.append(users_data)
         log_info("User records:{}".format(records), MODULE_CONTEXT)
 
