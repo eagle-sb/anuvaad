@@ -84,9 +84,16 @@ class Tokenisation(object):
             blocks = input_json_data_pagewise['regions']
             if blocks is not None:
                 for block_id, item in enumerate(blocks):
-                    if item['class'] == 'PARA':
+                    if item.get('class') in ['PARA']:
                         text_data = item['text']
                         tokenised_text = self.tokenisation_core([text_data], in_locale)
+                        item['tokenized_sentences'] = [self.making_object_for_tokenised_text(text) for i, text in enumerate(tokenised_text)]
+                    if item.get('class') in ['TABLE']:
+                        table_data = item['text']
+                        cell_data = table_data.split('<END_OF_CELL>')
+                        tokenised_text = []
+                        for text_data in cell_data:
+                            tokenised_text.extend(self.tokenisation_core([text_data], in_locale))
                         item['tokenized_sentences'] = [self.making_object_for_tokenised_text(text) for i, text in enumerate(tokenised_text)]
             return input_json_data_pagewise
         except:
@@ -161,7 +168,7 @@ class Tokenisation(object):
     def is_valid_paragraph(self, block):
         try:
             if block['class'] is not None and type(block['class']) is str:
-                return block.get('class') == 'PARA' or False
+                return block.get('class') in ['PARA']
             else:
                 return False
         except:
@@ -197,11 +204,18 @@ class Tokenisation(object):
             pages = page_data['outputs'][0]['pages']
             for page in pages:
                 for PARA in page['regions']:
-                    if PARA.get('class') == 'PARA' or False:
+                    if PARA.get('class') in ['PARA', 'TABLE']:
                         txt = ''
                         for LINE in PARA['regions']:
-                            if LINE.get('class') == 'LINE' or False:
-                                txt = txt + ' ' + str(LINE['text'])
+                            if LINE.get('class') in ['LINE', 'TABLE_CELL']:
+                                for WORD in LINE['regions']:
+                                    if WORD.get('class') in ['WORD']:
+                                        txt = txt + ' ' + str(WORD['text'])
+
+                                if LINE.get('class') in ['TABLE_CELL']:
+                                    txt = txt + '<END_OF_CELL>'
+
+
                         PARA['text'] = txt.strip()
             return pages
         except:

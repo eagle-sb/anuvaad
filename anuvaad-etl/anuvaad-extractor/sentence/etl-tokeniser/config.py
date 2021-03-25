@@ -3,22 +3,22 @@ import os
 
 # Flask server
 DEBUG = False
-context_path = '/anuvaad-etl/tokeniser'
+context_path = '/anuvaad-etl/tokeniser-ocr'
 HOST = '0.0.0.0'
 PORT = 5001
 ENABLE_CORS = False
 
 # kafka
-consumer_grp_default = 'anuvaad-etl-tokeniser-consumer-group'
-consumer_grp_identifier = 'KAFKA_ANUVAAD_ETL_TOKENISER_CONSUMER_GRP'
+consumer_grp_default = 'anuvaad-etl-tokeniser-ocr-consumer-group'
+consumer_grp_identifier = 'KAFKA_ANUVAAD_ETL_TOKENISER_OCR_CONSUMER_GRP'
 CONSUMER_GROUP = os.environ.get(consumer_grp_identifier, consumer_grp_default)
 
-input_topic_default = 'anuvaad-dp-tools-tokeniser-input-v1'
-input_topic_identifier = 'KAFKA_ANUVAAD_DP_TOOLS_TOKENISER_INPUT'
+input_topic_default = 'anuvaad-dp-tools-tokeniser-ocr-input-v1'
+input_topic_identifier = 'KAFKA_ANUVAAD_DP_TOOLS_TOKENISER_OCR_INPUT'
 input_topic = os.environ.get(input_topic_identifier, input_topic_default)
 
-output_topic_default = 'anuvaad-dp-tools-tokeniser-output-v1'
-output_topic_identifier = 'KAFKA_ANUVAAD_DP_TOOLS_TOKENISER_OUTPUT'
+output_topic_default = 'anuvaad-dp-tools-tokeniser-ocr-output-v1'
+output_topic_identifier = 'KAFKA_ANUVAAD_DP_TOOLS_TOKENISER_OCR_OUTPUT'
 output_topic = os.environ.get(output_topic_identifier, output_topic_default)
 
 kf_local_server = 'localhost:9092'
