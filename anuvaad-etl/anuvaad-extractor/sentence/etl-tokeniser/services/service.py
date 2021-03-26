@@ -226,9 +226,9 @@ class Tokenisation(object):
 
     def save_page_res(self, res, file_name):
         try:
-            tmp_file = copy.deepcopy(res['rsp'])
+            tmp_file = copy.deepcopy(res)
             del tmp_file['input']
-            tmp_file['files'] = res['rsp']['outputs']
+            tmp_file['files'] = res['outputs']
             del tmp_file['outputs']
             json_file_name = file_name
             for file in [tmp_file]:
