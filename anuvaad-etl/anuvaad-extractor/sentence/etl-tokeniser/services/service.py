@@ -212,11 +212,19 @@ class Tokenisation(object):
                             if LINE.get('class') in ['LINE', 'CELL']:
                                 for WORD in LINE['regions']:
                                     if WORD.get('class') in ['WORD']:
-                                        txt = txt + ' ' + str(WORD['text'])
+                                        if len(str(WORD['text'])) == 1:
+                                            if str(WORD['text']) in ('.', ':', '!', '?', ',', '|', '||', ';', '%', '*', '-', '/', '}', ')', ']'): #EX: 100%, following table:, Supreme Court (SC)
+                                                txt = txt + str(WORD['text'])
+                                            else:
+                                                txt = txt + ' ' + str(WORD['text'])
+                                        else:
+                                            if txt.endswith(('-', '/', '{', '[', '(')): #EX: fifty-eight, dates: 07/08/1993, Supreme Court (SC)
+                                                txt = txt + str(WORD['text'])
+                                            else:
+                                                txt = txt + ' ' + str(WORD['text'])
 
                                 if LINE.get('class') in ['CELL']:
                                     txt = txt + '<END_OF_CELL>'
-
 
                         PARA['text'] = txt.strip()
             return pages
