@@ -96,6 +96,10 @@ class Tokenisation(object):
                         for text_data in cell_data:
                             tokenised_text.extend(self.tokenisation_core([text_data], in_locale))
                         item['tokenized_sentences'] = [self.making_object_for_tokenised_text(text) for i, text in enumerate(tokenised_text)]
+                    if item.get('class') in ['HEADER', 'FOOTER']:
+                        data = item['text']
+                        item['tokenized_sentences'] = [self.making_object_for_tokenised_text(data)]
+
             return input_json_data_pagewise
         except:
             log_error("Keys in block merger response changed or tokenisation went wrong.", self.input_json_data, None) 
@@ -206,7 +210,7 @@ class Tokenisation(object):
             pages = page_data['outputs'][0]['pages']
             for page in pages:
                 for PARA in page['regions']:
-                    if PARA.get('class') in ['PARA', 'TABLE']:
+                    if PARA.get('class') in ['PARA', 'TABLE', 'HEADER', 'FOOTER']:
                         txt = ''
                         for LINE in PARA['regions']:
                             if LINE.get('class') in ['LINE', 'CELL']:
