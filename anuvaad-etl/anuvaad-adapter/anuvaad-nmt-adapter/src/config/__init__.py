@@ -15,5 +15,5 @@ APP_BASE_PATH = "src/"
 MODULE_NAME = "/nmt-adapter"
 
 ##Google credentials
-PROJECT_ID = "ID"
-CREDENTIALS = r"CREDENTIALS_JSON"
+PROJECT_ID = os.environ['PROJECT_ID']
+CREDENTIALS = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
