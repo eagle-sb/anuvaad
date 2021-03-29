@@ -14,7 +14,6 @@ class GoogleTranslate_v3(Resource):
     def post(self):
         try:
             project_id = config.PROJECT_ID
-            os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = config.CREDENTIALS
             client = translate.TranslationServiceClient()
             parent = f"projects/{project_id}"
             body = request.json
