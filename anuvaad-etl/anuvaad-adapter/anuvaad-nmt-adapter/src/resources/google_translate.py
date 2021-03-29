@@ -18,36 +18,36 @@ class GoogleTranslate_v3(Resource):
             client = translate.TranslationServiceClient()
             parent = f"projects/{project_id}"
             body = request.json
-            source_list = {
-                'src_list':[{ }],
-            }
-            j = body['src_list']
-            if (len(j))>0 and (len(j))<50:
-                val_src =  [li['src'] for li in j]
-                response = client.translate_text(request={
-                        "parent": parent,
-                        "contents": val_src,
-                        "mime_type": "text/plain",
-                        "source_language_code": body["source_language_code"],
-                        "target_language_code": body["target_language_code"]
-                    })
-                res = MessageToDict(response._pb)
-                result = []
-                a = res['translations']
-                b = body['src_list']
-                for value in range(len(a)) and range(len(b)):
-                    mod_id = {
-                            "src":b[value]["src"],
-                            "s_id":b[value]["s_id"],
-                            "tgt": a[value]['translatedText'],
-                            "n_id": b[value]["n_id"],
-                            "tmx_phrases":b[value]["tmx_phrases"]
-                    }
-                    result.append(mod_id)
-                    out = CustomResponse(Status.SUCCESS.value,result)
+            if bool(body) and bool(body['source_language_code']) and bool(body['target_language_code']):
+                jsn = body['src_list']
+                if len(jsn)>0:
+                    val_src =  [li['src'] for li in jsn]
+                    response = client.translate_text(request={
+                            "parent": parent,
+                            "contents": val_src,
+                            "mime_type": "text/plain",
+                            "source_language_code": body["source_language_code"],
+                            "target_language_code": body["target_language_code"]
+                        })
+                    res = MessageToDict(response._pb)
+                    result = []
+                    a = res['translations']
+                    for value in range(len(a)) and range(len(jsn)):
+                        mod_id = {
+                                "src":jsn[value]["src"],
+                                "s_id":jsn[value]["s_id"],
+                                "tgt": a[value]['translatedText']
+                        }
+                        for k in jsn:
+                            k.update(mod_id)
+                            result.append(k)
+                            out = CustomResponse(Status.SUCCESS.value,result)
+                        return out.getres()
+            else:
+                out = CustomResponse(Status.INVALID_API_REQUEST.value,request.json)
                 return out.getres()
         except Exception as e:
                 status = Status.SYSTEM_ERR.value
                 status['why'] = str(e)
-                out = CustomResponse(status, None)                  
-                return out.getresjson(),500
+                out = CustomResponse(status, request.json)                  
+                return out.getres()
