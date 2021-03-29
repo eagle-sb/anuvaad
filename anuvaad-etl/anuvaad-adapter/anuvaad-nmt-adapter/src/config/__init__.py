@@ -12,8 +12,8 @@ ENABLE_CORS = True
 APP_BASE_PATH = "src/"
 
 ## Module name
-MODULE_NAME = "/nmt-adapter"
+MODULE_NAME = "/anuvaad-nmt-adapter"
 
 ##Google credentials
-PROJECT_ID = os.environ['PROJECT_ID']
 GOOGLE_APPLICATION_CREDENTIALS = os.environ['GOOGLE_APPLICATION_CREDENTIALS']
+PROJECT_ID = os.environ['PROJECT_ID']
