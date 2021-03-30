@@ -14,7 +14,7 @@ import requests
 from flask_mail import Mail, Message
 from app import mail
 from flask import render_template
-
+from collections import Counter
 from config import USR_MONGO_COLLECTION,USR_TEMP_TOKEN_MONGO_COLLECTION,USR_TOKEN_MONGO_COLLECTION
 
 
@@ -214,6 +214,15 @@ class UserUtils:
         # if "phoneNo" in user and user["phoneNo"]:
             # if (UserUtils.validate_phone(user["phoneNo"])) == False:
             #     return post_error("Data not valid", "Phone number given is not valid", None)
+
+        if "models" in user and user["models"]:
+            new_models=user["models"]
+            check_dups= UserUtils.check_model_duplicates(new_models)
+            if check_dups is not None:
+                return check_dups
+
+
+
         if UserUtils.validate_email(user["email"]) == False:
             return post_error("Data not valid", "Email Id given is not valid", None)
         try:
@@ -240,14 +249,10 @@ class UserUtils:
         if "name" not in user or not user["name"]:
             return post_error("Data Missing", "name not found", None)
         if "email" not in user.keys():
-            return post_error("Data Missing", "email not found", None)
-        
+            return post_error("Data Missing", "email not found", None)   
 
         userId = user["userID"]
 
-        # if "phoneNo" in user and user["phoneNo"]:
-            # if (UserUtils.validate_phone(user["phoneNo"])) == False:
-            #     return post_error("Data not valid", "Phone number given is not valid", None)
         if UserUtils.validate_email(user["email"]) == False:
             return post_error("Data not valid", "Email Id given is not valid", None)
         try:
@@ -258,9 +263,24 @@ class UserUtils:
             for value in record:
                 if value["is_active"]== False:
                     return post_error("Not active", "This operation is not allowed for an inactive user", None)
+                if "models" in value:
+                    user_models=value["models"]
+                else:
+                    user_models=[]           
         except Exception as e:
             log_exception("db connection exception ",  MODULE_CONTEXT, e)
             return post_error("Database connection exception", "An error occurred while connecting to the database:{}".format(str(e)), None)
+
+        if "models" in user and user["models"]:
+            new_models=user["models"]
+            check_dups= UserUtils.check_model_duplicates(new_models)
+            if check_dups is not None:
+                return check_dups
+        if user_models:
+            updated_models=UserUtils.generate_models_to_update(user_models,new_models)
+            user["models"]=updated_models 
+
+
         
 
     @staticmethod
@@ -369,24 +389,32 @@ class UserUtils:
             return post_error("Database exception","Exception occurred:{}".format(str(e)),None)
 
       
-    # @staticmethod
-    # def get_nmt_models(model_ids):
-    #     try:
-    #         token="xxx"
-    #         headers = {"Content-Type": "application/json","auth-token":token}
-    #         request_url='https://auth.anuvaad.org//nmt-inference/v2/fetch-models?models={}'.format(model_ids)
-    #         # request_url=config.NMT_FETCH_MODELS_URL
-    #         # params=model_ids
-    #         log_info("Intiating request to fetch data from %s"%request_url, MODULE_CONTEXT)
-    #         response = requests.get(request_url, headers = headers)
-    #         response_data = response.content
-    #         log_info("Received data from fetch-content end point of content handler", MODULE_CONTEXT)
-    #         dict_str = response_data.decode("UTF-8")
-    #         dict_json_data = json.loads(dict_str)
-    #         print(dict_json_data)
-    #         # return dict_json_data
-    #     except Exception as e:
-    #         log_exception("exception while fectching models from NMT"+str(e),  MODULE_CONTEXT, e)
+    @staticmethod
+    def generate_models_to_update(user_models,new_models):
+        models_to_replace=[]
+        for old in user_models:
+            for new in new_models:
+                if (old["src_lang"]==new["src_lang"] and old["tgt_lang"]==new["tgt_lang"]):
+                    models_to_replace.append(old)
+        models=[x for x in user_models if x not in models_to_replace]
+        models.extend(new_models)
+        return models
+
+
+
+
+                
+    @staticmethod
+    def check_model_duplicates(models):
+        dup=[]
+        for model in models:
+            dup.append((model["src_lang"],model["tgt_lang"]))
+        counter=Counter(dup)
+        for count in counter:
+            if counter[count]>1:
+                return post_error("Not Valid","Multiple models of same language pair cannot be assigned at a time to a user",None)
+
+
                 
 
         
