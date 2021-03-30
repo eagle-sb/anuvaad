@@ -19,6 +19,6 @@ Run app.py to start the service with all the packages installed
 python src/app.py
 ```
 
-For more information about api documentation, please check @ ```https://github.com/project-anuvaad/anuvaad/tree/nmt-adapter/anuvaad-etl/anuvaad-adapter/anuvaad-nmt-adapter/docs/contracts/apis/```
+For more information about api documentation, please check @ ```https://github.com/project-anuvaad/anuvaad/tree/nmt-adapter/anuvaad-etl/anuvaad-adapter/anuvaad-nmt-adapter/docs/```
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
