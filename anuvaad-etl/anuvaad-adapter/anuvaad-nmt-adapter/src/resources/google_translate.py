@@ -33,18 +33,18 @@ class GoogleTranslate_v3(Resource):
                     res = MessageToDict(response._pb)
                     result = []
                     a = res['translations']
-                    for value in range(len(a)) and range(len(jsn)):
-                        mod_id = {
-                                "src":jsn[value]["src"],
-                                "s_id":jsn[value]["s_id"],
-                                "tgt": a[value]['translatedText']
-                        }
-                        for k in jsn:
-                            k.update(mod_id)
-                            result.append(k)
-                            out = CustomResponse(Status.SUCCESS.value,result)
-                        log_info("output: {}".format(result),MODULE_CONTEXT)
-                        return out.getres()
+                    mod_id = [{
+                            "src":jsn[i]["src"],
+                            "s_id":jsn[i]["s_id"],
+                            "tgt": a[i]['translatedText']
+                    }
+                    for i in range(len(jsn))]
+                    for j,k in enumerate(jsn):
+                        k.update(mod_id[j])
+                        result.append(k)
+                    out = CustomResponse(Status.SUCCESS.value,result)
+                    log_info("output: {}".format(result),MODULE_CONTEXT)
+                    return out.getres()
             else:
                 log_info("Error in Gnmt:invalid api request,either incorrect format or Mandatory input parameters missing or empty request",MODULE_CONTEXT)
                 out = CustomResponse(Status.INVALID_API_REQUEST.value,request.json)
