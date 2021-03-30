@@ -12,12 +12,14 @@ import uuid
 
 class GoogleTranslate_v3(Resource):
     def post(self):
+        log_info("GoogleTranslate_v3 (Gnmt) api called",MODULE_CONTEXT)
         try:
             project_id = config.PROJECT_ID
             client = translate.TranslationServiceClient()
             parent = f"projects/{project_id}"
             body = request.json
             if bool(body) and bool(body['source_language_code']) and bool(body['target_language_code']):
+                log_info("Complete request input: {}".format(body),MODULE_CONTEXT)
                 jsn = body['src_list']
                 if len(jsn)>0:
                     val_src =  [li['src'] for li in jsn]
@@ -41,11 +43,14 @@ class GoogleTranslate_v3(Resource):
                             k.update(mod_id)
                             result.append(k)
                             out = CustomResponse(Status.SUCCESS.value,result)
+                        log_info("output: {}".format(result),MODULE_CONTEXT)
                         return out.getres()
             else:
+                log_info("Error in Gnmt:invalid api request,either incorrect format or Mandatory input parameters missing or empty request",MODULE_CONTEXT)
                 out = CustomResponse(Status.INVALID_API_REQUEST.value,request.json)
                 return out.getres()
         except Exception as e:
+                log_exception("Error in Gnmt: {}".format(e),MODULE_CONTEXT,e)
                 status = Status.SYSTEM_ERR.value
                 status['why'] = str(e)
                 out = CustomResponse(status, request.json)                  
