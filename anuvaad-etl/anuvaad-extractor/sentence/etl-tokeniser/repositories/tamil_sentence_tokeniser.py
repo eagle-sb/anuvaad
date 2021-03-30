@@ -40,6 +40,7 @@ class AnuvaadTamilTokenizer(object):
         self._dot_with_quote_abbrevations = []
         self._dot_with_number_abbrevations = []
         self._dot_with_beginning_number_abbrevations = []
+        self._decimal_beginning_with_dot_or_without_space = []
         self._tokenizer = PunktSentenceTokenizer(lang_vars=SentenceEndLangVars())
 
     def tokenize(self, text):
@@ -58,6 +59,7 @@ class AnuvaadTamilTokenizer(object):
         text = self.serialize_quotes_with_number(text)
         text = self.serialize_bullet_points(text)
         text = self.serialize_decimal(text)
+        text = self.serialize_decimal_begin_with_dot_or_without_space(text)
         text = self.add_space_after_sentence_end(text)
         sentences = self._tokenizer.tokenize(text)
         output = []
@@ -76,6 +78,7 @@ class AnuvaadTamilTokenizer(object):
             se = self.deserialize_with_abbrevations(se)
             se = self.deserialize_bullet_points(se)
             se = self.deserialize_table_points(se)
+            se = self.deserialize_decimal_begin_with_dot_or_without_space(se)
             if se != '':
                 output.append(se.strip())
         print('--------------Process finished-------------')
@@ -212,6 +215,26 @@ class AnuvaadTamilTokenizer(object):
         if self._date_abbrevations is not None and isinstance(self._date_abbrevations, list):
             for pattern in self._date_abbrevations:
                 pattern_obj = re.compile(re.escape('DD_'+str(index)+'_DD'), re.IGNORECASE)
+                text = pattern_obj.sub(pattern, text)
+                index+=1
+        return text
+
+    def serialize_decimal_begin_with_dot_or_without_space(self, text):
+        patterns = re.findall(r'[.]{0,}[0-9]{1,}[ ]{0,}[.][ ]{0,}[0-9]{1,}', text)
+        index = 0
+        if patterns is not None and isinstance(patterns, list):
+            for pattern in patterns:
+                pattern_obj = re.compile(re.escape(pattern))
+                self._decimal_beginning_with_dot_or_without_space.append(pattern)
+                text = pattern_obj.sub('DDS_'+str(index)+'_DDS', text)
+                index+=1
+        return text
+
+    def deserialize_decimal_begin_with_dot_or_without_space(self, text):
+        index = 0
+        if self._decimal_beginning_with_dot_or_without_space is not None and isinstance(self._decimal_beginning_with_dot_or_without_space, list):
+            for pattern in self._decimal_beginning_with_dot_or_without_space:
+                pattern_obj = re.compile(re.escape('DDS_'+str(index)+'_DDS'), re.IGNORECASE)
                 text = pattern_obj.sub(pattern, text)
                 index+=1
         return text

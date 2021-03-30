@@ -216,6 +216,8 @@ class Tokenisation(object):
                             if LINE.get('class') in ['LINE', 'CELL']:
                                 for WORD in LINE['regions']:
                                     if WORD.get('class') in ['WORD']:
+                                        if len(str(WORD['text'])) == 0:
+                                            continue
                                         if len(str(WORD['text'])) == 1:
                                             if str(WORD['text']) in ('.', ':', '!', '?', ',', '|', '||', ';', '%', '*', '-', '/', '}', ')', ']'): #EX: 100%, following table:, Supreme Court (SC)
                                                 txt = txt + str(WORD['text'])
