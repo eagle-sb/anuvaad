@@ -173,9 +173,10 @@ class Tokenisation(object):
     def is_valid_paragraph(self, block):
         try:
             if block['class'] is not None and type(block['class']) is str:
-                return block.get('class') in ['PARA']
-            else:
-                return False
+                if block.get('class') in ['PARA']:
+                    if len(block.get('text', '')) != 0:
+                        return True
+            return False
         except:
             log_exception("Finding if valid paragraph failed", self.input_json_data, None)
             raise ServiceError(400, "Finding if valid paragraph failed")
