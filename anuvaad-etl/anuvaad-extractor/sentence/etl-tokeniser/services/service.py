@@ -219,7 +219,9 @@ class Tokenisation(object):
                                     if WORD.get('class') in ['WORD']:
                                         if len(str(WORD['text'])) == 0:
                                             continue
-                                        if len(str(WORD['text'])) == 1:
+                                        if txt.endswith('<END_OF_CELL>'):
+                                            txt = txt + str(WORD['text'])
+                                        elif len(str(WORD['text'])) == 1:
                                             if str(WORD['text']) in ('.', ':', '!', '?', ',', '|', '||', ';', '%', '*', '-', '/', '}', ')', ']'): #EX: 100%, following table:, Supreme Court (SC)
                                                 txt = txt + str(WORD['text'])
                                             else:
