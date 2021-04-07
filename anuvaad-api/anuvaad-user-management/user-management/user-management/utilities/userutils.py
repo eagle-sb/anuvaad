@@ -348,10 +348,10 @@ class UserUtils:
                 rolecodes), MODULE_CONTEXT)
             return rolecodes,role_details
         except Exception as exc:
-            log_exception("Exception while reading configs: " +
+            log_exception("Exception while reading roles: " +
                           str(exc), MODULE_CONTEXT, exc)
-            post_error("CONFIG_READ_ERROR",
-                       "Exception while reading configs: " + str(exc), MODULE_CONTEXT)
+            return post_error("CONFIG_READ_ERROR",
+                       "Exception while reading roles: " + str(exc), MODULE_CONTEXT)
 #generating email notification for registered users
     @staticmethod
     def generate_email_user_creation(users):

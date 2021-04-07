@@ -26,8 +26,6 @@ class UserManagementRepositories:
             userIDs, userNames, roleCodes,orgCodes,offset,limit_value,skip_pagination)
         if result is not None:
             return result
-        # else:
-        #     return ("No such users")
 
     @staticmethod
     def onboard_users(users):
@@ -35,4 +33,8 @@ class UserManagementRepositories:
         if result is not None:
             return result
 
-  
+    @staticmethod
+    def get_roles():
+        result = UserManagementModel.get_roles_from_role_sheet()
+        if result is not None:
+            return result

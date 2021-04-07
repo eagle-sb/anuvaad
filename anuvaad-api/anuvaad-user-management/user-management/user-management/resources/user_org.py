@@ -59,7 +59,7 @@ class SearchOrganization(Resource):
         org_code=args["org_code"]
         try:
             result = orgRepo.search_organizations(org_code)
-            log_info("User search result:{}".format(result), MODULE_CONTEXT)
+            log_info("Org search result:{}".format(result), MODULE_CONTEXT)
             if result == None:
                 res = CustomResponse(
                     Status.EMPTY_ORG_SEARCH.value, None)
@@ -67,9 +67,10 @@ class SearchOrganization(Resource):
             res = CustomResponse(Status.SUCCESS_ORG_SEARCH.value, result)
             return res.getresjson(), 200
         except Exception as e:
-            log_exception("Exception while searching user records: " +
+            log_exception("Exception while searching org records: " +
                           str(e), MODULE_CONTEXT, e)
-            return post_error("Exception occurred", "Exception while performing user search::{}".format(str(e)), None), 400
+            return post_error("Exception occurred", "Exception while performing org search::{}".format(str(e)), None), 400
+
 
 
 

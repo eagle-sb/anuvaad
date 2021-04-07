@@ -19,6 +19,8 @@ class Status(enum.Enum):
                           'why': "users were searched successfully"}
     SUCCESS_ORG_SEARCH = {'ok': True, 'http': {'status': 200},
                           'why': "organizations were searched successfully"}
+    SUCCESS_ROLE_SEARCH = {'ok': True, 'http': {'status': 200},
+                          'why': "roles were searched successfully"}
     EMPTY_USR_SEARCH = {'ok': True, 'http': {'status': 200},
                           'why': "No such users"}
     EMPTY_ORG_SEARCH = {'ok': True, 'http': {'status': 200},

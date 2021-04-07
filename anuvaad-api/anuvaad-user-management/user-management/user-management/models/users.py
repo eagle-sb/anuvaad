@@ -131,11 +131,6 @@ class UserManagementModel(object):
                 result.append(record)
             if not result:
                 return None
-            #finding models for the users
-            # for user in result:
-            #     if "models" in user:
-            #         fetch_models=UserUtils.get_nmt_models(user["models"])
-
             return result,record_count
 
         except Exception as e:
@@ -195,4 +190,9 @@ class UserManagementModel(object):
                           str(e),  MODULE_CONTEXT, e)
             return post_error("Database  exception", "An error occurred while processing on the db :{}".format(str(e)), None)
 
-    
+
+    @staticmethod
+    def get_roles_from_role_sheet():
+        role_description=UserUtils.read_role_codes()[1]
+        if role_description:
+            return role_description

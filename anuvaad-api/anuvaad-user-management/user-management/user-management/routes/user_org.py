@@ -11,3 +11,4 @@ Api(ORGANIZATION_BLUEPRINT).add_resource(
 Api(ORGANIZATION_BLUEPRINT).add_resource(
     SearchOrganization, "/v1/org/search"
 )
+

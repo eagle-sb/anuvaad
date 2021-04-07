@@ -163,7 +163,23 @@ class OnboardUsers(Resource):
             return post_error("Exception occurred", "Exception while performing users on-boarding::{}".format(str(e)), None), 400
 
 
-   
+class SearchRoles(Resource):
+
+    def get(self):
+        try:
+            log_info("Request for role search received", MODULE_CONTEXT)
+            result = UserManagementRepositories.get_roles()
+            if "errorID" in result:
+                return result, 400
+            else:
+                res = CustomResponse(Status.SUCCESS_ROLE_SEARCH.value, result)
+                return res.getresjson(), 200
+        except Exception as e:
+            log_exception("Exception while searching user records: " +
+                          str(e), MODULE_CONTEXT, e)
+            return post_error("Exception occurred", "Exception while performing user search::{}".format(str(e)), None), 400
+
+
 
 class Health(Resource):
     def get(self):
