@@ -25,7 +25,7 @@ def process_tokenization_kf():
         log_info("process_tokenization_kf : trying to receive value from consumer ", None)
         for msg in consumer:
             data = msg.value
-            log_info("process_tokenization_kf : received input json from input topic consumer ", data)
+            # log_info("process_tokenization_kf : received input json from input topic consumer ", data)
             task_id = str("TOK-" + str(time.time()).replace('.', '')[0:13])
             task_starttime = eval(str(time.time()).replace('.', '')[0:13])
             input_files, workflow_id, jobid, tool_name, step_order, user_id = file_ops.json_input_format(data)

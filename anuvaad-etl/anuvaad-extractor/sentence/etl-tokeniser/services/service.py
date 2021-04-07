@@ -207,7 +207,7 @@ class Tokenisation(object):
 
     def get_all_the_paragraphs(self, page_data):
         try:
-            print(":: TOKENIZATION OCR INCOMING DATA ::", page_data)
+            # print(":: TOKENIZATION OCR INCOMING DATA ::", page_data)
             pages = page_data['outputs'][0]['pages']
             for page in pages:
                 for PARA in page['regions']:
@@ -262,6 +262,6 @@ class Tokenisation(object):
                              None)
                     page_idx = page_idx + config.SAVE_NO_PAGE
                     rsp = requests.post(config.SAVE_URL, json=save_file)
-                    log_info("successfully saved data to database with record id: " + str(recordID), rsp)
+                    log_info("successfully saved data to database with record id: " + str(recordID), None)
         except Exception as e:
             log_exception("Error occured during saving page response", None, e)
