@@ -10,7 +10,7 @@ class OrgUtils:
 
     def __init__(self):
         pass
-#orgId generation
+    #orgId generation
     @staticmethod
     def generate_org_id():
         return(uuid.uuid4().hex)

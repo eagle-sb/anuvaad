@@ -78,17 +78,19 @@ class UserManagementModel(object):
                 collections = get_db()[USR_MONGO_COLLECTION]
                 user_id = user["userID"]
                 users_data = {}
-                users_data['name'] = user["name"]
-                users_data['email'] = user["email"]
-                if "phoneNo" in user:
+
+                if "name" in user and user["name"]:
+                    users_data['name'] = user["name"]
+                if "email" in user and user["email"]:
+                    users_data['email'] = user["email"]
+                if "phoneNo" in user and user["phoneNo"]:
                     users_data['phoneNo'] = user["phoneNo"]
-                if "orgID" in user:
+                if "orgID" in user and user["orgID"]:
                     users_data['orgID'] = str(user["orgID"]).upper()
-                    validity =OrgUtils.validate_org(str(user["orgID"]).upper())
-                    if validity is not None:
-                        return validity
-                if "models" in user:
+                if "models" in user and user["models"]:
                     users_data['models']= user["models"]
+                if "roles" in user and user["roles"]:
+                    users_data["roles"]=user["roles"]
 
                 results = collections.update(
                     {"userID": user_id}, {'$set': users_data})

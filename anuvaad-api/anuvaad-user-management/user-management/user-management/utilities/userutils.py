@@ -7,6 +7,7 @@ from anuvaad_auditor.loghandler import log_info, log_exception
 from anuvaad_auditor.errorhandler import post_error
 import jwt
 from utilities import MODULE_CONTEXT
+from .orgutils import OrgUtils
 import config
 import json
 import codecs
@@ -24,7 +25,7 @@ json_file_name = config.ROLE_CODES_FILE_NAME
 
 mail_ui_link=config.BASE_URL
 role_codes = []
-
+role_details=[]
 
 class UserUtils:
 
@@ -74,11 +75,10 @@ class UserUtils:
     @staticmethod
     def validate_rolecodes(roles):
         global role_codes
+        global role_details
         if not role_codes:
             log_info("reading from remote location", MODULE_CONTEXT)
-            role_codes = UserUtils.read_role_codes()
-            # if role_codes is None:
-            #     post_error("Data Null","Rolecodes read from json is none",None)
+            role_codes,role_details = UserUtils.read_role_codes()
         log_info("ROLE_CODES:{}".format(role_codes), MODULE_CONTEXT)
         log_info("roles : {}".format(roles), MODULE_CONTEXT)
         
@@ -244,17 +244,31 @@ class UserUtils:
 
     @staticmethod
     def validate_user_input_updation(user):
+        global role_details
         if "userID" not in user or not user["userID"]:
-            return post_error("Data Missing", "userID not found", None)
-        if "name" not in user or not user["name"]:
-            return post_error("Data Missing", "name not found", None)
-        if "email" not in user.keys():
-            return post_error("Data Missing", "email not found", None)   
+            return post_error("Data Missing", "userID not found", None)     
+        if "email" in user and user["email"]:
+            email_validity = UserUtils.validate_email(user["email"])
+            if email_validity == False:
+                return post_error("Data not valid", "Email Id given is not valid", None)   
+        if "orgID" in user and user["orgID"]:
+            org_validity =OrgUtils.validate_org(str(user["orgID"]).upper())
+            if org_validity is not None:
+                return org_validity
+        rolecodes=[]
+        if "roleCode" in user and user["roleCode"]:
+            rolecodes.append(str(user["roleCode"]))
+            role_validity = UserUtils.validate_rolecodes(rolecodes) 
+            if role_validity == False:
+                return post_error("Invalid data", "Rolecode given is not valid", None)
+            user["roles"]=[]
+            roles_to_update={}
+            roles_to_update["roleCode"]=str(user["roleCode"]).upper()
+            roleDesc=[x["description"] for x in role_details if x["code"]==user["roleCode"] ]
+            roles_to_update["roleDesc"]=roleDesc[0]
+            user["roles"].append(roles_to_update)
 
         userId = user["userID"]
-
-        if UserUtils.validate_email(user["email"]) == False:
-            return post_error("Data not valid", "Email Id given is not valid", None)
         try:
             collections = get_db()[USR_MONGO_COLLECTION]
             record = collections.find({'userID': userId,"is_verified":True})
@@ -276,9 +290,9 @@ class UserUtils:
             check_dups= UserUtils.check_model_duplicates(new_models)
             if check_dups is not None:
                 return check_dups
-        if user_models:
-            updated_models=UserUtils.generate_models_to_update(user_models,new_models)
-            user["models"]=updated_models 
+            if user_models:
+                updated_models=UserUtils.generate_models_to_update(user_models,new_models)
+                user["models"]=updated_models 
 
 
         
@@ -325,12 +339,14 @@ class UserUtils:
                 log_info("roles read from json are {}".format(
                     roles), MODULE_CONTEXT)
                 rolecodes = []
+                role_details=[]
                 for role in roles:
                     if role["active"]:
                         rolecodes.append(role["code"])
+                        role_details.append(role)
             log_info("rolecodes read from json is stored on to rolecodes array:{} ".format(
                 rolecodes), MODULE_CONTEXT)
-            return rolecodes
+            return rolecodes,role_details
         except Exception as exc:
             log_exception("Exception while reading configs: " +
                           str(exc), MODULE_CONTEXT, exc)
