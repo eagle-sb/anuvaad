@@ -82,23 +82,29 @@ class Tokenisation(object):
     def adding_tokenised_text_blockmerger(self, input_json_data_pagewise, in_locale, page_id):
         try:
             log_info("text block tokenisation started for page : %s"%(page_id+1), self.input_json_data)
+            if not input_json_data_pagewise.get('valid_page', False):
+                log_info("::INVALID PAGE:: text block tokenization skipped because for Invalid page : %s" %(page_id), self.input_json_data)
+                return input_json_data_pagewise
             blocks = input_json_data_pagewise['regions']
             if blocks is not None:
                 for block_id, item in enumerate(blocks):
-                    if item.get('class') in ['PARA']:
+                    if item.get('class') in ['PARA'] and item.get('valid_para', False):
                         text_data = item['text']
                         tokenised_text = self.tokenisation_core([text_data], in_locale)
                         item['tokenized_sentences'] = [self.making_object_for_tokenised_text(text) for i, text in enumerate(tokenised_text)]
-                    if item.get('class') in ['TABLE']:
+                    elif item.get('class') in ['TABLE'] and item.get('valid_para', False):
                         table_data = item['text']
                         cell_data = table_data.split('<END_OF_CELL>')
                         tokenised_text = []
                         for text_data in cell_data:
                             tokenised_text.extend(self.tokenisation_core([text_data], in_locale))
                         item['tokenized_sentences'] = [self.making_object_for_tokenised_text(text) for i, text in enumerate(tokenised_text)]
-                    if item.get('class') in ['HEADER', 'FOOTER']:
+                    elif item.get('class') in ['HEADER', 'FOOTER'] and item.get('valid_para', False):
                         data = item['text']
                         item['tokenized_sentences'] = [self.making_object_for_tokenised_text(data)]
+                    elif not item.get('valid_para', False):
+                        log_info("::INVALID PARA:: text block tokenization skipped because for Invalid para: %s page: %s" %(block_id, page_id), self.input_json_data)
+                        continue
 
             return input_json_data_pagewise
         except:
@@ -134,6 +140,9 @@ class Tokenisation(object):
                 #     if page_height < page_width: #If this condition is true means this is a PPT file where width will be more than the height
                 #         log_info("Skipping logic for the merging incomplete sentence of last block to next text block", self.input_json_data)
                 #         continue
+                if not page_data.get('valid_page', False):
+                    log_info("::SKIPPED:: Incomplete text merging because of invalid page for page: %s"%(page_idx), self.input_json_data)
+                    continue
                 page_data_blocks = page_data['regions']
                 if page_idx+1 < len(input_data_file):
                     last_text_block_idx = self.get_last_text_block_with_text(page_data_blocks)
@@ -172,7 +181,7 @@ class Tokenisation(object):
     # If for a paragraph the attribute is not in FOOTER, "", TABLE it is a valid paragraph
     def is_valid_paragraph(self, block):
         try:
-            if block['class'] is not None and type(block['class']) is str:
+            if block['class'] is not None and type(block['class']) is str and block.get('valid_para', False):
                 if block.get('class') in ['PARA']:
                     if len(block.get('text', '')) != 0:
                         return True
@@ -207,35 +216,48 @@ class Tokenisation(object):
 
     def get_all_the_paragraphs(self, page_data):
         try:
-            # print(":: TOKENIZATION OCR INCOMING DATA ::", page_data)
+            log_info(":: TOKENIZATION OCR GET ALL PARA PROCESS STARTED::", self.input_json_data)
             pages = page_data['outputs'][0]['pages']
-            for page in pages:
-                for PARA in page['regions']:
-                    if PARA.get('class') in ['PARA', 'TABLE', 'HEADER', 'FOOTER']:
-                        txt = ''
-                        for LINE in PARA['regions']:
-                            if LINE.get('class') in ['LINE', 'CELL']:
-                                for WORD in LINE['regions']:
-                                    if WORD.get('class') in ['WORD']:
-                                        if len(str(WORD['text'])) == 0:
-                                            continue
-                                        if txt.endswith('<END_OF_CELL>'):
-                                            txt = txt + str(WORD['text'])
-                                        elif len(str(WORD['text'])) == 1:
-                                            if str(WORD['text']) in ('.', ':', '!', '?', ',', '|', '||', ';', '%', '*', '-', '/', '}', ')', ']'): #EX: 100%, following table:, Supreme Court (SC)
-                                                txt = txt + str(WORD['text'])
-                                            else:
-                                                txt = txt + ' ' + str(WORD['text'])
-                                        else:
-                                            if txt.endswith(('-', '/', '{', '[', '(')): #EX: fifty-eight, dates: 07/08/1993, Supreme Court (SC)
-                                                txt = txt + str(WORD['text'])
-                                            else:
-                                                txt = txt + ' ' + str(WORD['text'])
+            for page_id, page in enumerate(pages):
+                page['valid_page'] = True
+                log_info(":: GET ALL PARA PROCESS STARTED For >>>>>>>>>> PAGE: %s"%(page_id), self.input_json_data)
+                try:
+                    for para_id, PARA in enumerate(page['regions']):
+                        PARA['valid_para'] = True
+                        log_info(":: GET ALL PARA PROCESS STARTED For >>>PAGE: %s  >>> PARA: %s" %(page_id, para_id), self.input_json_data)
+                        if PARA.get('class') in ['PARA', 'TABLE', 'HEADER', 'FOOTER']:
+                            txt = ''
+                            try:
+                                for line_no, LINE in enumerate(PARA['regions']):
+                                    if LINE.get('class') in ['LINE', 'CELL']:
+                                        for word_no, WORD in enumerate(LINE['regions']):
+                                            if WORD.get('class') in ['WORD']:
+                                                if len(str(WORD['text'])) == 0:
+                                                    continue
+                                                if txt.endswith('<END_OF_CELL>'):
+                                                    txt = txt + str(WORD['text'])
+                                                elif len(str(WORD['text'])) == 1:
+                                                    if str(WORD['text']) in ('.', ':', '!', '?', ',', '|', '||', ';', '%', '*', '-', '/', '}', ')', ']'): #EX: 100%, following table:, Supreme Court (SC)
+                                                        txt = txt + str(WORD['text'])
+                                                    else:
+                                                        txt = txt + ' ' + str(WORD['text'])
+                                                else:
+                                                    if txt.endswith(('-', '/', '{', '[', '(')): #EX: fifty-eight, dates: 07/08/1993, Supreme Court (SC)
+                                                        txt = txt + str(WORD['text'])
+                                                    else:
+                                                        txt = txt + ' ' + str(WORD['text'])
 
-                                if LINE.get('class') in ['CELL']:
-                                    txt = txt + '<END_OF_CELL>'
+                                        if LINE.get('class') in ['CELL']:
+                                            txt = txt + '<END_OF_CELL>'
+                                PARA['text'] = txt.strip()
+                            except Exception as para_exception:
+                                PARA['valid_para'] = False
+                                log_exception("RETRIVING PARA ERROR:: Retriving data failed for PAGE: %s , PARA: %s" %(page_id, para_id),
+                                          self.input_json_data, para_exception)
+                except Exception as page_exception:
+                    page['valid_page'] = False
+                    log_exception("RETRIVING PAGE EXCEPTION:: Retriving data failed for PAGE: %s"%(page_id), self.input_json_data, page_exception)
 
-                        PARA['text'] = txt.strip()
             return pages
         except:
             log_exception("Retriving paragraphs from input failed", self.input_json_data, None)
