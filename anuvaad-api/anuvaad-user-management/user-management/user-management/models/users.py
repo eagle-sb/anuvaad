@@ -89,8 +89,8 @@ class UserManagementModel(object):
                     users_data['orgID'] = str(user["orgID"]).upper()
                 if "models" in user and user["models"]:
                     users_data['models']= user["models"]
-                if "roles" in user and user["roles"]:
-                    users_data["roles"]=user["roles"]
+                if "roles_new" in user and user["roles_new"]:
+                    users_data["roles"]=user["roles_new"]
 
                 results = collections.update(
                     {"userID": user_id}, {'$set': users_data})

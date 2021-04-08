@@ -261,12 +261,12 @@ class UserUtils:
             role_validity = UserUtils.validate_rolecodes(rolecodes) 
             if role_validity == False:
                 return post_error("Invalid data", "Rolecode given is not valid", None)
-            user["roles"]=[]
+            user["roles_new"]=[]
             roles_to_update={}
             roles_to_update["roleCode"]=str(user["roleCode"]).upper()
             roleDesc=[x["description"] for x in role_details if x["code"]==user["roleCode"] ]
             roles_to_update["roleDesc"]=roleDesc[0]
-            user["roles"].append(roles_to_update)
+            user["roles_new"].append(roles_to_update)
 
         userId = user["userID"]
         try:
@@ -404,7 +404,7 @@ class UserUtils:
             log_exception("exception while validating username/email"+str(e),  MODULE_CONTEXT, e)
             return post_error("Database exception","Exception occurred:{}".format(str(e)),None)
 
-      
+    #refactoring models so that old models are replaced with new models while update w.r.t lang pair
     @staticmethod
     def generate_models_to_update(user_models,new_models):
         models_to_replace=[]
@@ -416,12 +416,9 @@ class UserUtils:
         models.extend(new_models)
         return models
 
-
-
-
-                
-    @staticmethod
-    def check_model_duplicates(models):
+    #no multiple models on same lang pair are not allowed at a time for a user;       
+    @staticmethod 
+    def check_model_duplicates(models): 
         dup=[]
         for model in models:
             dup.append((model["src_lang"],model["tgt_lang"]))
