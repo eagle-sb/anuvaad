@@ -35,6 +35,7 @@ class Response(object):
                     output_file_response = list()
                     for i, item in enumerate(input_key['files']):
                         input_filename, in_file_type, in_locale = file_ops.accessing_files(item)
+                        log_info("::tokenization_ocr : received Language: %s" %in_locale, self.json_data)
                         error_validator.check_language(in_locale)
                         if in_file_type == "txt":
                             input_file_data = file_ops.read_txt_file(input_filename)
