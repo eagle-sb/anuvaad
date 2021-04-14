@@ -1,3 +1,5 @@
+from anuvaad_auditor import log_info
+
 from utilities.model_response import Status
 from utilities.utils import FileOperation
 from errors.errors_exception import WorkflowkeyError
@@ -64,6 +66,7 @@ class ValidationResponse(object):
     
     # checking support of tokeniser for languages
     def check_language(self, language):
+        log_info("::tokenization : received Language: %s" %(language), None)
         allowed_languages = ['en', 'hi', 'mr', 'ta', 'te', 'kn', 'ml', 'bn', 'as', 'or', 'gu', 'pa', 'ur']
         if language not in allowed_languages:
             raise FileErrors("LOCALE_ERROR", "Currently, This language is not supported by tokeniser. \
