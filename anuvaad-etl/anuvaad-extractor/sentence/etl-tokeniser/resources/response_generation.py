@@ -22,6 +22,7 @@ class Response(object):
     
     # Generating response for a workflow request coming from kafka consumer or flask server
     def workflow_response(self, task_id, task_starttime):
+        log_info("process_tokenization_OCR : received input : %s" %self.json_data, self.json_data)
         input_key, workflow_id, jobid, tool_name, step_order, user_id = file_ops.json_input_format(self.json_data)
         log_info("workflow_response : started the response generation for %s"%jobid, self.json_data)
         error_validator = ValidationResponse(self.DOWNLOAD_FOLDER)
